@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영업 파이프라인</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #3B82F6;
+      --primary-dark: #2563EB;
+      --primary-light: #EFF6FF;
+      --bg: #F1F5F9;
+      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #1E293B;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,.14), 0 4px 12px rgba(0,0,0,.08);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-pill: 999px;
+
+      /* status colors */
+      --c-contact: #F97316;
+      --c-contact-bg: #FFF7ED;
+      --c-proposal: #8B5CF6;
+      --c-proposal-bg: #F5F3FF;
+      --c-meeting: #3B82F6;
+      --c-meeting-bg: #EFF6FF;
+      --c-success: #10B981;
+      --c-success-bg: #ECFDF5;
+      --c-hold: #6B7280;
+      --c-hold-bg: #F9FAFB;
+    }
+
+    html { font-family: 'Noto Sans KR', sans-serif; font-size: 14px; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ─── HEADER ─────────────────────────────────────── */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      padding: 0 24px;
+    }
+    .header-top {
+      display: flex; align-items: center; gap: 16px;
+      height: 64px;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 18px; font-weight: 700; flex-shrink: 0;
+    }
+    .logo-text { font-size: 17px; font-weight: 700; color: var(--text); white-space: nowrap; }
+
+    .search-wrap {
+      flex: 1; max-width: 480px;
+      position: relative;
+    }
+    .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); pointer-events: none;
+    }
+    .search-input {
+      width: 100%; height: 40px;
+      padding: 0 14px 0 38px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-pill);
+      font-family: inherit; font-size: 13px; color: var(--text);
+      background: var(--bg);
+      outline: none; transition: border-color .2s, box-shadow .2s;
+    }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.15); background: #fff; }
+
+    .header-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+    /* Status filter chips */
+    .chips-bar {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 0; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .chips-bar::-webkit-scrollbar { display: none; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 14px; border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--text-secondary);
+      font-size: 12px; font-weight: 500; font-family: inherit;
+      cursor: pointer; white-space: nowrap;
+      transition: all .18s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .75; }
+
+    /* ─── TOOLBAR ─────────────────────────────────────── */
+    .toolbar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 24px 12px;
+      flex-wrap: wrap;
+    }
+    .owner-btns { display: flex; gap: 6px; }
+    .owner-btn {
+      padding: 6px 16px; border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--text-secondary);
+      font-size: 12px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all .18s;
+    }
+    .owner-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .owner-btn.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+    .count-badge {
+      background: var(--primary-light); color: var(--primary);
+      padding: 4px 12px; border-radius: var(--radius-pill);
+      font-size: 12px; font-weight: 700;
+    }
+
+    .sort-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .sort-label { font-size: 12px; color: var(--text-muted); }
+    .sort-select {
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      padding: 6px 10px; font-size: 12px; font-family: inherit;
+      color: var(--text); background: var(--surface); cursor: pointer;
+      outline: none; transition: border-color .18s;
+    }
+    .sort-select:focus { border-color: var(--primary); }
+
+    /* ─── MAIN GRID ───────────────────────────────────── */
+    .main { padding: 0 24px 100px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    /* ─── CLIENT CARD ─────────────────────────────────── */
+    .card {
+      background: var(--surface); border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      padding: 18px 20px;
+      cursor: pointer; position: relative; overflow: hidden;
+      transition: box-shadow .2s, transform .2s, border-color .2s;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent, var(--primary)); opacity: .7;
+    }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: #CBD5E1; }
+
+    .card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .card-title { flex: 1; }
+    .company-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .contact-person { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+    .badges { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 1px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: var(--radius-pill);
+      font-size: 11px; font-weight: 600; line-height: 1;
+      white-space: nowrap;
+    }
+    .badge-owner-senior { background: #F1F5F9; color: #475569; }
+    .badge-owner-me { background: #DBEAFE; color: #1D4ED8; }
+    .badge-status { }
+
+    .card-meta {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 11px; color: var(--text-muted); margin-bottom: 10px;
+    }
+    .card-meta-item { display: flex; align-items: center; gap: 4px; }
+
+    .memo-preview {
+      font-size: 12px; color: var(--text-secondary); line-height: 1.6;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden;
+      background: var(--bg); border-radius: var(--radius-sm);
+      padding: 8px 10px; min-height: 36px;
+    }
+    .memo-preview.empty { color: var(--text-muted); font-style: italic; }
+
+    /* ─── EMPTY STATE ─────────────────────────────────── */
+    .empty-state {
+      grid-column: 1/-1; text-align: center;
+      padding: 80px 24px;
+    }
+    .empty-icon { font-size: 52px; margin-bottom: 16px; opacity: .4; }
+    .empty-title { font-size: 16px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+    .empty-desc { font-size: 13px; color: var(--text-muted); }
+
+    /* ─── FAB ─────────────────────────────────────────── */
+    .fab {
+      position: fixed; bottom: 28px; right: 28px; z-index: 200;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; border: none; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(59,130,246,.45);
+      font-size: 26px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(59,130,246,.55); }
+    .fab:active { transform: scale(.96); }
+
+    /* ─── OVERLAY / PANEL ─────────────────────────────── */
+    .overlay {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(15,23,42,.45); backdrop-filter: blur(3px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+
+    .panel {
+      background: var(--surface); border-radius: 18px;
+      box-shadow: var(--shadow-lg);
+      width: 100%; max-width: 600px; max-height: 90vh;
+      display: flex; flex-direction: column;
+      transform: translateY(24px) scale(.97);
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+      overflow: hidden;
+    }
+    .overlay.open .panel { transform: none; }
+
+    .panel-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .panel-title-area { flex: 1; }
+    .panel-company { font-size: 18px; font-weight: 700; }
+    .panel-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .btn-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--text-secondary);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; transition: all .18s;
+    }
+    .btn-icon:hover { background: var(--bg); color: var(--text); }
+    .btn-icon.danger:hover { background: #FEF2F2; border-color: #FCA5A5; color: #EF4444; }
+
+    .panel-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-row.full { grid-template-columns: 1fr; }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 11px; font-weight: 600; color: var(--text-secondary); letter-spacing: .05em; text-transform: uppercase; }
+    .field input, .field select, .field textarea {
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      padding: 9px 12px; font-size: 13px; font-family: inherit;
+      color: var(--text); background: var(--surface); outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+    }
+    .field textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    .status-pills { display: flex; gap: 7px; flex-wrap: wrap; }
+    .status-pill {
+      padding: 7px 14px; border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border);
+      font-size: 12px; font-weight: 600; font-family: inherit;
+      cursor: pointer; background: var(--surface); color: var(--text-secondary);
+      transition: all .18s;
+    }
+    .status-pill:hover { transform: scale(1.04); }
+
+    .panel-footer {
+      display: flex; gap: 10px; justify-content: flex-end;
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .btn {
+      padding: 9px 22px; border-radius: var(--radius-sm);
+      border: 1.5px solid transparent;
+      font-size: 13px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all .18s;
+    }
+    .btn-secondary { background: var(--bg); color: var(--text-secondary); border-color: var(--border); }
+    .btn-secondary:hover { background: #E2E8F0; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    /* ─── TOAST ───────────────────────────────────────── */
+    .toast-wrap {
+      position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%);
+      z-index: 500; display: flex; flex-direction: column; align-items: center; gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      background: #1E293B; color: #fff;
+      padding: 10px 20px; border-radius: var(--radius-pill);
+      font-size: 13px; font-weight: 500;
+      box-shadow: var(--shadow-md);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .25s, transform .25s;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: none; }
+    .toast.warn { background: #DC2626; }
+
+    /* ─── CONFIRM DIALOG ──────────────────────────────── */
+    .confirm-overlay {
+      position: fixed; inset: 0; z-index: 600;
+      background: rgba(15,23,42,.5); backdrop-filter: blur(2px);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .confirm-overlay.open { opacity: 1; pointer-events: all; }
+    .confirm-box {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow-lg); padding: 28px 28px 22px;
+      max-width: 360px; width: 100%; text-align: center;
+      transform: scale(.94); transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+    }
+    .confirm-overlay.open .confirm-box { transform: none; }
+    .confirm-icon { font-size: 36px; margin-bottom: 12px; }
+    .confirm-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .confirm-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+    .confirm-btns { display: flex; gap: 10px; justify-content: center; }
+    .btn-danger { background: #EF4444; color: #fff; border-color: #EF4444; }
+    .btn-danger:hover { background: #DC2626; border-color: #DC2626; }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 640px) {
+      .header { padding: 0 16px; }
+      .header-top { gap: 10px; }
+      .logo-text { display: none; }
+      .main { padding: 0 16px 100px; }
+      .toolbar { padding: 12px 16px 8px; }
+      .grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .panel { max-width: 100%; border-radius: 18px 18px 0 0; align-self: flex-end; }
+      .overlay { align-items: flex-end; padding: 0; }
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+<!-- ─── HEADER ─────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">영</div>
+      <span class="logo-text">영업 파이프라인</span>
+    </div>
+    <div class="search-wrap">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input id="searchInput" class="search-input" type="text" placeholder="회사명, 담당자, 메모 검색..." autocomplete="off" />
+    </div>
+  </div>
+  <div class="chips-bar" id="statusChips">
+    <button class="chip active" data-status="전체">전체</button>
+    <button class="chip" data-status="컨택중"><span class="chip-dot" style="color:#F97316"></span>컨택중</button>
+    <button class="chip" data-status="제안중"><span class="chip-dot" style="color:#8B5CF6"></span>제안중</button>
+    <button class="chip" data-status="미팅완료"><span class="chip-dot" style="color:#3B82F6"></span>미팅완료</button>
+    <button class="chip" data-status="성사"><span class="chip-dot" style="color:#10B981"></span>성사</button>
+    <button class="chip" data-status="보류"><span class="chip-dot" style="color:#6B7280"></span>보류</button>
+  </div>
+</header>
+
+<!-- ─── TOOLBAR ────────────────────────────────────────── -->
+<div class="toolbar">
+  <div class="owner-btns" id="ownerBtns">
+    <button class="owner-btn active" data-owner="전체">전체</button>
+    <button class="owner-btn" data-owner="선배">선배 담당</button>
+    <button class="owner-btn" data-owner="나">내 담당</button>
+  </div>
+  <span class="count-badge" id="countBadge">0건</span>
+  <div class="sort-wrap">
+    <span class="sort-label">정렬:</span>
+    <select id="sortSelect" class="sort-select">
+      <option value="lastContact">최근 연락일</option>
+      <option value="createdAt">등록일</option>
+      <option value="companyName">회사명</option>
+    </select>
+  </div>
+</div>
+
+<!-- ─── MAIN GRID ───────────────────────────────────────── -->
+<main class="main">
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- ─── FAB ────────────────────────────────────────────── -->
+<button class="fab" id="fabBtn" title="신규 거래처 등록">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <path d="M12 5v14M5 12h14"/>
+  </svg>
+</button>
+
+<!-- ─── DETAIL / EDIT PANEL ─────────────────────────────── -->
+<div class="overlay" id="overlay">
+  <div class="panel" id="panel">
+    <div class="panel-header">
+      <div class="panel-title-area">
+        <div class="panel-company" id="panelCompany">회사명</div>
+        <div class="panel-sub" id="panelSub">등록일 —</div>
+      </div>
+      <button class="btn-icon danger" id="deleteBtn" title="삭제">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+        </svg>
+      </button>
+      <button class="btn-icon" id="closeBtn" title="닫기">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="panel-body" id="panelBody">
+      <div class="form-row">
+        <div class="field">
+          <label>회사명 *</label>
+          <input id="f-companyName" type="text" placeholder="(주)회사명" />
+        </div>
+        <div class="field">
+          <label>담당자명</label>
+          <input id="f-contactPerson" type="text" placeholder="홍길동 대리" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>전화번호</label>
+          <input id="f-phone" type="tel" placeholder="010-0000-0000" />
+        </div>
+        <div class="field">
+          <label>최근 연락일</label>
+          <input id="f-lastContactDate" type="date" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>담당 구분 *</label>
+          <select id="f-owner">
+            <option value="나">나</option>
+            <option value="선배">선배</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>담당자 이름 (실명)</label>
+          <input id="f-ownerName" type="text" placeholder="예: 김선배, 박나" />
+        </div>
+      </div>
+      <div class="form-row full" style="margin-bottom:10px;">
+        <div class="field">
+          <label>영업 상태 *</label>
+          <div class="status-pills" id="statusPills">
+            <button class="status-pill" data-status="컨택중">컨택중</button>
+            <button class="status-pill" data-status="제안중">제안중</button>
+            <button class="status-pill" data-status="미팅완료">미팅완료</button>
+            <button class="status-pill" data-status="성사">성사</button>
+            <button class="status-pill" data-status="보류">보류</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="field">
+          <label>메모 (카톡 내용, 진행 상황 등)</label>
+          <textarea id="f-memo" placeholder="카톡 대화 내용, 제안 진행 현황, 특이사항 등을 자유롭게 메모하세요..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <button class="btn btn-secondary" id="cancelBtn">취소</button>
+      <button class="btn btn-primary" id="saveBtn">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CONFIRM DIALOG ──────────────────────────────────── -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title" id="confirmTitle">거래처를 삭제할까요?</div>
+    <div class="confirm-desc" id="confirmDesc">이 작업은 되돌릴 수 없습니다.</div>
+    <div class="confirm-btns">
+      <button class="btn btn-secondary" id="confirmCancel">취소</button>
+      <button class="btn btn-danger" id="confirmOk">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST ───────────────────────────────────────────── -->
+<div class="toast-wrap">
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ========================================================
+   DATA & STATE
+   ======================================================== */
+const LS_KEY = 'salesPipeline';
+
+const STATUS_META = {
+  '컨택중':  { color: '#F97316', bg: '#FFF7ED', accent: '#F97316' },
+  '제안중':  { color: '#8B5CF6', bg: '#F5F3FF', accent: '#8B5CF6' },
+  '미팅완료':{ color: '#3B82F6', bg: '#EFF6FF', accent: '#3B82F6' },
+  '성사':    { color: '#10B981', bg: '#ECFDF5', accent: '#10B981' },
+  '보류':    { color: '#6B7280', bg: '#F9FAFB', accent: '#9CA3AF' },
+};
+
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
+const SAMPLE_DATA = [
+  { id: uuid(), companyName: '(주)한국솔루션', contactPerson: '이민준 부장', phone: '02-1234-5678', owner: '선배', ownerName: '김선배', status: '제안중', lastContactDate: '2026-05-12', memo: '지난 주 제안서 발송 완료. 검토 기간 2주 요청함. 5/26 회신 예정.\n카톡: "잘 받았습니다. 검토 후 연락드리겠습니다 😊"', createdAt: '2026-04-20T09:00:00Z' },
+  { id: uuid(), companyName: '글로벌테크 코리아', contactPerson: '박지수 차장', phone: '010-9876-5432', owner: '나', ownerName: '박나', status: '미팅완료', lastContactDate: '2026-05-14', memo: '5/14 화상 미팅 완료. 예산은 3천만원 내외. 6월 초 최종 결정 예정.\n추가 자료 요청: 유사 사례 레퍼런스 2개', createdAt: '2026-04-15T10:30:00Z' },
+  { id: uuid(), companyName: '서울미디어그룹', contactPerson: '정현우 대리', phone: '02-3456-7890', owner: '나', ownerName: '박나', status: '컨택중', lastContactDate: '2026-05-10', memo: '인스타 DM으로 첫 컨택. 카톡 연결 완료.\n"다음 주에 시간 내어볼게요~" 답변 받음', createdAt: '2026-05-08T14:00:00Z' },
+  { id: uuid(), companyName: '(주)대한물류', contactPerson: '최영수 이사', phone: '010-5555-1234', owner: '선배', ownerName: '김선배', status: '성사', lastContactDate: '2026-05-01', memo: '계약 완료! 🎉 계약금 입금 확인.\n5월 말 킥오프 미팅 예정. 담당자 온보딩 필요.', createdAt: '2026-03-10T08:00:00Z' },
+  { id: uuid(), companyName: '스마트팜(주)', contactPerson: '김도현 팀장', phone: '010-2222-3333', owner: '나', ownerName: '박나', status: '보류', lastContactDate: '2026-04-20', memo: '예산 동결로 하반기 재검토 요청.\n"상반기는 어렵고, 7월 이후에 다시 논의해요" 카톡 수신', createdAt: '2026-04-01T11:00:00Z' },
+  { id: uuid(), companyName: '퓨처모빌리티', contactPerson: '오승빈 과장', phone: '02-7777-8888', owner: '선배', ownerName: '김선배', status: '미팅완료', lastContactDate: '2026-05-15', memo: '어제 대면 미팅. 니즈 확인 완료.\n경쟁사 두 곳과 비교 중. 차별점 강조 필요. 맞춤 제안서 작성 예정.', createdAt: '2026-04-25T09:30:00Z' },
+  { id: uuid(), companyName: '에이스패션', contactPerson: '한수진 MD', phone: '010-4444-9999', owner: '나', ownerName: '박나', status: '제안중', lastContactDate: '2026-05-11', memo: '제안서 1차 전달. 디자인 파트 추가 요청.\n카톡: "제안 내용 좋은데요, 비용 조정 가능한지 확인 부탁해요"', createdAt: '2026-05-05T13:00:00Z' },
+  { id: uuid(), companyName: '제이엔바이오', contactPerson: '윤재혁 대표', phone: '010-7777-2222', owner: '선배', ownerName: '김선배', status: '컨택중', lastContactDate: '2026-05-13', memo: '지인 소개로 연결. 전화 통화 10분.\n"자료 먼저 보내주시면 검토해 볼게요" → 이메일 발송 완료', createdAt: '2026-05-10T16:00:00Z' },
+];
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
+
+function saveData(data) {
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+}
+
+let clients = loadData() || [...SAMPLE_DATA];
+if (!loadData()) saveData(clients);
+
+let state = {
+  search: '',
+  statusFilter: '전체',
+  ownerFilter: '전체',
+  sort: 'lastContact',
+  editingId: null,
+  selectedStatus: '컨택중',
+  isNew: false,
+};
+
+/* ========================================================
+   HELPERS
+   ======================================================== */
+function statusStyle(status) {
+  const m = STATUS_META[status] || STATUS_META['보류'];
+  return `color:${m.color};background:${m.bg};`;
+}
+
+function accentColor(status) {
+  return (STATUS_META[status] || STATUS_META['보류']).accent;
+}
+
+function formatDate(str) {
+  if (!str) return '—';
+  const d = new Date(str);
+  if (isNaN(d)) return str;
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function today() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function daysAgo(str) {
+  if (!str) return '';
+  const diff = Math.floor((Date.now() - new Date(str)) / 86400000);
+  if (diff === 0) return '오늘';
+  if (diff === 1) return '어제';
+  if (diff < 0) return '예정';
+  return `${diff}일 전`;
+}
+
+/* ========================================================
+   FILTERING & SORTING
+   ======================================================== */
+function getFiltered() {
+  let list = [...clients];
+  const q = state.search.trim().toLowerCase();
+
+  if (q) list = list.filter(c =>
+    c.companyName.toLowerCase().includes(q) ||
+    (c.contactPerson||'').toLowerCase().includes(q) ||
+    (c.memo||'').toLowerCase().includes(q) ||
+    (c.ownerName||'').toLowerCase().includes(q)
+  );
+
+  if (state.statusFilter !== '전체') list = list.filter(c => c.status === state.statusFilter);
+  if (state.ownerFilter !== '전체') list = list.filter(c => c.owner === state.ownerFilter);
+
+  list.sort((a, b) => {
+    if (state.sort === 'lastContact') {
+      return (b.lastContactDate||'').localeCompare(a.lastContactDate||'');
+    }
+    if (state.sort === 'createdAt') {
+      return (b.createdAt||'').localeCompare(a.createdAt||'');
+    }
+    if (state.sort === 'companyName') {
+      return a.companyName.localeCompare(b.companyName, 'ko');
+    }
+    return 0;
+  });
+
+  return list;
+}
+
+/* ========================================================
+   RENDER
+   ======================================================== */
+function render() {
+  const list = getFiltered();
+  const grid = document.getElementById('grid');
+  document.getElementById('countBadge').textContent = `${list.length}건`;
+
+  if (list.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-title">검색 결과가 없습니다</div>
+        <div class="empty-desc">다른 검색어나 필터를 사용해보세요</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(c => {
+    const accent = accentColor(c.status);
+    const ownerBadge = c.owner === '선배'
+      ? `<span class="badge badge-owner-senior">👤 ${c.ownerName || '선배'}</span>`
+      : `<span class="badge badge-owner-me">🙋 ${c.ownerName || '나'}</span>`;
+    const statusBadge = `<span class="badge badge-status" style="${statusStyle(c.status)}">${c.status}</span>`;
+    const memoText = c.memo ? c.memo.replace(/\n/g,' ') : '';
+    const memoClass = c.memo ? '' : 'empty';
+    const memoDisplay = c.memo ? memoText : '메모 없음 — 클릭하여 추가';
+
+    return `
+    <div class="card" data-id="${c.id}" style="--accent:${accent}">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="company-name">${escHtml(c.companyName)}</div>
+          <div class="contact-person">${escHtml(c.contactPerson||'')}${c.phone ? ' · ' + escHtml(c.phone) : ''}</div>
+        </div>
+        <div class="badges">
+          ${ownerBadge}
+          ${statusBadge}
+        </div>
+      </div>
+      <div class="card-meta">
+        <span class="card-meta-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          ${formatDate(c.lastContactDate)}
+        </span>
+        <span style="color:${accent};font-weight:600;">${daysAgo(c.lastContactDate)}</span>
+      </div>
+      <div class="memo-preview ${memoClass}">${escHtml(memoDisplay)}</div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.card').forEach(el => {
+    el.addEventListener('click', () => openPanel(el.dataset.id));
+  });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ========================================================
+   PANEL (add / edit)
+   ======================================================== */
+function openPanel(id) {
+  const isNew = !id;
+  state.isNew = isNew;
+  state.editingId = id || null;
+
+  const c = isNew ? {
+    companyName: '', contactPerson: '', phone: '',
+    owner: '나', ownerName: '', status: '컨택중',
+    lastContactDate: today(), memo: '', createdAt: new Date().toISOString()
+  } : clients.find(x => x.id === id);
+
+  if (!c) return;
+
+  document.getElementById('panelCompany').textContent = isNew ? '신규 거래처 등록' : c.companyName;
+  document.getElementById('panelSub').textContent = isNew ? '' : `등록일 ${formatDate(c.createdAt)}`;
+
+  document.getElementById('f-companyName').value = c.companyName;
+  document.getElementById('f-contactPerson').value = c.contactPerson || '';
+  document.getElementById('f-phone').value = c.phone || '';
+  document.getElementById('f-owner').value = c.owner;
+  document.getElementById('f-ownerName').value = c.ownerName || '';
+  document.getElementById('f-lastContactDate').value = c.lastContactDate || today();
+  document.getElementById('f-memo').value = c.memo || '';
+
+  state.selectedStatus = c.status;
+  renderStatusPills();
+
+  document.getElementById('deleteBtn').style.display = isNew ? 'none' : '';
+  document.getElementById('overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-companyName').focus(), 300);
+}
+
+function renderStatusPills() {
+  document.querySelectorAll('.status-pill').forEach(btn => {
+    const s = btn.dataset.status;
+    const m = STATUS_META[s];
+    if (s === state.selectedStatus) {
+      btn.style.cssText = `background:${m.bg};border-color:${m.color};color:${m.color};`;
+    } else {
+      btn.style.cssText = '';
+    }
+  });
+}
+
+function closePanel() {
+  document.getElementById('overlay').classList.remove('open');
+  state.editingId = null;
+  state.isNew = false;
+}
+
+function savePanel() {
+  const companyName = document.getElementById('f-companyName').value.trim();
+  if (!companyName) { showToast('회사명을 입력해주세요.', true); return; }
+  if (!state.selectedStatus) { showToast('영업 상태를 선택해주세요.', true); return; }
+
+  // duplicate check
+  const dup = clients.find(c =>
+    c.companyName.trim().toLowerCase() === companyName.toLowerCase() &&
+    c.id !== state.editingId
+  );
+  if (dup) {
+    showToast(`⚠️ "${companyName}" 이(가) 이미 등록되어 있습니다!`, true);
+    return;
+  }
+
+  const data = {
+    companyName,
+    contactPerson: document.getElementById('f-contactPerson').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
+    owner: document.getElementById('f-owner').value,
+    ownerName: document.getElementById('f-ownerName').value.trim(),
+    status: state.selectedStatus,
+    lastContactDate: document.getElementById('f-lastContactDate').value,
+    memo: document.getElementById('f-memo').value.trim(),
+  };
+
+  if (state.isNew) {
+    clients.unshift({ id: uuid(), createdAt: new Date().toISOString(), ...data });
+    showToast('거래처가 등록되었습니다 ✓');
+  } else {
+    const idx = clients.findIndex(c => c.id === state.editingId);
+    if (idx !== -1) {
+      clients[idx] = { ...clients[idx], ...data };
+      showToast('저장되었습니다 ✓');
+    }
+  }
+
+  saveData(clients);
+  closePanel();
+  render();
+}
+
+/* ========================================================
+   DELETE
+   ======================================================== */
+function deleteClient(id) {
+  const c = clients.find(x => x.id === id);
+  if (!c) return;
+  showConfirm(
+    `"${c.companyName}" 삭제`,
+    '이 거래처 정보가 완전히 삭제됩니다. 계속할까요?',
+    () => {
+      clients = clients.filter(x => x.id !== id);
+      saveData(clients);
+      closePanel();
+      render();
+      showToast('거래처가 삭제되었습니다.');
+    }
+  );
+}
+
+/* ========================================================
+   CONFIRM DIALOG
+   ======================================================== */
+let confirmCallback = null;
+
+function showConfirm(title, desc, onOk) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmDesc').textContent = desc;
+  confirmCallback = onOk;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+
+function hideConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  confirmCallback = null;
+}
+
+/* ========================================================
+   TOAST
+   ======================================================== */
+let toastTimer;
+function showToast(msg, warn = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast' + (warn ? ' warn' : '');
+  requestAnimationFrame(() => { el.classList.add('show'); });
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.classList.remove('show'); }, 2800);
+}
+
+/* ========================================================
+   EVENT LISTENERS
+   ======================================================== */
+// Search
+document.getElementById('searchInput').addEventListener('input', e => {
+  state.search = e.target.value;
+  render();
+});
+
+// Status chips
+document.getElementById('statusChips').addEventListener('click', e => {
+  const btn = e.target.closest('.chip');
+  if (!btn) return;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  state.statusFilter = btn.dataset.status;
+  render();
+});
+
+// Owner filter
+document.getElementById('ownerBtns').addEventListener('click', e => {
+  const btn = e.target.closest('.owner-btn');
+  if (!btn) return;
+  document.querySelectorAll('.owner-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.ownerFilter = btn.dataset.owner;
+  render();
+});
+
+// Sort
+document.getElementById('sortSelect').addEventListener('change', e => {
+  state.sort = e.target.value;
+  render();
+});
+
+// FAB
+document.getElementById('fabBtn').addEventListener('click', () => openPanel(null));
+
+// Panel buttons
+document.getElementById('closeBtn').addEventListener('click', closePanel);
+document.getElementById('cancelBtn').addEventListener('click', closePanel);
+document.getElementById('saveBtn').addEventListener('click', savePanel);
+document.getElementById('deleteBtn').addEventListener('click', () => deleteClient(state.editingId));
+
+// Close on overlay click
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closePanel();
+});
+
+// Status pills
+document.getElementById('statusPills').addEventListener('click', e => {
+  const btn = e.target.closest('.status-pill');
+  if (!btn) return;
+  state.selectedStatus = btn.dataset.status;
+  renderStatusPills();
+});
+
+// Confirm dialog
+document.getElementById('confirmOk').addEventListener('click', () => {
+  if (confirmCallback) confirmCallback();
+  hideConfirm();
+});
+document.getElementById('confirmCancel').addEventListener('click', hideConfirm);
+document.getElementById('confirmOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('confirmOverlay')) hideConfirm();
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('confirmOverlay').classList.contains('open')) {
+      hideConfirm();
+    } else if (document.getElementById('overlay').classList.contains('open')) {
+      closePanel();
+    }
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    if (document.getElementById('overlay').classList.contains('open')) savePanel();
+  }
+});
+
+// Live update panel title
+document.getElementById('f-companyName').addEventListener('input', e => {
+  if (state.isNew) {
+    document.getElementById('panelCompany').textContent = e.target.value || '신규 거래처 등록';
+  }
+});
+
+/* ========================================================
+   INIT
+   ======================================================== */
+render();
+</script>
+</body>
+</html>
