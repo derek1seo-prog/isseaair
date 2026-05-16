@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --primary: #3B82F6;
       --primary-dark: #2563EB;
@@ -18,351 +17,270 @@
       --surface: #FFFFFF;
       --border: #E2E8F0;
       --text: #1E293B;
-      --text-secondary: #64748B;
-      --text-muted: #94A3B8;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
-      --shadow-lg: 0 10px 40px rgba(0,0,0,.14), 0 4px 12px rgba(0,0,0,.08);
-      --radius: 12px;
-      --radius-sm: 8px;
-      --radius-pill: 999px;
+      --text-2: #64748B;
+      --text-3: #94A3B8;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.09), 0 2px 6px rgba(0,0,0,.05);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,.13), 0 4px 12px rgba(0,0,0,.07);
+      --r: 12px; --r-sm: 8px; --r-pill: 999px;
     }
-
     html { font-family: 'Noto Sans KR', sans-serif; font-size: 14px; }
     body { background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* ─── HEADER ─────────────────────────────────────── */
+    /* ── HEADER ─────────────────────────────────── */
     .header {
       position: sticky; top: 0; z-index: 100;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      padding: 0 24px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm); padding: 0 24px;
     }
-    .header-top { display: flex; align-items: center; gap: 16px; height: 64px; }
-    .logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .header-top { display: flex; align-items: center; gap: 12px; height: 60px; }
+    .logo { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
     .logo-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+      background: linear-gradient(135deg, #3B82F6, #2563EB);
       display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 18px; font-weight: 700; flex-shrink: 0;
+      color: #fff; font-size: 16px; font-weight: 700;
     }
-    .logo-text { font-size: 17px; font-weight: 700; color: var(--text); white-space: nowrap; }
+    .logo-text { font-size: 16px; font-weight: 700; white-space: nowrap; }
 
-    .search-wrap { flex: 1; max-width: 480px; position: relative; }
-    .search-icon {
-      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-      color: var(--text-muted); pointer-events: none;
+    .search-wrap { flex: 1; max-width: 420px; position: relative; }
+    .search-ico {
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      color: var(--text-3); pointer-events: none;
     }
     .search-input {
-      width: 100%; height: 40px; padding: 0 14px 0 38px;
-      border: 1.5px solid var(--border); border-radius: var(--radius-pill);
+      width: 100%; height: 38px; padding: 0 12px 0 34px;
+      border: 1.5px solid var(--border); border-radius: var(--r-pill);
       font-family: inherit; font-size: 13px; color: var(--text);
       background: var(--bg); outline: none;
       transition: border-color .2s, box-shadow .2s;
     }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.15); background: #fff; }
+    .search-input::placeholder { color: var(--text-3); }
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.14); background:#fff; }
 
-    .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .hdr-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
-    /* sync status */
-    .sync-status {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 11px; color: var(--text-muted);
-      padding: 5px 12px; border-radius: var(--radius-pill);
-      background: var(--bg); border: 1.5px solid var(--border);
+    /* view toggle */
+    .view-toggle { display: flex; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r-sm); padding: 2px; gap: 2px; }
+    .view-btn {
+      padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer;
+      font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-2);
+      background: transparent; display: flex; align-items: center; gap: 5px;
+      transition: all .15s;
     }
-    .sync-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--text-muted);
-      transition: background .3s;
+    .view-btn.active { background: var(--surface); color: var(--primary); box-shadow: var(--shadow-sm); }
+
+    .sync-pill {
+      display: flex; align-items: center; gap: 5px;
+      padding: 4px 11px; border-radius: var(--r-pill);
+      border: 1.5px solid var(--border); background: var(--bg);
+      font-size: 11px; color: var(--text-3); white-space: nowrap;
     }
-    .sync-dot.ok { background: #10B981; }
+    .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); transition: background .3s; }
+    .sync-dot.ok  { background: #10B981; }
     .sync-dot.err { background: #EF4444; }
-    .sync-dot.loading { background: var(--primary); animation: pulse 1s infinite; }
+    .sync-dot.loading { background: var(--primary); animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-
-    .btn-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      border: 1.5px solid var(--border); background: var(--surface); color: var(--text-secondary);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all .18s;
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: var(--r-sm);
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--text-2); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .15s;
     }
-    .btn-icon:hover { background: var(--bg); color: var(--text); }
-    .btn-icon.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+    .icon-btn:hover { background: var(--bg); color: var(--text); }
 
-    .chips-bar {
-      display: flex; align-items: center; gap: 6px;
-      padding: 10px 0; overflow-x: auto; scrollbar-width: none;
+    /* ── FILTER BAR ──────────────────────────────── */
+    .filter-bar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 24px; display: flex; align-items: center; gap: 8px;
+      overflow-x: auto; scrollbar-width: none; height: 48px;
     }
-    .chips-bar::-webkit-scrollbar { display: none; }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-label { font-size: 11px; font-weight: 700; color: var(--text-3); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+    .filter-sep { width: 1px; height: 18px; background: var(--border); flex-shrink: 0; }
     .chip {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 5px 14px; border-radius: var(--radius-pill);
-      border: 1.5px solid var(--border); background: var(--surface); color: var(--text-secondary);
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
+      border-radius: var(--r-pill); border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--text-2);
       font-size: 12px; font-weight: 500; font-family: inherit;
-      cursor: pointer; white-space: nowrap; transition: all .18s;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: all .15s;
     }
     .chip:hover { border-color: var(--primary); color: var(--primary); }
     .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
-    .chip-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .75; }
+    .chip-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-    /* ─── TOOLBAR ─────────────────────────────────────── */
-    .toolbar {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 24px 12px; flex-wrap: wrap;
+    /* ── TOOLBAR ─────────────────────────────────── */
+    .toolbar { display: flex; align-items: center; gap: 10px; padding: 14px 24px 10px; flex-wrap: wrap; }
+    .sub-filter { display: flex; gap: 6px; }
+    .sub-btn {
+      padding: 5px 14px; border-radius: var(--r-pill);
+      border: 1.5px solid var(--border); background: var(--surface); color: var(--text-2);
+      font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all .15s;
     }
-    .owner-btns { display: flex; gap: 6px; }
-    .owner-btn {
-      padding: 6px 16px; border-radius: var(--radius-pill);
-      border: 1.5px solid var(--border); background: var(--surface); color: var(--text-secondary);
-      font-size: 12px; font-weight: 600; font-family: inherit;
-      cursor: pointer; transition: all .18s;
+    .sub-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .sub-btn.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+    .count-badge { background: var(--primary-light); color: var(--primary); padding: 3px 11px; border-radius: var(--r-pill); font-size: 12px; font-weight: 700; }
+    .sort-wrap { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+    .sort-label { font-size: 12px; color: var(--text-3); }
+    .sort-sel {
+      border: 1.5px solid var(--border); border-radius: var(--r-sm);
+      padding: 5px 9px; font-size: 12px; font-family: inherit;
+      color: var(--text); background: var(--surface); cursor: pointer; outline: none;
     }
-    .owner-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .owner-btn.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+    .sort-sel:focus { border-color: var(--primary); }
 
-    .count-badge {
-      background: var(--primary-light); color: var(--primary);
-      padding: 4px 12px; border-radius: var(--radius-pill);
-      font-size: 12px; font-weight: 700;
-    }
-    .sort-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-    .sort-label { font-size: 12px; color: var(--text-muted); }
-    .sort-select {
-      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-      padding: 6px 10px; font-size: 12px; font-family: inherit;
-      color: var(--text); background: var(--surface); cursor: pointer;
-      outline: none; transition: border-color .18s;
-    }
-    .sort-select:focus { border-color: var(--primary); }
+    /* ── MAIN ────────────────────────────────────── */
+    .main { padding: 0 24px 48px; }
 
-    /* ─── MAIN GRID ───────────────────────────────────── */
-    .main { padding: 0 24px 40px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
-    }
-
-    /* ─── CARD ────────────────────────────────────────── */
+    /* ── BOARD VIEW ──────────────────────────────── */
+    .board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
     .card {
-      background: var(--surface); border-radius: var(--radius);
+      background: var(--surface); border-radius: var(--r);
       border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
-      padding: 18px 20px; cursor: pointer; position: relative; overflow: hidden;
+      overflow: hidden; cursor: pointer; position: relative;
       transition: box-shadow .2s, transform .2s, border-color .2s;
-    }
-    .card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: var(--accent, var(--primary)); opacity: .7;
+      display: flex;
     }
     .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: #CBD5E1; }
+    .card-accent { width: 4px; flex-shrink: 0; }
+    .card-body { flex: 1; padding: 16px 18px; min-width: 0; }
 
-    .card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
-    .card-title { flex: 1; }
-    .company-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
-    .contact-person { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-    .badges { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 1px; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 10px; border-radius: var(--radius-pill);
-      font-size: 11px; font-weight: 600; line-height: 1; white-space: nowrap;
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .card-name { font-size: 15px; font-weight: 700; line-height: 1.3; }
+    .card-item { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .status-badge {
+      display: inline-flex; align-items: center; padding: 3px 9px;
+      border-radius: var(--r-pill); font-size: 11px; font-weight: 700;
+      white-space: nowrap; flex-shrink: 0;
     }
-    .badge-owner-senior { background: #F1F5F9; color: #475569; }
-    .badge-owner-me { background: #DBEAFE; color: #1D4ED8; }
 
-    .card-meta {
-      display: flex; align-items: center; gap: 12px;
-      font-size: 11px; color: var(--text-muted); margin-bottom: 10px;
+    .card-info { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-bottom: 10px; }
+    .card-info-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-2); }
+
+    .card-memo {
+      font-size: 12px; color: var(--text-2); line-height: 1.6;
+      background: var(--bg); border-radius: var(--r-sm); padding: 8px 10px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      min-height: 34px;
     }
-    .card-meta-item { display: flex; align-items: center; gap: 4px; }
+    .card-memo.empty { color: var(--text-3); font-style: italic; }
 
-    .memo-preview {
-      font-size: 12px; color: var(--text-secondary); line-height: 1.6;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-      overflow: hidden; background: var(--bg); border-radius: var(--radius-sm);
-      padding: 8px 10px; min-height: 36px;
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .card-date { font-size: 11px; color: var(--text-3); display: flex; align-items: center; gap: 4px; }
+    .card-person { font-size: 11px; font-weight: 600; color: var(--text-2); }
+
+    /* ── LIST VIEW ───────────────────────────────── */
+    .list-wrap { overflow-x: auto; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--surface); box-shadow: var(--shadow-sm); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      padding: 11px 14px; text-align: left; font-size: 11px; font-weight: 700;
+      color: var(--text-2); letter-spacing: .05em; text-transform: uppercase;
+      background: var(--bg); border-bottom: 1.5px solid var(--border);
+      white-space: nowrap; position: sticky; top: 0;
     }
-    .memo-preview.empty { color: var(--text-muted); font-style: italic; }
+    tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background .12s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #F8FAFC; }
+    tbody td { padding: 11px 14px; vertical-align: middle; }
+    .td-name { font-weight: 700; white-space: nowrap; }
+    .td-item { font-size: 12px; color: var(--text-2); }
+    .td-memo { max-width: 260px; font-size: 12px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .td-date { white-space: nowrap; font-size: 12px; color: var(--text-2); }
+    .td-person { white-space: nowrap; font-weight: 600; }
+    .td-price { white-space: nowrap; font-size: 12px; color: var(--text-2); }
 
-    /* ─── EMPTY / LOADING ─────────────────────────────── */
-    .empty-state { grid-column: 1/-1; text-align: center; padding: 80px 24px; }
-    .empty-icon { font-size: 52px; margin-bottom: 16px; opacity: .4; }
-    .empty-title { font-size: 16px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
-    .empty-desc { font-size: 13px; color: var(--text-muted); }
-
-    .loading-grid { grid-column: 1/-1; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-    .skeleton {
-      background: var(--surface); border-radius: var(--radius);
-      border: 1.5px solid var(--border); padding: 18px 20px; height: 160px;
-      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    /* ── EMPTY / ERROR ───────────────────────────── */
+    .state-box { grid-column: 1/-1; text-align: center; padding: 72px 24px; }
+    .state-icon { font-size: 48px; margin-bottom: 14px; opacity: .45; }
+    .state-title { font-size: 15px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; }
+    .state-desc { font-size: 13px; color: var(--text-3); line-height: 1.7; }
+    .state-steps {
+      display: inline-block; text-align: left; margin-top: 16px;
+      background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r);
+      padding: 14px 18px; font-size: 12px; color: var(--text-2); line-height: 2;
     }
-    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .state-steps code { background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-family: monospace; }
 
-    /* ─── DETAIL PANEL ────────────────────────────────── */
+    /* skeleton */
+    .skel { background: linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius: var(--r); height: 170px; }
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* ── DETAIL OVERLAY ──────────────────────────── */
     .overlay {
-      position: fixed; inset: 0; z-index: 300;
-      background: rgba(15,23,42,.45); backdrop-filter: blur(3px);
+      position: fixed; inset: 0; z-index: 300; padding: 20px;
+      background: rgba(15,23,42,.42); backdrop-filter: blur(3px);
       display: flex; align-items: center; justify-content: center;
-      padding: 20px; opacity: 0; pointer-events: none; transition: opacity .25s;
+      opacity: 0; pointer-events: none; transition: opacity .22s;
     }
     .overlay.open { opacity: 1; pointer-events: all; }
-    .panel {
+    .modal {
       background: var(--surface); border-radius: 18px; box-shadow: var(--shadow-lg);
-      width: 100%; max-width: 560px; max-height: 90vh;
+      width: 100%; max-width: 580px; max-height: 88vh;
       display: flex; flex-direction: column;
-      transform: translateY(24px) scale(.97);
-      transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+      transform: translateY(20px) scale(.97);
+      transition: transform .24s cubic-bezier(.34,1.56,.64,1);
       overflow: hidden;
     }
-    .overlay.open .panel { transform: none; }
+    .overlay.open .modal { transform: none; }
 
-    .panel-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 20px 24px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    .modal-header {
+      display: flex; align-items: stretch; gap: 0;
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
-    .panel-accent-bar {
-      width: 4px; height: 36px; border-radius: 4px;
-      background: var(--panel-accent, var(--primary)); flex-shrink: 0;
-    }
-    .panel-title-area { flex: 1; }
-    .panel-company { font-size: 18px; font-weight: 700; }
-    .panel-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-    .panel-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
-
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
-    .info-item { display: flex; flex-direction: column; gap: 4px; }
-    .info-label { font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; }
-    .info-value { font-size: 13px; color: var(--text); font-weight: 500; }
-
-    .status-badge-large {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 14px; border-radius: var(--radius-pill);
-      font-size: 13px; font-weight: 700;
-    }
-
-    .memo-box {
-      background: var(--bg); border-radius: var(--radius-sm);
-      padding: 14px 16px; font-size: 13px; color: var(--text-secondary);
-      line-height: 1.75; white-space: pre-wrap; word-break: break-word;
-      border: 1.5px solid var(--border);
-    }
-    .memo-box.empty { color: var(--text-muted); font-style: italic; }
-
-    .panel-footer {
-      display: flex; justify-content: flex-end; padding: 14px 24px;
-      border-top: 1px solid var(--border); flex-shrink: 0;
-    }
-    .btn {
-      padding: 9px 22px; border-radius: var(--radius-sm);
-      border: 1.5px solid transparent;
-      font-size: 13px; font-weight: 600; font-family: inherit;
-      cursor: pointer; transition: all .18s;
-    }
-    .btn-secondary { background: var(--bg); color: var(--text-secondary); border-color: var(--border); }
-    .btn-secondary:hover { background: #E2E8F0; }
-
-    /* ─── SETTINGS PANEL ──────────────────────────────── */
-    .settings-overlay {
-      position: fixed; inset: 0; z-index: 400;
-      background: rgba(15,23,42,.5); backdrop-filter: blur(3px);
+    .modal-accent { width: 5px; flex-shrink: 0; }
+    .modal-header-content { flex: 1; padding: 18px 20px; }
+    .modal-name { font-size: 19px; font-weight: 700; line-height: 1.3; }
+    .modal-item { font-size: 12px; color: var(--text-2); margin-top: 3px; }
+    .modal-close {
+      align-self: flex-start; margin: 14px 16px; width: 32px; height: 32px;
+      border-radius: 9px; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--text-2);
       display: flex; align-items: center; justify-content: center;
-      padding: 20px; opacity: 0; pointer-events: none; transition: opacity .25s;
+      cursor: pointer; transition: all .15s;
     }
-    .settings-overlay.open { opacity: 1; pointer-events: all; }
-    .settings-panel {
-      background: var(--surface); border-radius: 18px; box-shadow: var(--shadow-lg);
-      width: 100%; max-width: 520px; max-height: 85vh;
-      display: flex; flex-direction: column;
-      transform: translateY(24px) scale(.97);
-      transition: transform .25s cubic-bezier(.34,1.56,.64,1);
-      overflow: hidden;
-    }
-    .settings-overlay.open .settings-panel { transform: none; }
-    .settings-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 20px 24px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
-    }
-    .settings-title { flex: 1; font-size: 16px; font-weight: 700; }
-    .settings-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+    .modal-close:hover { background: var(--bg); color: var(--text); }
 
-    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-    .field label { font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: .06em; text-transform: uppercase; }
-    .field input, .field select {
-      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-      padding: 9px 12px; font-size: 13px; font-family: inherit;
-      color: var(--text); background: var(--surface); outline: none;
-      transition: border-color .18s, box-shadow .18s;
+    .modal-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+    .detail-item { display: flex; flex-direction: column; gap: 4px; }
+    .detail-label { font-size: 10px; font-weight: 700; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; }
+    .detail-value { font-size: 13px; color: var(--text); font-weight: 500; }
+    .detail-value a { color: var(--primary); text-decoration: none; }
+    .detail-value a:hover { text-decoration: underline; }
+    .memo-section { margin-top: 4px; }
+    .memo-label { font-size: 10px; font-weight: 700; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+    .memo-content {
+      background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r-sm);
+      padding: 14px 16px; font-size: 13px; color: var(--text-2);
+      line-height: 1.8; white-space: pre-wrap; word-break: break-word; min-height: 60px;
     }
-    .field input:focus, .field select:focus {
-      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.12);
-    }
-    .field-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+    .memo-content.empty { color: var(--text-3); font-style: italic; }
 
-    .section-title {
-      font-size: 12px; font-weight: 700; color: var(--text-secondary);
-      letter-spacing: .08em; text-transform: uppercase;
-      margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
-    }
-    .section-title:first-child { margin-top: 0; }
-
-    .col-map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .settings-footer {
-      display: flex; gap: 10px; justify-content: flex-end;
-      padding: 16px 24px; border-top: 1px solid var(--border); flex-shrink: 0;
-    }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-dark); }
-
-    /* ─── INFO CALLOUT ────────────────────────────────── */
-    .callout {
-      background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: var(--radius-sm);
-      padding: 12px 14px; font-size: 12px; color: #1E40AF; line-height: 1.6;
-      margin-bottom: 16px;
-    }
-    .callout code {
-      background: #DBEAFE; padding: 1px 5px; border-radius: 4px;
-      font-family: monospace; font-size: 11px;
-    }
-
-    /* ─── TOAST ───────────────────────────────────────── */
-    .toast-wrap {
-      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
-      z-index: 900; pointer-events: none;
-    }
+    /* ── TOAST ───────────────────────────────────── */
+    .toast-wrap { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 900; pointer-events: none; }
     .toast {
-      background: #1E293B; color: #fff;
-      padding: 10px 20px; border-radius: var(--radius-pill);
-      font-size: 13px; font-weight: 500; box-shadow: var(--shadow-md);
-      opacity: 0; transform: translateY(10px);
-      transition: opacity .25s, transform .25s; white-space: nowrap;
+      background: #1E293B; color: #fff; padding: 9px 18px;
+      border-radius: var(--r-pill); font-size: 13px; font-weight: 500;
+      box-shadow: var(--shadow-md); opacity: 0; transform: translateY(8px);
+      transition: opacity .22s, transform .22s; white-space: nowrap;
     }
     .toast.show { opacity: 1; transform: none; }
     .toast.warn { background: #DC2626; }
-    .toast.ok { background: #059669; }
+    .toast.ok   { background: #059669; }
 
-    /* ─── RESPONSIVE ──────────────────────────────────── */
-    @media (max-width: 640px) {
-      .header { padding: 0 16px; }
-      .header-top { gap: 10px; }
-      .logo-text { display: none; }
-      .sync-status span { display: none; }
-      .main { padding: 0 16px 40px; }
-      .toolbar { padding: 12px 16px 8px; }
-      .grid { grid-template-columns: 1fr; }
-      .info-grid { grid-template-columns: 1fr; }
-      .col-map-grid { grid-template-columns: 1fr; }
-      .panel { max-width: 100%; border-radius: 18px 18px 0 0; align-self: flex-end; }
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media(max-width:640px){
+      .header { padding: 0 14px; }
+      .logo-text, .sync-pill span { display: none; }
+      .filter-bar { padding: 0 14px; }
+      .toolbar { padding: 12px 14px 8px; }
+      .main { padding: 0 14px 48px; }
+      .board-grid { grid-template-columns: 1fr; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .modal { max-width: 100%; border-radius: 18px 18px 0 0; align-self: flex-end; }
       .overlay { align-items: flex-end; padding: 0; }
-      .settings-panel { max-width: 100%; border-radius: 18px 18px 0 0; align-self: flex-end; }
-      .settings-overlay { align-items: flex-end; padding: 0; }
     }
-
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
@@ -370,7 +288,7 @@
 </head>
 <body>
 
-<!-- ─── HEADER ─────────────────────────────────────────── -->
+<!-- ── HEADER ──────────────────────────────────────── -->
 <header class="header">
   <div class="header-top">
     <div class="logo">
@@ -378,637 +296,495 @@
       <span class="logo-text">영업 파이프라인</span>
     </div>
     <div class="search-wrap">
-      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-      <input id="searchInput" class="search-input" type="text" placeholder="회사명, 담당자, 메모 검색..." autocomplete="off" />
+      <svg class="search-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="searchInput" class="search-input" type="text" placeholder="업체명, 담당자, 메모 검색..." autocomplete="off" />
     </div>
-    <div class="header-right">
-      <div class="sync-status" id="syncStatus">
+    <div class="hdr-right">
+      <div class="view-toggle">
+        <button class="view-btn active" id="btnBoard">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          보드
+        </button>
+        <button class="view-btn" id="btnList">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+          목록
+        </button>
+      </div>
+      <div class="sync-pill">
         <div class="sync-dot" id="syncDot"></div>
         <span id="syncText">미연결</span>
       </div>
-      <button class="btn-icon" id="refreshBtn" title="지금 새로고침">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-          <path d="M21 3v5h-5"/>
-          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-          <path d="M8 16H3v5"/>
-        </svg>
-      </button>
-      <button class="btn-icon" id="settingsBtn" title="연동 설정">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
-          <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
-        </svg>
+      <button class="icon-btn" id="refreshBtn" title="새로고침">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
       </button>
     </div>
   </div>
-  <div class="chips-bar" id="statusChips">
-    <button class="chip active" data-status="전체">전체</button>
-    <button class="chip" data-status="컨택중"><span class="chip-dot" style="color:#F97316"></span>컨택중</button>
-    <button class="chip" data-status="제안중"><span class="chip-dot" style="color:#8B5CF6"></span>제안중</button>
-    <button class="chip" data-status="미팅완료"><span class="chip-dot" style="color:#3B82F6"></span>미팅완료</button>
-    <button class="chip" data-status="성사"><span class="chip-dot" style="color:#10B981"></span>성사</button>
-    <button class="chip" data-status="보류"><span class="chip-dot" style="color:#6B7280"></span>보류</button>
-  </div>
 </header>
 
-<!-- ─── TOOLBAR ────────────────────────────────────────── -->
+<!-- ── FILTER BAR (상태) ────────────────────────────── -->
+<div class="filter-bar" id="filterBar">
+  <span class="filter-label">상태</span>
+  <button class="chip active" data-filter="status" data-val="전체">전체</button>
+</div>
+
+<!-- ── TOOLBAR ─────────────────────────────────────── -->
 <div class="toolbar">
-  <div class="owner-btns" id="ownerBtns">
-    <button class="owner-btn active" data-owner="전체">전체</button>
-    <button class="owner-btn" data-owner="선배">선배 담당</button>
-    <button class="owner-btn" data-owner="나">내 담당</button>
+  <div class="sub-filter" id="itemFilter">
+    <span class="filter-label" style="line-height:2">아이템</span>
+    <button class="sub-btn active" data-filter="item" data-val="전체">전체</button>
   </div>
   <span class="count-badge" id="countBadge">0건</span>
   <div class="sort-wrap">
     <span class="sort-label">정렬:</span>
-    <select id="sortSelect" class="sort-select">
-      <option value="lastContact">최근 연락일</option>
-      <option value="companyName">회사명</option>
+    <select id="sortSel" class="sort-sel">
+      <option value="date">최근연락일</option>
+      <option value="name">업체명</option>
     </select>
   </div>
 </div>
 
-<!-- ─── MAIN GRID ───────────────────────────────────────── -->
-<main class="main">
-  <div class="grid" id="grid">
-    <div class="empty-state">
-      <div class="empty-icon">📊</div>
-      <div class="empty-title">Google Sheets 연동이 필요합니다</div>
-      <div class="empty-desc">우측 상단 ⚙️ 설정 버튼을 눌러 스프레드시트를 연결하세요</div>
+<!-- ── MAIN ────────────────────────────────────────── -->
+<main class="main" id="main">
+  <div class="board-grid" id="boardGrid">
+    <div class="state-box">
+      <div class="state-icon">📊</div>
+      <div class="state-title">스프레드시트 연결 중...</div>
+      <div class="state-desc">잠시 기다려 주세요.</div>
     </div>
+  </div>
+  <div class="list-wrap" id="listWrap" style="display:none">
+    <table><thead><tr>
+      <th>업체명</th><th>아이템</th><th>상태</th><th>담당자</th><th>견적구간</th><th>최근연락일</th><th>연락처</th><th>비고</th>
+    </tr></thead><tbody id="listBody"></tbody></table>
   </div>
 </main>
 
-<!-- ─── DETAIL PANEL ─────────────────────────────────────── -->
+<!-- ── DETAIL MODAL ─────────────────────────────────── -->
 <div class="overlay" id="overlay">
-  <div class="panel" id="panel">
-    <div class="panel-header">
-      <div class="panel-accent-bar" id="panelAccentBar"></div>
-      <div class="panel-title-area">
-        <div class="panel-company" id="panelCompany"></div>
-        <div class="panel-sub" id="panelSub"></div>
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-accent" id="modalAccent"></div>
+      <div class="modal-header-content">
+        <div class="modal-name" id="modalName"></div>
+        <div class="modal-item" id="modalItem"></div>
       </div>
-      <button class="btn-icon" id="closeBtn" title="닫기">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
+      <button class="modal-close" id="modalClose">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="panel-body" id="panelBody"></div>
-    <div class="panel-footer">
-      <button class="btn btn-secondary" id="closeBtn2">닫기</button>
-    </div>
+    <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
-<!-- ─── SETTINGS PANEL ───────────────────────────────────── -->
-<div class="settings-overlay" id="settingsOverlay">
-  <div class="settings-panel">
-    <div class="settings-header">
-      <div class="settings-title">Google Sheets 연동 설정</div>
-      <button class="btn-icon" id="settingsCloseBtn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-    <div class="settings-body">
-      <div class="callout">
-        💡 Apps Script Web App URL 방식을 추천합니다. 비공개 시트도 연동 가능하고 설정이 간단합니다.<br>
-        아래 <strong>Apps Script URL</strong>을 입력하면 바로 사용할 수 있습니다.
-      </div>
-
-      <div class="section-title">연동 방식 선택</div>
-      <div class="field">
-        <label>방식</label>
-        <select id="settingMethod">
-          <option value="apps-script">Apps Script Web App (권장 — 비공개 시트 가능)</option>
-          <option value="api-key">Sheets API + API Key (공개 시트만)</option>
-        </select>
-      </div>
-
-      <!-- Apps Script 방식 -->
-      <div id="appsScriptFields">
-        <div class="section-title">Apps Script 설정</div>
-        <div class="field">
-          <label>Apps Script Web App URL *</label>
-          <input id="settingScriptUrl" type="url" placeholder="https://script.google.com/macros/s/XXXXXX/exec" />
-          <div class="field-desc">Apps Script 배포 후 받은 URL을 붙여넣으세요.</div>
-        </div>
-      </div>
-
-      <!-- API Key 방식 -->
-      <div id="apiKeyFields" style="display:none">
-        <div class="section-title">API Key 설정</div>
-        <div class="field">
-          <label>Spreadsheet ID *</label>
-          <input id="settingSheetId" type="text" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" />
-          <div class="field-desc">스프레드시트 URL에서 <code>/d/</code> 뒤의 긴 문자열</div>
-        </div>
-        <div class="field">
-          <label>Google API Key *</label>
-          <input id="settingApiKey" type="text" placeholder="AIzaSy..." />
-          <div class="field-desc">Google Cloud Console에서 발급한 API Key</div>
-        </div>
-        <div class="field">
-          <label>시트 이름</label>
-          <input id="settingSheetName" type="text" placeholder="Sheet1" value="Sheet1" />
-        </div>
-      </div>
-
-      <div class="section-title">열(Column) 매핑</div>
-      <div class="callout">
-        스프레드시트 1행은 헤더(항목명)로 사용됩니다. 각 항목에 해당하는 열의 헤더명을 정확히 입력하세요.
-      </div>
-      <div class="col-map-grid">
-        <div class="field">
-          <label>회사명 *</label>
-          <input id="colCompany" type="text" placeholder="회사명" value="회사명" />
-        </div>
-        <div class="field">
-          <label>담당자명</label>
-          <input id="colContact" type="text" placeholder="담당자명" value="담당자명" />
-        </div>
-        <div class="field">
-          <label>전화번호</label>
-          <input id="colPhone" type="text" placeholder="전화번호" value="전화번호" />
-        </div>
-        <div class="field">
-          <label>담당구분 (선배/나)</label>
-          <input id="colOwnerType" type="text" placeholder="담당구분" value="담당구분" />
-        </div>
-        <div class="field">
-          <label>담당자 실명</label>
-          <input id="colOwnerName" type="text" placeholder="담당자실명" value="담당자실명" />
-        </div>
-        <div class="field">
-          <label>영업상태</label>
-          <input id="colStatus" type="text" placeholder="영업상태" value="영업상태" />
-        </div>
-        <div class="field">
-          <label>최근연락일</label>
-          <input id="colDate" type="text" placeholder="최근연락일" value="최근연락일" />
-        </div>
-        <div class="field">
-          <label>메모</label>
-          <input id="colMemo" type="text" placeholder="메모" value="메모" />
-        </div>
-      </div>
-
-      <div class="section-title">자동 새로고침</div>
-      <div class="field">
-        <label>갱신 주기</label>
-        <select id="settingInterval">
-          <option value="30">30초</option>
-          <option value="60" selected>1분</option>
-          <option value="120">2분</option>
-          <option value="300">5분</option>
-          <option value="0">사용 안 함</option>
-        </select>
-        <div class="field-desc">선택한 주기마다 스프레드시트를 자동으로 다시 불러옵니다.</div>
-      </div>
-    </div>
-    <div class="settings-footer">
-      <button class="btn btn-secondary" id="settingsCancelBtn">취소</button>
-      <button class="btn btn-primary" id="settingsSaveBtn">저장 및 연결</button>
-    </div>
-  </div>
-</div>
-
-<!-- ─── TOAST ───────────────────────────────────────────── -->
-<div class="toast-wrap">
-  <div class="toast" id="toast"></div>
-</div>
+<!-- ── TOAST ────────────────────────────────────────── -->
+<div class="toast-wrap"><div class="toast" id="toast"></div></div>
 
 <script>
-/* ========================================================
-   CONSTANTS & STATE
-   ======================================================== */
-const LS_KEY = 'salesPipeline_v2';
+/* ══════════════════════════════════════════════════════
+   CONFIG — 시트 ID 고정
+   ══════════════════════════════════════════════════════ */
+const SHEET_ID  = '1meltbEPk5Lhzs6Gj4zwrOqP3bVC6Wgn1sC93SLsZWOc';
+const GID       = '0';
+const INTERVAL  = 60; // 자동 새로고침 (초)
 
-const STATUS_META = {
-  '컨택중':  { color: '#F97316', bg: '#FFF7ED', accent: '#F97316' },
-  '제안중':  { color: '#8B5CF6', bg: '#F5F3FF', accent: '#8B5CF6' },
-  '미팅완료':{ color: '#3B82F6', bg: '#EFF6FF', accent: '#3B82F6' },
-  '성사':    { color: '#10B981', bg: '#ECFDF5', accent: '#10B981' },
-  '보류':    { color: '#6B7280', bg: '#F9FAFB', accent: '#9CA3AF' },
+/* 컬럼 헤더 → 내부 키 매핑 */
+const COL = {
+  name:    '업체명',
+  phone:   '연락처',
+  address: '주소',
+  memo:    '비고',
+  person:  '담당자',
+  email:   '이메일',
+  price:   '견적구간',
+  status:  '상태',
+  item:    '아이템',
+  date:    '최근연락일',
 };
 
-const DEFAULT_CONFIG = {
-  method: 'apps-script',
-  scriptUrl: '',
-  sheetId: '',
-  apiKey: '',
-  sheetName: 'Sheet1',
-  interval: 60,
-  cols: {
-    company: '회사명',
-    contact: '담당자명',
-    phone: '전화번호',
-    ownerType: '담당구분',
-    ownerName: '담당자실명',
-    status: '영업상태',
-    date: '최근연락일',
-    memo: '메모',
+/* 상태 → 색상 (동적으로도 대응) */
+const STATUS_PALETTE = [
+  { keys: ['영업불가','영업 불가','불가'],       color:'#EF4444', bg:'#FEF2F2' },
+  { keys: ['진행중','진행','컨택중','컨택'],       color:'#F97316', bg:'#FFF7ED' },
+  { keys: ['제안중','제안','미팅'],               color:'#8B5CF6', bg:'#F5F3FF' },
+  { keys: ['성사','계약','완료'],                 color:'#10B981', bg:'#ECFDF5' },
+  { keys: ['보류','대기','홀드'],                 color:'#6B7280', bg:'#F9FAFB' },
+  { keys: ['신규','첫컨택'],                      color:'#3B82F6', bg:'#EFF6FF' },
+];
+const FALLBACK_COLORS = ['#8B5CF6','#F59E0B','#06B6D4','#84CC16','#EC4899'];
+const _colorCache = {};
+function statusMeta(s) {
+  if (!s) return { color:'#9CA3AF', bg:'#F9FAFB' };
+  if (_colorCache[s]) return _colorCache[s];
+  const lower = s.toLowerCase();
+  for (const p of STATUS_PALETTE) {
+    if (p.keys.some(k => lower.includes(k.toLowerCase()))) {
+      return (_colorCache[s] = p);
+    }
   }
-};
+  const i = Math.abs([...s].reduce((a,c)=>a+c.charCodeAt(0),0)) % FALLBACK_COLORS.length;
+  return (_colorCache[s] = { color: FALLBACK_COLORS[i], bg: '#F8F9FA' });
+}
 
-let config = loadConfig();
-let clients = [];
+/* ══════════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════════ */
+let clients   = [];
+let statusVals = [];
+let itemVals   = [];
 let state = {
-  search: '',
-  statusFilter: '전체',
-  ownerFilter: '전체',
-  sort: 'lastContact',
-  viewingId: null,
+  view:        'board',   // 'board' | 'list'
+  search:      '',
+  statusFilter:'전체',
+  itemFilter:  '전체',
+  sort:        'date',
 };
 let refreshTimer = null;
 
-/* ========================================================
-   CONFIG PERSISTENCE
-   ======================================================== */
-function loadConfig() {
+/* ══════════════════════════════════════════════════════
+   FETCH — gviz/tq JSON (시트 "웹에 게시" 필요)
+   ══════════════════════════════════════════════════════ */
+async function fetchData() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}&cachebust=${Date.now()}`;
+  const res  = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const text = await res.text();
+  /* gviz 응답은 /*O_o*/ ... 로 감싸져 있음 */
+  const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+  const data    = JSON.parse(jsonStr);
+  return parseGviz(data);
+}
+
+function parseGviz(data) {
+  const cols = (data.table?.cols || []).map(c => c.label || '');
+  const rows = data.table?.rows || [];
+  return rows
+    .map(row => {
+      const obj = {};
+      cols.forEach((h, i) => {
+        const cell = row.c?.[i];
+        if (!cell || cell.v === null || cell.v === undefined) { obj[h] = ''; return; }
+        /* 날짜 타입 처리 */
+        if (cell.f) { obj[h] = cell.f; }
+        else if (typeof cell.v === 'string' && cell.v.startsWith('Date(')) {
+          const m = cell.v.match(/Date\((\d+),(\d+),(\d+)/);
+          if (m) obj[h] = `${m[1]}-${String(+m[2]+1).padStart(2,'0')}-${String(+m[3]).padStart(2,'0')}`;
+          else obj[h] = String(cell.v);
+        } else {
+          obj[h] = String(cell.v);
+        }
+      });
+      return obj;
+    })
+    .filter(r => r[COL.name] && r[COL.name].trim() !== '');
+}
+
+async function sync() {
+  setSyncState('loading', '불러오는 중...');
   try {
-    const raw = localStorage.getItem(LS_KEY + '_config');
-    if (raw) return { ...DEFAULT_CONFIG, ...JSON.parse(raw), cols: { ...DEFAULT_CONFIG.cols, ...JSON.parse(raw).cols } };
-  } catch(e) {}
-  return { ...DEFAULT_CONFIG };
-}
+    const rows = await fetchData();
+    clients = rows;
 
-function saveConfig(cfg) {
-  localStorage.setItem(LS_KEY + '_config', JSON.stringify(cfg));
-}
+    /* 필터 옵션 동적 수집 */
+    statusVals = [...new Set(rows.map(r => r[COL.status]).filter(Boolean))];
+    itemVals   = [...new Set(rows.map(r => r[COL.item]).filter(Boolean))];
 
-/* ========================================================
-   FETCH FROM GOOGLE SHEETS
-   ======================================================== */
-async function fetchSheets() {
-  if (config.method === 'apps-script') {
-    if (!config.scriptUrl) return null;
-    const res = await fetch(config.scriptUrl);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } else {
-    if (!config.sheetId || !config.apiKey) return null;
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.sheetId}/values/${encodeURIComponent(config.sheetName)}?key=${config.apiKey}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    return sheetsApiToJson(data.values || []);
+    buildFilters();
+    render();
+
+    const now = new Date();
+    setSyncState('ok', `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} 동기화`);
+  } catch(e) {
+    setSyncState('err', '연결 오류');
+    if (clients.length === 0) renderError(e.message);
+    showToast('데이터를 가져오지 못했습니다.', 'warn');
   }
 }
 
-function sheetsApiToJson(rows) {
-  if (rows.length < 2) return [];
-  const headers = rows[0];
-  return rows.slice(1).map(row => {
-    const obj = {};
-    headers.forEach((h, i) => { obj[h] = row[i] || ''; });
-    return obj;
+function startTimer() {
+  clearInterval(refreshTimer);
+  if (INTERVAL > 0) refreshTimer = setInterval(sync, INTERVAL * 1000);
+}
+
+function setSyncState(st, txt) {
+  document.getElementById('syncDot').className = 'sync-dot' + (st ? ' ' + st : '');
+  document.getElementById('syncText').textContent = txt;
+}
+
+/* ══════════════════════════════════════════════════════
+   BUILD DYNAMIC FILTERS
+   ══════════════════════════════════════════════════════ */
+function buildFilters() {
+  /* 상태 chips */
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = `<span class="filter-label">상태</span>`;
+  ['전체', ...statusVals].forEach(v => {
+    const m = statusMeta(v);
+    const active = state.statusFilter === v ? 'active' : '';
+    const dot = v !== '전체' ? `<span class="chip-dot" style="background:${m.color}"></span>` : '';
+    const el = document.createElement('button');
+    el.className = `chip ${active}`;
+    el.dataset.filter = 'status'; el.dataset.val = v;
+    el.innerHTML = dot + v;
+    bar.appendChild(el);
+  });
+
+  /* 아이템 sub-filter */
+  const iWrap = document.getElementById('itemFilter');
+  iWrap.innerHTML = `<span class="filter-label" style="line-height:2">아이템</span>`;
+  ['전체', ...itemVals].forEach(v => {
+    const active = state.itemFilter === v ? 'active' : '';
+    const el = document.createElement('button');
+    el.className = `sub-btn ${active}`;
+    el.dataset.filter = 'item'; el.dataset.val = v;
+    el.textContent = v;
+    iWrap.appendChild(el);
   });
 }
 
-function rowToClient(row, idx) {
-  const c = config.cols;
-  return {
-    id: `row_${idx}`,
-    companyName: row[c.company] || '',
-    contactPerson: row[c.contact] || '',
-    phone: row[c.phone] || '',
-    owner: (row[c.ownerType] || '나').trim(),
-    ownerName: row[c.ownerName] || '',
-    status: row[c.status] || '컨택중',
-    lastContactDate: row[c.date] || '',
-    memo: row[c.memo] || '',
-  };
-}
-
-async function syncData() {
-  setSyncState('loading', '불러오는 중...');
-  try {
-    const rows = await fetchSheets();
-    if (rows === null) { setSyncState('', '미연결'); return; }
-    clients = rows
-      .filter(r => r[config.cols.company] && r[config.cols.company].trim())
-      .map(rowToClient);
-    const now = new Date();
-    const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-    setSyncState('ok', `${timeStr} 동기화`);
-    render();
-  } catch(e) {
-    setSyncState('err', '연결 오류');
-    showToast('데이터를 불러오지 못했습니다: ' + e.message, 'warn');
-  }
-}
-
-function setSyncState(state, text) {
-  const dot = document.getElementById('syncDot');
-  const txt = document.getElementById('syncText');
-  dot.className = 'sync-dot' + (state ? ' ' + state : '');
-  txt.textContent = text;
-}
-
-function startAutoRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  if (config.interval > 0) {
-    refreshTimer = setInterval(syncData, config.interval * 1000);
-  }
-}
-
-/* ========================================================
-   HELPERS
-   ======================================================== */
-function statusMeta(s) { return STATUS_META[s] || { color: '#6B7280', bg: '#F9FAFB', accent: '#9CA3AF' }; }
-
-function formatDate(str) {
-  if (!str) return '—';
-  if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
-    const [y,m,d] = str.split('-');
-    return `${y}.${m}.${d}`;
-  }
-  return str;
-}
-
-function daysAgo(str) {
-  if (!str) return '';
-  const d = new Date(str);
-  if (isNaN(d)) return '';
-  const diff = Math.floor((Date.now() - d) / 86400000);
-  if (diff === 0) return '오늘';
-  if (diff === 1) return '어제';
-  if (diff < 0) return '예정';
-  return `${diff}일 전`;
-}
-
-function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-/* ========================================================
-   FILTER & SORT
-   ======================================================== */
+/* ══════════════════════════════════════════════════════
+   FILTER + SORT
+   ══════════════════════════════════════════════════════ */
 function getFiltered() {
   let list = [...clients];
   const q = state.search.trim().toLowerCase();
-  if (q) list = list.filter(c =>
-    c.companyName.toLowerCase().includes(q) ||
-    (c.contactPerson||'').toLowerCase().includes(q) ||
-    (c.memo||'').toLowerCase().includes(q) ||
-    (c.ownerName||'').toLowerCase().includes(q)
+  if (q) list = list.filter(r =>
+    (r[COL.name]   ||'').toLowerCase().includes(q) ||
+    (r[COL.person] ||'').toLowerCase().includes(q) ||
+    (r[COL.memo]   ||'').toLowerCase().includes(q) ||
+    (r[COL.item]   ||'').toLowerCase().includes(q)
   );
-  if (state.statusFilter !== '전체') list = list.filter(c => c.status === state.statusFilter);
-  if (state.ownerFilter !== '전체') list = list.filter(c => c.owner === state.ownerFilter);
+  if (state.statusFilter !== '전체') list = list.filter(r => r[COL.status] === state.statusFilter);
+  if (state.itemFilter   !== '전체') list = list.filter(r => r[COL.item]   === state.itemFilter);
   list.sort((a, b) => {
-    if (state.sort === 'lastContact') return (b.lastContactDate||'').localeCompare(a.lastContactDate||'');
-    if (state.sort === 'companyName') return a.companyName.localeCompare(b.companyName, 'ko');
-    return 0;
+    if (state.sort === 'date') return (b[COL.date]||'').localeCompare(a[COL.date]||'');
+    return (a[COL.name]||'').localeCompare(b[COL.name]||'', 'ko');
   });
   return list;
 }
 
-/* ========================================================
+/* ══════════════════════════════════════════════════════
    RENDER
-   ======================================================== */
+   ══════════════════════════════════════════════════════ */
 function render() {
   const list = getFiltered();
-  const grid = document.getElementById('grid');
   document.getElementById('countBadge').textContent = `${list.length}건`;
+  if (state.view === 'board') renderBoard(list);
+  else renderList(list);
+}
 
-  if (clients.length === 0) {
-    const isConnected = (config.method === 'apps-script' && config.scriptUrl) ||
-                        (config.method === 'api-key' && config.sheetId && config.apiKey);
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">${isConnected ? '🔄' : '📊'}</div>
-        <div class="empty-title">${isConnected ? '데이터가 없습니다' : 'Google Sheets 연동이 필요합니다'}</div>
-        <div class="empty-desc">${isConnected ? '스프레드시트에 거래처 정보를 입력하세요' : '우측 상단 ⚙️ 설정 버튼을 눌러 스프레드시트를 연결하세요'}</div>
-      </div>`;
-    return;
-  }
+/* BOARD */
+function renderBoard(list) {
+  document.getElementById('boardGrid').style.display = '';
+  document.getElementById('listWrap').style.display  = 'none';
+  const grid = document.getElementById('boardGrid');
 
-  if (list.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🔍</div>
-        <div class="empty-title">검색 결과가 없습니다</div>
-        <div class="empty-desc">다른 검색어나 필터를 사용해보세요</div>
-      </div>`;
-    return;
-  }
+  if (list.length === 0) { grid.innerHTML = emptyHTML(); return; }
 
-  grid.innerHTML = list.map(c => {
-    const m = statusMeta(c.status);
-    const ownerBadge = c.owner === '선배'
-      ? `<span class="badge badge-owner-senior">👤 ${escHtml(c.ownerName || '선배')}</span>`
-      : `<span class="badge badge-owner-me">🙋 ${escHtml(c.ownerName || '나')}</span>`;
-    const statusBadge = `<span class="badge" style="color:${m.color};background:${m.bg}">${escHtml(c.status)}</span>`;
-    const memoText = c.memo ? c.memo.replace(/\n/g,' ') : '';
-
+  grid.innerHTML = list.map((r, idx) => {
+    const m    = statusMeta(r[COL.status]);
+    const memo = r[COL.memo] || '';
     return `
-    <div class="card" data-id="${c.id}" style="--accent:${m.accent}">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="company-name">${escHtml(c.companyName)}</div>
-          <div class="contact-person">${escHtml(c.contactPerson)}${c.phone ? ' · ' + escHtml(c.phone) : ''}</div>
+    <div class="card" data-idx="${idx}">
+      <div class="card-accent" style="background:${m.color}"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <div class="card-name">${esc(r[COL.name])}</div>
+            <div class="card-item">${esc(r[COL.item])}</div>
+          </div>
+          <span class="status-badge" style="color:${m.color};background:${m.bg}">${esc(r[COL.status]||'—')}</span>
         </div>
-        <div class="badges">${ownerBadge}${statusBadge}</div>
+        <div class="card-info">
+          ${r[COL.phone]   ? `<span class="card-info-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.44 2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.56-.56a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>${esc(r[COL.phone])}</span>` : ''}
+          ${r[COL.address] ? `<span class="card-info-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(r[COL.address])}</span>` : ''}
+          ${r[COL.price]   ? `<span class="card-info-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>${esc(r[COL.price])}</span>` : ''}
+        </div>
+        <div class="card-memo ${memo ? '' : 'empty'}">${esc(memo || '비고 없음')}</div>
+        <div class="card-footer">
+          <span class="card-date">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            ${esc(r[COL.date] || '—')}
+          </span>
+          <span class="card-person">${esc(r[COL.person] || '')}</span>
+        </div>
       </div>
-      <div class="card-meta">
-        <span class="card-meta-item">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-          ${formatDate(c.lastContactDate)}
-        </span>
-        <span style="color:${m.accent};font-weight:600">${daysAgo(c.lastContactDate)}</span>
-      </div>
-      <div class="memo-preview ${c.memo ? '' : 'empty'}">${escHtml(c.memo ? memoText : '메모 없음')}</div>
     </div>`;
   }).join('');
 
   grid.querySelectorAll('.card').forEach(el => {
-    el.addEventListener('click', () => openDetail(el.dataset.id));
+    el.addEventListener('click', () => openModal(list[+el.dataset.idx]));
   });
 }
 
-/* ========================================================
-   DETAIL VIEW
-   ======================================================== */
-function openDetail(id) {
-  const c = clients.find(x => x.id === id);
-  if (!c) return;
-  const m = statusMeta(c.status);
+/* LIST */
+function renderList(list) {
+  document.getElementById('boardGrid').style.display = 'none';
+  document.getElementById('listWrap').style.display  = '';
+  const tbody = document.getElementById('listBody');
 
-  document.getElementById('panelCompany').textContent = c.companyName;
-  document.getElementById('panelSub').textContent = c.contactPerson + (c.phone ? ' · ' + c.phone : '');
-  document.getElementById('panelAccentBar').style.background = m.accent;
+  if (list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:60px;color:var(--text-3)">결과 없음</td></tr>`;
+    return;
+  }
 
-  document.getElementById('panelBody').innerHTML = `
-    <div class="info-grid">
-      <div class="info-item">
-        <div class="info-label">영업 상태</div>
-        <div class="info-value">
-          <span class="status-badge-large" style="color:${m.color};background:${m.bg}">${escHtml(c.status)}</span>
+  tbody.innerHTML = list.map((r, idx) => {
+    const m = statusMeta(r[COL.status]);
+    return `
+    <tr data-idx="${idx}">
+      <td>
+        <div class="td-name" style="display:flex;align-items:center;gap:7px">
+          <span style="width:3px;height:30px;border-radius:3px;background:${m.color};flex-shrink:0;display:inline-block"></span>
+          ${esc(r[COL.name])}
         </div>
+      </td>
+      <td class="td-item">${esc(r[COL.item]||'—')}</td>
+      <td><span class="status-badge" style="color:${m.color};background:${m.bg}">${esc(r[COL.status]||'—')}</span></td>
+      <td class="td-person">${esc(r[COL.person]||'—')}</td>
+      <td class="td-price">${esc(r[COL.price]||'—')}</td>
+      <td class="td-date">${esc(r[COL.date]||'—')}</td>
+      <td class="td-date">${esc(r[COL.phone]||'—')}</td>
+      <td class="td-memo">${esc(r[COL.memo]||'')}</td>
+    </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('tr').forEach(el => {
+    el.addEventListener('click', () => openModal(list[+el.dataset.idx]));
+  });
+}
+
+/* ── EMPTY / ERROR ── */
+function emptyHTML() {
+  return `<div class="state-box">
+    <div class="state-icon">🔍</div>
+    <div class="state-title">검색 결과가 없습니다</div>
+    <div class="state-desc">다른 검색어나 필터를 사용해보세요</div>
+  </div>`;
+}
+
+function renderError(msg) {
+  const g = document.getElementById('boardGrid');
+  const needs403 = msg.includes('403') || msg.includes('404');
+  g.innerHTML = `<div class="state-box">
+    <div class="state-icon">📋</div>
+    <div class="state-title">${needs403 ? '스프레드시트 공개 설정이 필요합니다' : '데이터를 불러올 수 없습니다'}</div>
+    <div class="state-desc">${needs403 ? '아래 순서대로 설정해주세요' : msg}</div>
+    ${needs403 ? `<div class="state-steps">
+      1. 스프레드시트 열기<br>
+      2. 메뉴 → <code>파일</code> → <code>웹에 게시</code><br>
+      3. 시트 선택 후 <code>게시</code> 버튼 클릭<br>
+      4. 이 페이지에서 새로고침 버튼 클릭
+    </div>` : ''}
+  </div>`;
+}
+
+/* ══════════════════════════════════════════════════════
+   DETAIL MODAL
+   ══════════════════════════════════════════════════════ */
+function openModal(r) {
+  const m = statusMeta(r[COL.status]);
+  document.getElementById('modalAccent').style.background = m.color;
+  document.getElementById('modalName').textContent  = r[COL.name] || '';
+  document.getElementById('modalItem').textContent  = r[COL.item] || '';
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="detail-label">상태</div>
+        <div class="detail-value"><span class="status-badge" style="color:${m.color};background:${m.bg}">${esc(r[COL.status]||'—')}</span></div>
       </div>
-      <div class="info-item">
-        <div class="info-label">담당</div>
-        <div class="info-value">${c.owner === '선배'
-          ? `<span class="badge badge-owner-senior">👤 ${escHtml(c.ownerName || '선배')}</span>`
-          : `<span class="badge badge-owner-me">🙋 ${escHtml(c.ownerName || '나')}</span>`
-        }</div>
+      <div class="detail-item">
+        <div class="detail-label">담당자</div>
+        <div class="detail-value">${esc(r[COL.person]||'—')}</div>
       </div>
-      <div class="info-item">
-        <div class="info-label">최근 연락일</div>
-        <div class="info-value">${formatDate(c.lastContactDate)} <span style="color:${m.accent};font-size:11px;font-weight:600">${daysAgo(c.lastContactDate)}</span></div>
+      <div class="detail-item">
+        <div class="detail-label">연락처</div>
+        <div class="detail-value">${r[COL.phone] ? `<a href="tel:${esc(r[COL.phone])}">${esc(r[COL.phone])}</a>` : '—'}</div>
       </div>
-      <div class="info-item">
-        <div class="info-label">전화번호</div>
-        <div class="info-value">${escHtml(c.phone || '—')}</div>
+      <div class="detail-item">
+        <div class="detail-label">이메일</div>
+        <div class="detail-value">${r[COL.email] ? `<a href="mailto:${esc(r[COL.email])}">${esc(r[COL.email])}</a>` : '—'}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">견적구간</div>
+        <div class="detail-value">${esc(r[COL.price]||'—')}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">최근연락일</div>
+        <div class="detail-value">${esc(r[COL.date]||'—')}</div>
+      </div>
+      <div class="detail-item" style="grid-column:1/-1">
+        <div class="detail-label">주소</div>
+        <div class="detail-value">${esc(r[COL.address]||'—')}</div>
       </div>
     </div>
-    <div style="margin-bottom:8px;font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase">메모 / 진행 내용</div>
-    <div class="memo-box ${c.memo ? '' : 'empty'}">${escHtml(c.memo || '메모가 없습니다.')}</div>
-  `;
+    <div class="memo-section">
+      <div class="memo-label">비고 / 영업 메모</div>
+      <div class="memo-content ${r[COL.memo] ? '' : 'empty'}">${esc(r[COL.memo] || '내용 없음')}</div>
+    </div>`;
 
   document.getElementById('overlay').classList.add('open');
 }
 
-function closeDetail() {
+function closeModal() {
   document.getElementById('overlay').classList.remove('open');
 }
 
-/* ========================================================
-   SETTINGS
-   ======================================================== */
-function openSettings() {
-  const s = config;
-  document.getElementById('settingMethod').value = s.method;
-  document.getElementById('settingScriptUrl').value = s.scriptUrl || '';
-  document.getElementById('settingSheetId').value = s.sheetId || '';
-  document.getElementById('settingApiKey').value = s.apiKey || '';
-  document.getElementById('settingSheetName').value = s.sheetName || 'Sheet1';
-  document.getElementById('settingInterval').value = String(s.interval);
-  document.getElementById('colCompany').value = s.cols.company;
-  document.getElementById('colContact').value = s.cols.contact;
-  document.getElementById('colPhone').value = s.cols.phone;
-  document.getElementById('colOwnerType').value = s.cols.ownerType;
-  document.getElementById('colOwnerName').value = s.cols.ownerName;
-  document.getElementById('colStatus').value = s.cols.status;
-  document.getElementById('colDate').value = s.cols.date;
-  document.getElementById('colMemo').value = s.cols.memo;
-  toggleMethodFields(s.method);
-  document.getElementById('settingsOverlay').classList.add('open');
+/* ══════════════════════════════════════════════════════
+   HELPERS
+   ══════════════════════════════════════════════════════ */
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-function closeSettings() {
-  document.getElementById('settingsOverlay').classList.remove('open');
-}
-
-function toggleMethodFields(method) {
-  document.getElementById('appsScriptFields').style.display = method === 'apps-script' ? '' : 'none';
-  document.getElementById('apiKeyFields').style.display = method === 'api-key' ? '' : 'none';
-}
-
-async function saveSettings() {
-  config = {
-    method: document.getElementById('settingMethod').value,
-    scriptUrl: document.getElementById('settingScriptUrl').value.trim(),
-    sheetId: document.getElementById('settingSheetId').value.trim(),
-    apiKey: document.getElementById('settingApiKey').value.trim(),
-    sheetName: document.getElementById('settingSheetName').value.trim() || 'Sheet1',
-    interval: parseInt(document.getElementById('settingInterval').value),
-    cols: {
-      company: document.getElementById('colCompany').value.trim(),
-      contact: document.getElementById('colContact').value.trim(),
-      phone: document.getElementById('colPhone').value.trim(),
-      ownerType: document.getElementById('colOwnerType').value.trim(),
-      ownerName: document.getElementById('colOwnerName').value.trim(),
-      status: document.getElementById('colStatus').value.trim(),
-      date: document.getElementById('colDate').value.trim(),
-      memo: document.getElementById('colMemo').value.trim(),
-    }
-  };
-  saveConfig(config);
-  closeSettings();
-  startAutoRefresh();
-  await syncData();
-  showToast('설정이 저장되었습니다 ✓', 'ok');
-}
-
-/* ========================================================
-   TOAST
-   ======================================================== */
-let toastTimer;
-function showToast(msg, type = '') {
+let _toastT;
+function showToast(msg, type='') {
   const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast' + (type ? ' ' + type : '');
+  el.textContent = msg; el.className = 'toast' + (type ? ' '+type : '');
   requestAnimationFrame(() => el.classList.add('show'));
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  clearTimeout(_toastT); _toastT = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-/* ========================================================
-   EVENT LISTENERS
-   ======================================================== */
+/* ══════════════════════════════════════════════════════
+   EVENTS
+   ══════════════════════════════════════════════════════ */
 document.getElementById('searchInput').addEventListener('input', e => { state.search = e.target.value; render(); });
 
-document.getElementById('statusChips').addEventListener('click', e => {
-  const btn = e.target.closest('.chip');
-  if (!btn) return;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  state.statusFilter = btn.dataset.status;
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('[data-filter="status"]'); if (!btn) return;
+  document.querySelectorAll('[data-filter="status"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); state.statusFilter = btn.dataset.val; render();
+});
+
+document.getElementById('itemFilter').addEventListener('click', e => {
+  const btn = e.target.closest('[data-filter="item"]'); if (!btn) return;
+  document.querySelectorAll('[data-filter="item"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); state.itemFilter = btn.dataset.val; render();
+});
+
+document.getElementById('sortSel').addEventListener('change', e => { state.sort = e.target.value; render(); });
+
+document.getElementById('refreshBtn').addEventListener('click', sync);
+
+document.getElementById('btnBoard').addEventListener('click', () => {
+  state.view = 'board';
+  document.getElementById('btnBoard').classList.add('active');
+  document.getElementById('btnList').classList.remove('active');
+  render();
+});
+document.getElementById('btnList').addEventListener('click', () => {
+  state.view = 'list';
+  document.getElementById('btnList').classList.add('active');
+  document.getElementById('btnBoard').classList.remove('active');
   render();
 });
 
-document.getElementById('ownerBtns').addEventListener('click', e => {
-  const btn = e.target.closest('.owner-btn');
-  if (!btn) return;
-  document.querySelectorAll('.owner-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  state.ownerFilter = btn.dataset.owner;
-  render();
-});
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('overlay').addEventListener('click', e => { if (e.target === document.getElementById('overlay')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-document.getElementById('sortSelect').addEventListener('change', e => { state.sort = e.target.value; render(); });
-
-document.getElementById('refreshBtn').addEventListener('click', syncData);
-document.getElementById('settingsBtn').addEventListener('click', openSettings);
-
-document.getElementById('closeBtn').addEventListener('click', closeDetail);
-document.getElementById('closeBtn2').addEventListener('click', closeDetail);
-document.getElementById('overlay').addEventListener('click', e => { if (e.target === document.getElementById('overlay')) closeDetail(); });
-
-document.getElementById('settingsCloseBtn').addEventListener('click', closeSettings);
-document.getElementById('settingsCancelBtn').addEventListener('click', closeSettings);
-document.getElementById('settingsSaveBtn').addEventListener('click', saveSettings);
-document.getElementById('settingsOverlay').addEventListener('click', e => { if (e.target === document.getElementById('settingsOverlay')) closeSettings(); });
-
-document.getElementById('settingMethod').addEventListener('change', e => toggleMethodFields(e.target.value));
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    if (document.getElementById('settingsOverlay').classList.contains('open')) closeSettings();
-    else if (document.getElementById('overlay').classList.contains('open')) closeDetail();
-  }
-});
-
-/* ========================================================
+/* ══════════════════════════════════════════════════════
    INIT
-   ======================================================== */
-(async () => {
-  if ((config.method === 'apps-script' && config.scriptUrl) ||
-      (config.method === 'api-key' && config.sheetId && config.apiKey)) {
-    await syncData();
-    startAutoRefresh();
-  } else {
-    render();
-  }
-})();
+   ══════════════════════════════════════════════════════ */
+sync().then(() => startTimer());
 </script>
 </body>
 </html>
