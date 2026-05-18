@@ -921,66 +921,174 @@
       }
 
       /* ── SCAN VIEW ───────────────────────────────── */
-      .scan-wrap { display: none; }
+      .scan-wrap {
+        display: none;
+      }
       .scan-input-section {
-        background: var(--surface); border-radius: var(--r);
-        border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
-        padding: 20px 24px; margin-bottom: 20px;
+        background: var(--surface);
+        border-radius: var(--r);
+        border: 1.5px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        padding: 20px 24px;
+        margin-bottom: 20px;
       }
       .scan-url-input {
-        width: 100%; min-height: 76px; resize: vertical; padding: 10px 12px;
-        border: 1.5px solid var(--border); border-radius: var(--r-sm);
-        font-family: inherit; font-size: 13px; color: var(--text); line-height: 1.6;
-        background: var(--bg); outline: none;
-        transition: border-color .15s, box-shadow .15s;
+        width: 100%;
+        min-height: 76px;
+        resize: vertical;
+        padding: 10px 12px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-sm);
+        font-family: inherit;
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.6;
+        background: var(--bg);
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
       }
-      .scan-url-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.14); background: #fff; }
-      .scan-url-input::placeholder { color: var(--text-3); }
-      .scan-actions { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-      .scan-progress { font-size: 12px; color: var(--text-3); }
-      .country-section { margin-bottom: 22px; }
+      .scan-url-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.14);
+        background: #fff;
+      }
+      .scan-url-input::placeholder {
+        color: var(--text-3);
+      }
+      .scan-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+      .scan-progress {
+        font-size: 12px;
+        color: var(--text-3);
+      }
+      .country-section {
+        margin-bottom: 22px;
+      }
       .country-header {
-        display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
-        padding: 10px 16px; border-radius: var(--r-sm);
-        font-size: 13px; font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+        padding: 10px 16px;
+        border-radius: var(--r-sm);
+        font-size: 13px;
+        font-weight: 700;
       }
       .country-count {
-        font-size: 11px; font-weight: 600; padding: 2px 8px;
-        border-radius: var(--r-pill); background: rgba(255,255,255,.4);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, 0.4);
       }
-      .scan-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px,1fr)); gap: 10px; }
+      .scan-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 10px;
+      }
       .scan-card {
-        background: var(--surface); border-radius: var(--r);
-        border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
-        padding: 14px 16px; transition: box-shadow .2s, transform .2s;
+        background: var(--surface);
+        border-radius: var(--r);
+        border: 1.5px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        padding: 14px 16px;
+        transition: box-shadow 0.2s, transform 0.2s;
       }
-      .scan-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-      .scan-card-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
-      .scan-card-mfr { font-size: 12px; color: var(--text-2); margin-bottom: 3px; }
-      .scan-card-phone { font-size: 12px; color: var(--primary); font-weight: 600; margin-bottom: 10px; }
-      .scan-card-phone.empty { color: var(--text-3); }
-      .scan-card-actions { display: flex; gap: 5px; }
+      .scan-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+      }
+      .scan-card-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+        line-height: 1.4;
+      }
+      .scan-card-mfr {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-bottom: 3px;
+      }
+      .scan-card-phone {
+        font-size: 12px;
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .scan-card-phone.empty {
+        color: var(--text-3);
+      }
+      .scan-card-actions {
+        display: flex;
+        gap: 5px;
+      }
       .scan-card-btn {
-        flex: 1; padding: 5px 6px; border-radius: var(--r-sm);
-        font-size: 11px; font-weight: 600; font-family: inherit;
-        cursor: pointer; border: 1.5px solid var(--border);
-        background: var(--bg); color: var(--text-2); transition: all .15s;
-        text-decoration: none; text-align: center; display: inline-flex;
-        align-items: center; justify-content: center; gap: 3px;
+        flex: 1;
+        padding: 5px 6px;
+        border-radius: var(--r-sm);
+        font-size: 11px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        border: 1.5px solid var(--border);
+        background: var(--bg);
+        color: var(--text-2);
+        transition: all 0.15s;
+        text-decoration: none;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
       }
-      .scan-card-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-      .scan-card-btn.del:hover { border-color: #EF4444; color: #EF4444; background: #FEF2F2; }
-      .scan-empty { text-align: center; padding: 60px 24px; color: var(--text-3); font-size: 13px; line-height: 2; }
-      .scan-empty-icon { font-size: 40px; margin-bottom: 12px; opacity: .5; }
+      .scan-card-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .scan-card-btn.del:hover {
+        border-color: #ef4444;
+        color: #ef4444;
+        background: #fef2f2;
+      }
+      .scan-empty {
+        text-align: center;
+        padding: 60px 24px;
+        color: var(--text-3);
+        font-size: 13px;
+        line-height: 2;
+      }
+      .scan-empty-icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+      }
       .scan-stat-bar {
-        display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
+        display: flex;
+        gap: 10px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
       }
       .scan-stat {
-        background: var(--surface); border: 1.5px solid var(--border);
-        border-radius: var(--r-sm); padding: 10px 16px;
-        font-size: 12px; color: var(--text-2);
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-sm);
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--text-2);
       }
-      .scan-stat strong { display: block; font-size: 22px; font-weight: 700; color: var(--text); }
+      .scan-stat strong {
+        display: block;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+      }
     </style>
   </head>
   <body>
@@ -1045,7 +1153,19 @@
               목록
             </button>
             <button class="view-btn" id="btnScan">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+                <path d="M11 8v6M8 11h6" />
+              </svg>
               스캔
             </button>
           </div>
@@ -1129,12 +1249,41 @@
       <!-- ── SCAN VIEW ─────────────────────────────────── -->
       <div class="scan-wrap" id="scanWrap">
         <div class="scan-input-section">
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">쇼핑몰 상품 링크 분석</div>
-          <div style="font-size:12px;color:var(--text-3);margin-bottom:10px">SSG·쿠팡·11번가·스마트스토어 링크를 붙여넣으세요 (여러 개는 줄바꿈으로 구분)</div>
-          <textarea id="scanUrlInput" class="scan-url-input" placeholder="https://emart.ssg.com/item/itemView.ssg?itemId=...&#10;https://www.coupang.com/vp/products/..."></textarea>
+          <div
+            style="
+              font-size: 13px;
+              font-weight: 600;
+              color: var(--text);
+              margin-bottom: 4px;
+            "
+          >
+            쇼핑몰 상품 링크 분석
+          </div>
+          <div
+            style="font-size: 12px; color: var(--text-3); margin-bottom: 10px"
+          >
+            SSG·쿠팡·11번가·스마트스토어 링크를 붙여넣으세요 (여러 개는
+            줄바꿈으로 구분)
+          </div>
+          <textarea
+            id="scanUrlInput"
+            class="scan-url-input"
+            placeholder="https://emart.ssg.com/item/itemView.ssg?itemId=...&#10;https://www.coupang.com/vp/products/..."
+          ></textarea>
           <div class="scan-actions">
             <button class="btn btn-primary" id="scanBtn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
               분석 시작
             </button>
             <button class="btn btn-ghost" id="clearScanBtn">전체 삭제</button>
@@ -1332,12 +1481,24 @@
       };
 
       /* 상태 → 색상 (동적으로도 대응) */
-      const STATUS_OPTIONS = ['거래성사', '영업중', '거래불가', '보류'];
+      const STATUS_OPTIONS = ["거래성사", "영업중", "거래불가", "보류"];
       const STATUS_PALETTE = [
-        { keys: ['거래성사', '성사', '계약', '완료'], color: '#10B981', bg: '#ECFDF5' },
-        { keys: ['영업중', '진행중', '진행', '컨택중', '컨택', '제안', '미팅'], color: '#F97316', bg: '#FFF7ED' },
-        { keys: ['거래불가', '영업불가', '불가'], color: '#EF4444', bg: '#FEF2F2' },
-        { keys: ['보류', '대기', '홀드'], color: '#6B7280', bg: '#F9FAFB' },
+        {
+          keys: ["거래성사", "성사", "계약", "완료"],
+          color: "#10B981",
+          bg: "#ECFDF5",
+        },
+        {
+          keys: ["영업중", "진행중", "진행", "컨택중", "컨택", "제안", "미팅"],
+          color: "#F97316",
+          bg: "#FFF7ED",
+        },
+        {
+          keys: ["거래불가", "영업불가", "불가"],
+          color: "#EF4444",
+          bg: "#FEF2F2",
+        },
+        { keys: ["보류", "대기", "홀드"], color: "#6B7280", bg: "#F9FAFB" },
       ];
       const FALLBACK_COLORS = [
         "#8B5CF6",
@@ -1376,8 +1537,11 @@
       };
       let refreshTimer = null;
       let scannedItems = (() => {
-        try { return JSON.parse(localStorage.getItem("isseaair_scan") || "[]"); }
-        catch { return []; }
+        try {
+          return JSON.parse(localStorage.getItem("isseaair_scan") || "[]");
+        } catch {
+          return [];
+        }
       })();
 
       /* ══════════════════════════════════════════════════════
@@ -1547,7 +1711,10 @@
    RENDER
    ══════════════════════════════════════════════════════ */
       function render() {
-        if (state.view === 'scan') { renderScanResults(); return; }
+        if (state.view === "scan") {
+          renderScanResults();
+          return;
+        }
         const list = getFiltered();
         document.getElementById("countBadge").textContent = `${list.length}건`;
         if (state.view === "board") renderBoard(list);
@@ -1936,62 +2103,85 @@
    SCAN — 상품 스캔
    ══════════════════════════════════════════════════════ */
       const COUNTRY_STYLE = {
-        '중국':   { bg:'#FFF7ED', color:'#EA580C' },
-        '한국':   { bg:'#EFF6FF', color:'#2563EB' },
-        '미국':   { bg:'#F0FDF4', color:'#15803D' },
-        '일본':   { bg:'#FDF2F8', color:'#9D174D' },
-        '베트남': { bg:'#ECFDF5', color:'#059669' },
-        '미확인': { bg:'#F9FAFB', color:'#6B7280' },
+        중국: { bg: "#FFF7ED", color: "#EA580C" },
+        한국: { bg: "#EFF6FF", color: "#2563EB" },
+        미국: { bg: "#F0FDF4", color: "#15803D" },
+        일본: { bg: "#FDF2F8", color: "#9D174D" },
+        베트남: { bg: "#ECFDF5", color: "#059669" },
+        미확인: { bg: "#F9FAFB", color: "#6B7280" },
       };
 
       function saveScan() {
-        localStorage.setItem('isseaair_scan', JSON.stringify(scannedItems));
+        localStorage.setItem("isseaair_scan", JSON.stringify(scannedItems));
       }
 
       async function runScan() {
-        const ta = document.getElementById('scanUrlInput');
-        const urls = ta.value.split('\n').map(u => u.trim()).filter(u => /^https?:\/\//.test(u));
-        if (!urls.length) { showToast('URL을 입력해주세요', 'warn'); return; }
-        if (!APPS_SCRIPT_URL) { showToast('APPS_SCRIPT_URL을 먼저 설정해주세요', 'warn'); return; }
+        const ta = document.getElementById("scanUrlInput");
+        const urls = ta.value
+          .split("\n")
+          .map((u) => u.trim())
+          .filter((u) => /^https?:\/\//.test(u));
+        if (!urls.length) {
+          showToast("URL을 입력해주세요", "warn");
+          return;
+        }
+        if (!APPS_SCRIPT_URL) {
+          showToast("APPS_SCRIPT_URL을 먼저 설정해주세요", "warn");
+          return;
+        }
 
-        const btn = document.getElementById('scanBtn');
-        const prog = document.getElementById('scanProgress');
+        const btn = document.getElementById("scanBtn");
+        const prog = document.getElementById("scanProgress");
         btn.disabled = true;
-        let ok = 0, fail = 0;
+        let ok = 0,
+          fail = 0;
 
         for (let i = 0; i < urls.length; i++) {
           const url = urls[i];
           prog.textContent = `분석 중 ${i + 1}/${urls.length}…`;
           try {
             const api = new URL(APPS_SCRIPT_URL);
-            api.searchParams.set('action', 'scrape');
-            api.searchParams.set('url', url);
+            api.searchParams.set("action", "scrape");
+            api.searchParams.set("url", url);
             const res = await fetch(api.toString());
             const json = await res.json();
             if (json.success && json.data) {
-              if (!scannedItems.some(x => x.url === url)) {
-                scannedItems.push({ ...json.data, url, addedAt: new Date().toISOString() });
+              if (!scannedItems.some((x) => x.url === url)) {
+                scannedItems.push({
+                  ...json.data,
+                  url,
+                  addedAt: new Date().toISOString(),
+                });
               }
               ok++;
-            } else { fail++; showToast(`분석 실패: ${json.error || ''}`, 'warn'); }
-          } catch(e) { fail++; showToast(`오류: ${e.message}`, 'warn'); }
+            } else {
+              fail++;
+              showToast(`분석 실패: ${json.error || ""}`, "warn");
+            }
+          } catch (e) {
+            fail++;
+            showToast(`오류: ${e.message}`, "warn");
+          }
         }
 
         saveScan();
-        ta.value = '';
-        prog.textContent = `완료 — 성공 ${ok}개${fail ? `, 실패 ${fail}개` : ''}`;
+        ta.value = "";
+        prog.textContent = `완료 — 성공 ${ok}개${
+          fail ? `, 실패 ${fail}개` : ""
+        }`;
         btn.disabled = false;
         renderScanResults();
       }
 
       function deleteScanItem(url) {
-        scannedItems = scannedItems.filter(i => i.url !== url);
+        scannedItems = scannedItems.filter((i) => i.url !== url);
         saveScan();
         renderScanResults();
       }
 
       function clearAllScan() {
-        if (!confirm(`스캔 목록 ${scannedItems.length}개를 모두 삭제할까요?`)) return;
+        if (!confirm(`스캔 목록 ${scannedItems.length}개를 모두 삭제할까요?`))
+          return;
         scannedItems = [];
         saveScan();
         renderScanResults();
@@ -1999,92 +2189,139 @@
 
       function renderScanResults() {
         /* 통계 바 */
-        const statBar = document.getElementById('scanStatBar');
-        const container = document.getElementById('scanResults');
+        const statBar = document.getElementById("scanStatBar");
+        const container = document.getElementById("scanResults");
 
         if (!scannedItems.length) {
-          statBar.innerHTML = '';
+          statBar.innerHTML = "";
           container.innerHTML = `<div class="scan-empty"><div class="scan-empty-icon">🔍</div>분석된 상품이 없습니다<br>위에 쇼핑몰 링크를 붙여넣고 분석 시작을 눌러보세요</div>`;
           return;
         }
 
         /* 제조국별 그룹 */
         const groups = {};
-        scannedItems.forEach(item => {
-          const c = (item.제조국 || '미확인').trim() || '미확인';
+        scannedItems.forEach((item) => {
+          const c = (item.제조국 || "미확인").trim() || "미확인";
           (groups[c] = groups[c] || []).push(item);
         });
-        const countries = Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length);
+        const countries = Object.keys(groups).sort(
+          (a, b) => groups[b].length - groups[a].length
+        );
 
         /* 통계 */
         statBar.innerHTML = `
-          <div class="scan-stat"><strong>${scannedItems.length}</strong>총 상품</div>
-          <div class="scan-stat"><strong>${countries.length}</strong>제조국 수</div>
-          ${countries.slice(0,3).map(c => `<div class="scan-stat"><strong>${groups[c].length}</strong>${esc(c)}</div>`).join('')}`;
+          <div class="scan-stat"><strong>${
+            scannedItems.length
+          }</strong>총 상품</div>
+          <div class="scan-stat"><strong>${
+            countries.length
+          }</strong>제조국 수</div>
+          ${countries
+            .slice(0, 3)
+            .map(
+              (c) =>
+                `<div class="scan-stat"><strong>${
+                  groups[c].length
+                }</strong>${esc(c)}</div>`
+            )
+            .join("")}`;
 
         /* 국가별 카드 */
-        container.innerHTML = countries.map(country => {
-          const items = groups[country];
-          const s = COUNTRY_STYLE[country] || { bg:'#F9FAFB', color:'#6B7280' };
-          return `<div class="country-section">
-            <div class="country-header" style="background:${s.bg};color:${s.color}">
-              🌏 ${esc(country)} <span class="country-count">${items.length}개 업체</span>
+        container.innerHTML = countries
+          .map((country) => {
+            const items = groups[country];
+            const s = COUNTRY_STYLE[country] || {
+              bg: "#F9FAFB",
+              color: "#6B7280",
+            };
+            return `<div class="country-section">
+            <div class="country-header" style="background:${s.bg};color:${
+              s.color
+            }">
+              🌏 ${esc(country)} <span class="country-count">${
+              items.length
+            }개 업체</span>
             </div>
             <div class="scan-card-grid">
-              ${items.map(item => {
-                const phone = item.전화번호 || '';
-                return `<div class="scan-card">
-                  <div class="scan-card-name">${esc(item.품명 || '품명 미확인')}</div>
-                  <div class="scan-card-mfr">🏭 ${esc(item.제조사수입자 || '—')}</div>
-                  <div class="scan-card-phone ${phone ? '' : 'empty'}">📞 ${phone ? esc(phone) : '전화번호 없음'}</div>
+              ${items
+                .map((item) => {
+                  const phone = item.전화번호 || "";
+                  return `<div class="scan-card">
+                  <div class="scan-card-name">${esc(
+                    item.품명 || "품명 미확인"
+                  )}</div>
+                  <div class="scan-card-mfr">🏭 ${esc(
+                    item.제조사수입자 || "—"
+                  )}</div>
+                  <div class="scan-card-phone ${phone ? "" : "empty"}">📞 ${
+                    phone ? esc(phone) : "전화번호 없음"
+                  }</div>
                   <div class="scan-card-actions">
-                    <a href="${esc(item.url)}" target="_blank" rel="noopener" class="scan-card-btn">🔗 상품</a>
-                    ${phone ? `<button class="scan-card-btn" onclick="navigator.clipboard.writeText('${esc(phone)}');showToast('번호 복사됨','ok')">📋 복사</button>` : ''}
-                    <button class="scan-card-btn del" onclick="deleteScanItem('${esc(item.url)}')">🗑</button>
+                    <a href="${esc(
+                      item.url
+                    )}" target="_blank" rel="noopener" class="scan-card-btn">🔗 상품</a>
+                    ${
+                      phone
+                        ? `<button class="scan-card-btn" onclick="navigator.clipboard.writeText('${esc(
+                            phone
+                          )}');showToast('번호 복사됨','ok')">📋 복사</button>`
+                        : ""
+                    }
+                    <button class="scan-card-btn del" onclick="deleteScanItem('${esc(
+                      item.url
+                    )}')">🗑</button>
                   </div>
                 </div>`;
-              }).join('')}
+                })
+                .join("")}
             </div>
           </div>`;
-        }).join('');
+          })
+          .join("");
       }
 
       function switchToScan() {
-        state.view = 'scan';
-        document.getElementById('btnBoard').classList.remove('active');
-        document.getElementById('btnList').classList.remove('active');
-        document.getElementById('btnScan').classList.add('active');
-        document.getElementById('boardGrid').style.display  = 'none';
-        document.getElementById('listWrap').style.display   = 'none';
-        document.getElementById('scanWrap').style.display   = 'block';
-        document.getElementById('filterBar').style.display  = 'none';
-        document.querySelector('.toolbar').style.display    = 'none';
+        state.view = "scan";
+        document.getElementById("btnBoard").classList.remove("active");
+        document.getElementById("btnList").classList.remove("active");
+        document.getElementById("btnScan").classList.add("active");
+        document.getElementById("boardGrid").style.display = "none";
+        document.getElementById("listWrap").style.display = "none";
+        document.getElementById("scanWrap").style.display = "block";
+        document.getElementById("filterBar").style.display = "none";
+        document.querySelector(".toolbar").style.display = "none";
         renderScanResults();
       }
 
       function switchFromScan() {
-        document.getElementById('scanWrap').style.display  = 'none';
-        document.getElementById('filterBar').style.display = '';
-        document.querySelector('.toolbar').style.display   = '';
-        document.getElementById('scanProgress').textContent = '';
+        document.getElementById("scanWrap").style.display = "none";
+        document.getElementById("filterBar").style.display = "";
+        document.querySelector(".toolbar").style.display = "";
+        document.getElementById("scanProgress").textContent = "";
       }
 
       /* ══════════════════════════════════════════════════════
    HELPERS
    ══════════════════════════════════════════════════════ */
       function formatPhone(raw) {
-        const d = raw.replace(/\D/g, '').slice(0, 11);
-        if (!d) return '';
-        if (d.startsWith('02')) {
+        const d = raw.replace(/\D/g, "").slice(0, 11);
+        if (!d) return "";
+        if (d.startsWith("02")) {
           if (d.length <= 2) return d;
-          if (d.length <= 5) return d.slice(0,2) + '-' + d.slice(2);
-          if (d.length <= 9) return d.slice(0,2) + '-' + d.slice(2, d.length-4) + '-' + d.slice(-4);
-          return d.slice(0,2) + '-' + d.slice(2,6) + '-' + d.slice(6);
+          if (d.length <= 5) return d.slice(0, 2) + "-" + d.slice(2);
+          if (d.length <= 9)
+            return (
+              d.slice(0, 2) + "-" + d.slice(2, d.length - 4) + "-" + d.slice(-4)
+            );
+          return d.slice(0, 2) + "-" + d.slice(2, 6) + "-" + d.slice(6);
         }
         if (d.length <= 3) return d;
-        if (d.length <= 7) return d.slice(0,3) + '-' + d.slice(3);
-        if (d.length <= 10) return d.slice(0,3) + '-' + d.slice(3, d.length-4) + '-' + d.slice(-4);
-        return d.slice(0,3) + '-' + d.slice(3,7) + '-' + d.slice(7);
+        if (d.length <= 7) return d.slice(0, 3) + "-" + d.slice(3);
+        if (d.length <= 10)
+          return (
+            d.slice(0, 3) + "-" + d.slice(3, d.length - 4) + "-" + d.slice(-4)
+          );
+        return d.slice(0, 3) + "-" + d.slice(3, 7) + "-" + d.slice(7);
       }
 
       function esc(s) {
@@ -2165,9 +2402,13 @@
         document.getElementById("btnScan").classList.remove("active");
         render();
       });
-      document.getElementById("btnScan").addEventListener("click", switchToScan);
+      document
+        .getElementById("btnScan")
+        .addEventListener("click", switchToScan);
       document.getElementById("scanBtn").addEventListener("click", runScan);
-      document.getElementById("clearScanBtn").addEventListener("click", clearAllScan);
+      document
+        .getElementById("clearScanBtn")
+        .addEventListener("click", clearAllScan);
 
       document
         .getElementById("modalClose")
