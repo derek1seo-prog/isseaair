@@ -1089,9 +1089,73 @@
         font-weight: 700;
         color: var(--text);
       }
+      /* ── LOCK SCREEN ─────────────────────────────── */
+      .lock-screen {
+        position: fixed; inset: 0; z-index: 9999;
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .lock-box {
+        background: #fff; border-radius: 20px;
+        padding: 40px 36px 36px; width: 320px;
+        box-shadow: 0 24px 60px rgba(0,0,0,.35);
+        display: flex; flex-direction: column; align-items: center; gap: 20px;
+      }
+      .lock-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+      .lock-title { font-size: 17px; font-weight: 700; color: #1e293b; }
+      .lock-subtitle { font-size: 13px; color: #94a3b8; margin-top: -12px; }
+      .pin-dots {
+        display: flex; gap: 14px; margin: 4px 0;
+      }
+      .pin-dot {
+        width: 14px; height: 14px; border-radius: 50%;
+        border: 2px solid #cbd5e1; background: transparent;
+        transition: all .2s;
+      }
+      .pin-dot.filled { background: #3b82f6; border-color: #3b82f6; }
+      .pin-dot.error { background: #ef4444; border-color: #ef4444; }
+      .pin-keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 10px; }
+      .pin-key {
+        height: 52px; border-radius: 12px;
+        border: 1.5px solid #e2e8f0; background: #f8fafc;
+        font-size: 18px; font-weight: 600; color: #1e293b;
+        cursor: pointer; transition: all .12s; font-family: inherit;
+      }
+      .pin-key:active, .pin-key:hover { background: #eff6ff; border-color: #3b82f6; color: #3b82f6; }
+      .pin-key.del { font-size: 14px; color: #64748b; }
+      .lock-error { font-size: 12px; color: #ef4444; height: 16px; }
     </style>
   </head>
   <body>
+    <!-- ── LOCK SCREEN ───────────────────────────────────── -->
+    <div class="lock-screen" id="lockScreen">
+      <div class="lock-box">
+        <img class="lock-logo" src="logo.png" alt="로고" />
+        <div class="lock-title">영업 파이프라인</div>
+        <div class="lock-subtitle">PIN을 입력하세요</div>
+        <div class="pin-dots" id="pinDots">
+          <div class="pin-dot" id="d0"></div>
+          <div class="pin-dot" id="d1"></div>
+          <div class="pin-dot" id="d2"></div>
+          <div class="pin-dot" id="d3"></div>
+        </div>
+        <div class="lock-error" id="lockError"></div>
+        <div class="pin-keypad">
+          <button class="pin-key" data-k="1">1</button>
+          <button class="pin-key" data-k="2">2</button>
+          <button class="pin-key" data-k="3">3</button>
+          <button class="pin-key" data-k="4">4</button>
+          <button class="pin-key" data-k="5">5</button>
+          <button class="pin-key" data-k="6">6</button>
+          <button class="pin-key" data-k="7">7</button>
+          <button class="pin-key" data-k="8">8</button>
+          <button class="pin-key" data-k="9">9</button>
+          <button class="pin-key" data-k=""></button>
+          <button class="pin-key" data-k="0">0</button>
+          <button class="pin-key del" data-k="del">⌫</button>
+        </div>
+      </div>
+    </div>
     <!-- ── HEADER ──────────────────────────────────────── -->
     <header class="header">
       <div class="header-top">
@@ -2434,6 +2498,60 @@
    INIT
    ══════════════════════════════════════════════════════ */
       sync().then(() => startTimer());
+
+      /* ── LOCK SCREEN ─────────────────────────────────── */
+      (() => {
+        const CORRECT = '7089';
+        const lock = document.getElementById('lockScreen');
+        if (sessionStorage.getItem('unlocked') === '1') { lock.style.display = 'none'; return; }
+
+        let pin = '';
+        const dots = [0,1,2,3].map(i => document.getElementById('d'+i));
+        const errEl = document.getElementById('lockError');
+
+        function updateDots() {
+          dots.forEach((d, i) => {
+            d.classList.toggle('filled', i < pin.length);
+            d.classList.remove('error');
+          });
+          errEl.textContent = '';
+        }
+
+        function shake() {
+          dots.forEach(d => d.classList.add('error'));
+          errEl.textContent = '비밀번호가 틀렸습니다';
+          setTimeout(() => { pin = ''; updateDots(); }, 800);
+        }
+
+        document.querySelectorAll('.pin-key').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const k = btn.dataset.k;
+            if (k === 'del') { pin = pin.slice(0,-1); updateDots(); return; }
+            if (k === '' || pin.length >= 4) return;
+            pin += k;
+            updateDots();
+            if (pin.length === 4) {
+              if (pin === CORRECT) {
+                sessionStorage.setItem('unlocked', '1');
+                lock.style.display = 'none';
+              } else {
+                shake();
+              }
+            }
+          });
+        });
+
+        document.addEventListener('keydown', e => {
+          if (lock.style.display === 'none') return;
+          if (e.key >= '0' && e.key <= '9' && pin.length < 4) {
+            pin += e.key; updateDots();
+            if (pin.length === 4) {
+              if (pin === CORRECT) { sessionStorage.setItem('unlocked','1'); lock.style.display='none'; }
+              else shake();
+            }
+          } else if (e.key === 'Backspace') { pin = pin.slice(0,-1); updateDots(); }
+        });
+      })();
     </script>
   </body>
 </html>
