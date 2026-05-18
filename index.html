@@ -1479,9 +1479,28 @@
    function doGet(e)  {
      if (e.parameter.action === 'scrape') return scrapeProduct(e.parameter.url);
      if (e.parameter.action === 'extractLinks') return extractLinks(e.parameter.url);
+     if (e.parameter.action === 'saveToEmart') return saveToEmart(e.parameter);
      return handle(e);
    }
    function doPost(e) { return handle(e); }
+
+   // ── emart 탭 저장 ─────────────────────────────────────
+   function saveToEmart(p) {
+     try {
+       const ss = SpreadsheetApp.getActiveSpreadsheet();
+       let sheet = ss.getSheetByName('emart');
+       if (!sheet) {
+         sheet = ss.insertSheet('emart');
+         sheet.appendRow(['URL', '품명', '제조사/수입자', '제조국', '전화번호', '스캔일시']);
+         sheet.getRange(1,1,1,6).setFontWeight('bold').setBackground('#f1f5f9');
+       } else if (sheet.getLastRow() === 0) {
+         sheet.appendRow(['URL', '품명', '제조사/수입자', '제조국', '전화번호', '스캔일시']);
+         sheet.getRange(1,1,1,6).setFontWeight('bold').setBackground('#f1f5f9');
+       }
+       sheet.appendRow([p.url||'', p['품명']||'', p['제조사수입자']||'', p['제조국']||'', p['전화번호']||'', p.addedAt||'']);
+       return res({success: true});
+     } catch(e) { return res({success: false, error: e.message}); }
+   }
 
    // ── 검색결과 링크 추출 ────────────────────────────────
    function extractLinks(url) {
@@ -2287,11 +2306,9 @@
             const json = await res.json();
             if (json.success && json.data) {
               if (!scannedItems.some((x) => x.url === url)) {
-                scannedItems.push({
-                  ...json.data,
-                  url,
-                  addedAt: new Date().toISOString(),
-                });
+                const item = { ...json.data, url, addedAt: new Date().toISOString() };
+                scannedItems.push(item);
+                saveItemToSheet(item);
               }
               ok++;
             } else {
@@ -2311,6 +2328,21 @@
         }`;
         btn.disabled = false;
         renderScanResults();
+      }
+
+      async function saveItemToSheet(item) {
+        if (!APPS_SCRIPT_URL) return;
+        try {
+          const api = new URL(APPS_SCRIPT_URL);
+          api.searchParams.set('action', 'saveToEmart');
+          api.searchParams.set('url', item.url || '');
+          api.searchParams.set('품명', item.품명 || '');
+          api.searchParams.set('제조사수입자', item.제조사수입자 || '');
+          api.searchParams.set('제조국', item.제조국 || '');
+          api.searchParams.set('전화번호', item.전화번호 || '');
+          api.searchParams.set('addedAt', item.addedAt || '');
+          await fetch(api.toString());
+        } catch(e) { /* silent */ }
       }
 
       function deleteScanItem(url) {
