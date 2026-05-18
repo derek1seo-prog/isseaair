@@ -120,10 +120,10 @@
       }
 
       .hdr-right {
-        margin-left: auto;
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-shrink: 0;
       }
 
       /* view toggle */
@@ -876,37 +876,86 @@
 
       /* ── RESPONSIVE ──────────────────────────────── */
       @media (max-width: 640px) {
-        .header {
-          padding: 0 14px;
+        /* ── 헤더: 2단 레이아웃 ── */
+        .header { padding: 0; }
+        .header-top {
+          flex-wrap: wrap;
+          height: auto;
+          padding: 10px 14px 0;
+          gap: 8px;
         }
-        .logo-text,
-        .sync-pill span {
-          display: none;
+        .logo-icon { width: 28px; height: 28px; }
+        .logo-text { display: none; }
+        .search-wrap { flex: 1; max-width: none; }
+        .search-input { height: 34px; font-size: 12px; }
+        .hdr-right { gap: 6px; order: 3; }
+        .sync-pill { padding: 4px 7px; }
+        .sync-pill span { display: none; }
+        /* 뷰 토글 — order:10으로 마지막에, 두 번째 줄 전체 너비 */
+        .view-toggle {
+          order: 10;
+          flex: 0 0 100%;
+          border-radius: 0;
+          border: none;
+          border-top: 1px solid var(--border);
+          background: transparent;
+          padding: 0;
+          gap: 0;
         }
-        .filter-bar {
-          padding: 0 14px;
+        .view-btn {
+          flex: 1;
+          justify-content: center;
+          border-radius: 0;
+          padding: 10px 4px;
+          font-size: 12px;
+          border-bottom: 2px solid transparent;
+          box-shadow: none;
         }
-        .toolbar {
-          padding: 12px 14px 8px;
+        .view-btn.active {
+          background: transparent;
+          box-shadow: none;
+          color: var(--primary);
+          border-bottom-color: var(--primary);
         }
-        .main {
-          padding: 0 14px 48px;
-        }
-        .board-grid {
-          grid-template-columns: 1fr;
-        }
-        .detail-grid {
-          grid-template-columns: 1fr;
-        }
+
+        /* ── 필터/툴바 ── */
+        .filter-bar { padding: 0 14px; height: 44px; }
+        .chip { padding: 3px 10px; font-size: 11px; }
+        .toolbar { padding: 10px 14px 6px; gap: 6px; }
+        .sub-filter { gap: 4px; }
+
+        /* ── 콘텐츠 ── */
+        .main { padding: 0 12px 80px; }
+        .board-grid { grid-template-columns: 1fr; gap: 8px; }
+        .card { padding: 14px 16px; }
+
+        /* ── 목록 테이블 ── */
+        .list-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { min-width: 520px; }
+
+        /* ── 모달 바텀시트 ── */
+        .detail-grid { grid-template-columns: 1fr; }
+        .overlay { align-items: flex-end; padding: 0; }
         .modal {
           max-width: 100%;
+          max-height: 90vh;
           border-radius: 18px 18px 0 0;
           align-self: flex-end;
         }
-        .overlay {
-          align-items: flex-end;
-          padding: 0;
-        }
+        .modal-header { padding: 16px 18px 12px; }
+        .modal-body { padding: 0 18px 12px; }
+        .modal-footer { padding: 10px 18px; }
+
+        /* ── 스캔 뷰 ── */
+        .extract-section { padding: 14px 16px; }
+        .scan-input-section { padding: 14px 16px; }
+        .scan-actions { flex-wrap: wrap; gap: 8px; }
+        .scan-card-grid { grid-template-columns: 1fr; }
+
+        /* ── 잠금화면 ── */
+        .lock-box { width: 90vw; padding: 32px 24px 28px; }
+        .pin-keypad { grid-template-columns: repeat(3, 64px); gap: 8px; }
+        .pin-key { height: 48px; font-size: 17px; }
       }
       ::-webkit-scrollbar {
         width: 5px;
@@ -1212,8 +1261,7 @@
             autocomplete="off"
           />
         </div>
-        <div class="hdr-right">
-          <div class="view-toggle">
+        <div class="view-toggle">
             <button class="view-btn active" id="btnBoard">
               <svg
                 width="13"
@@ -1260,6 +1308,7 @@
               스캔
             </button>
           </div>
+        <div class="hdr-right">
           <div class="sync-pill">
             <div class="sync-dot" id="syncDot"></div>
             <span id="syncText">미연결</span>
