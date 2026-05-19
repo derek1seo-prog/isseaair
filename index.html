@@ -1492,7 +1492,10 @@
             <span id="scanProgress" class="scan-progress"></span>
           </div>
         </div>
-        <div id="scanStatBar" class="scan-stat-bar"></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div id="scanStatBar" class="scan-stat-bar" style="flex:1;margin-bottom:0"></div>
+          <button id="emartSyncBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:12px;padding:4px 10px;white-space:nowrap" onclick="loadEmartItems()">☁ 시트에서 불러오기</button>
+        </div>
         <div id="scanResults"></div>
       </div>
     </main>
@@ -1576,6 +1579,7 @@
      if (e.parameter.action === 'scrape') return scrapeProduct(e.parameter.url);
      if (e.parameter.action === 'extractLinks') return extractLinks(e.parameter.url);
      if (e.parameter.action === 'saveToEmart') return saveToEmart(e.parameter);
+     if (e.parameter.action === 'getEmartItems') return getEmartItems();
      return handle(e);
    }
    function doPost(e) { return handle(e); }
@@ -1595,6 +1599,20 @@
        }
        sheet.appendRow([p.url||'', p['품명']||'', p['제조사수입자']||'', p['제조국']||'', p['전화번호']||'', p.addedAt||'']);
        return res({success: true});
+     } catch(e) { return res({success: false, error: e.message}); }
+   }
+
+   // ── emart 탭 불러오기 ────────────────────────────────
+   function getEmartItems() {
+     try {
+       const ss = SpreadsheetApp.getActiveSpreadsheet();
+       const sheet = ss.getSheetByName('emart');
+       if (!sheet || sheet.getLastRow() < 2) return res({success: true, items: []});
+       const rows = sheet.getRange(2, 1, sheet.getLastRow()-1, 6).getValues();
+       const items = rows.map(r => ({
+         url: r[0]||'', 품명: r[1]||'', 제조사수입자: r[2]||'', 제조국: r[3]||'', 전화번호: r[4]||'', addedAt: r[5]||''
+       })).filter(i => i.url);
+       return res({success: true, items});
      } catch(e) { return res({success: false, error: e.message}); }
    }
 
@@ -2461,7 +2479,7 @@
         const container = document.getElementById("scanResults");
 
         if (!scannedItems.length) {
-          statBar.innerHTML = "";
+          statBar.innerHTML = '<span style="color:var(--text-3);font-size:12px">항목 없음</span>';
           container.innerHTML = `<div class="scan-empty"><div class="scan-empty-icon">🔍</div>분석된 상품이 없습니다<br>위에 쇼핑몰 링크를 붙여넣고 분석 시작을 눌러보세요</div>`;
           return;
         }
@@ -2548,6 +2566,39 @@
           .join("");
       }
 
+      async function loadEmartItems() {
+        if (!APPS_SCRIPT_URL) return;
+        const btn = document.getElementById('emartSyncBtn');
+        if (btn) { btn.textContent = '⏳ 불러오는 중...'; btn.disabled = true; }
+        try {
+          const url = new URL(APPS_SCRIPT_URL);
+          url.searchParams.set('action', 'getEmartItems');
+          const res = await fetch(url.toString());
+          const json = await res.json();
+          if (json.success && json.items.length) {
+            let added = 0;
+            json.items.forEach(item => {
+              if (!scannedItems.some(x => x.url === item.url)) {
+                scannedItems.push(item);
+                added++;
+              }
+            });
+            localStorage.setItem('isseaair_scan', JSON.stringify(scannedItems));
+            if (added > 0) showToast(`${added}개 상품을 불러왔습니다`, 'success');
+            else showToast('새 항목 없음 (이미 동기화됨)', 'info');
+          } else if (json.success) {
+            showToast('시트에 저장된 항목이 없습니다', 'info');
+          } else {
+            showToast('불러오기 실패: ' + json.error, 'error');
+          }
+        } catch(e) {
+          showToast('불러오기 오류: ' + e.message, 'error');
+        } finally {
+          renderScanResults();
+          if (btn) { btn.textContent = '☁ 시트에서 불러오기'; btn.disabled = false; }
+        }
+      }
+
       function switchToScan() {
         state.view = "scan";
         document.getElementById("btnBoard").classList.remove("active");
@@ -2559,6 +2610,7 @@
         document.getElementById("filterBar").style.display = "none";
         document.querySelector(".toolbar").style.display = "none";
         renderScanResults();
+        loadEmartItems();
       }
 
       function switchFromScan() {
