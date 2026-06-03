@@ -2767,7 +2767,7 @@
       document.getElementById("scanBtn").addEventListener("click", runScan);
       document.getElementById("dedupScanBtn").addEventListener("click", deduplicateExisting);
       document.getElementById("blockedAddBtn").addEventListener("click", addBlocked);
-      document.getElementById("blockedInput").addEventListener("keydown", e => { if (e.key === 'Enter') addBlocked(); });
+      document.getElementById("blockedInput").addEventListener("keydown", e => { if (e.key === 'Enter' && !e.isComposing) addBlocked(); });
       renderBlockedTags();
       document
         .getElementById("clearScanBtn")
