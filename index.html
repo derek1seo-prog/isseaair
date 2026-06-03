@@ -1017,6 +1017,57 @@
         border-radius: var(--r-pill); margin-bottom: 4px;
         background: #fff8c5; color: #9a6700; border: 1px solid rgba(154,103,0,.3);
       }
+      /* ── 선배 거래처 섹션 ── */
+      .blocked-section {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--r); padding: 16px 20px; margin-bottom: 10px;
+      }
+      .blocked-section summary {
+        font-size: 13px; font-weight: 600; color: var(--text);
+        cursor: pointer; user-select: none; list-style: none;
+        display: flex; align-items: center; gap: 6px;
+      }
+      .blocked-section summary::-webkit-details-marker { display: none; }
+      .blocked-section summary::before { content: '▶'; font-size: 10px; color: var(--text-3); transition: transform .2s; }
+      .blocked-section[open] summary::before { transform: rotate(90deg); }
+      .blocked-body { margin-top: 14px; }
+      .blocked-desc { font-size: 12px; color: var(--text-2); margin-bottom: 12px; line-height: 1.6; }
+      .blocked-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+      .blocked-input {
+        flex: 1; padding: 5px 10px; border: 1px solid var(--border); border-radius: var(--r);
+        font-family: inherit; font-size: 13px; color: var(--text); background: var(--bg);
+        outline: none;
+      }
+      .blocked-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(9,105,218,.15); }
+      .blocked-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+      .blocked-tag {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 3px 10px 3px 12px; border-radius: var(--r-pill);
+        background: #ffebe9; color: #cf222e; border: 1px solid rgba(207,34,46,.3);
+        font-size: 12px; font-weight: 500;
+      }
+      .blocked-tag-del {
+        width: 16px; height: 16px; border-radius: 50%; border: none;
+        background: rgba(207,34,46,.2); color: #cf222e; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; line-height: 1; padding: 0;
+      }
+      .blocked-tag-del:hover { background: #cf222e; color: #fff; }
+      .blocked-empty { font-size: 12px; color: var(--text-3); font-style: italic; }
+      /* 선배 거래처 카드 태그 */
+      .scan-senior-tag {
+        display: inline-flex; align-items: center; gap: 3px;
+        font-size: 11px; font-weight: 600; padding: 2px 7px;
+        border-radius: var(--r-pill); margin-bottom: 4px;
+        background: #ffebe9; color: #cf222e; border: 1px solid rgba(207,34,46,.3);
+      }
+      .scan-card.card-senior { border-color: #f85149; border-width: 2px; background: #fff8f7; opacity: .85; }
+      .scan-senior-badge {
+        font-size: 10px; font-weight: 500; padding: 1px 6px;
+        border-radius: var(--r-pill); margin-left: 4px;
+        background: #fff8c5; color: #9a6700; border: 1px solid rgba(154,103,0,.3);
+        vertical-align: middle;
+      }
       .scan-empty {
         text-align: center; padding: 60px 24px;
         color: var(--text-3); font-size: 13px; line-height: 2;
@@ -1268,6 +1319,23 @@
             <div>② SSG 검색결과 페이지 열기 → <b>링크 추출</b> 클릭 → 링크 복사 후 아래 붙여넣기</div>
           </div>
         </div>
+        <!-- 선배 거래처 -->
+        <details class="blocked-section" id="blockedSection">
+          <summary>👥 선배 거래처 목록 <span id="blockedCount" style="font-size:11px;color:var(--text-3);font-weight:400"></span></summary>
+          <div class="blocked-body">
+            <div class="blocked-desc">
+              여기에 입력한 제조사/업체명이 스캔 카드에 나타나면 <b>자동으로 불가 표시</b>됩니다.<br>
+              부분 일치도 감지됩니다 (예: "삼익가구" 입력 시 "삼익가구OEM" 자동 차단)
+            </div>
+            <div class="blocked-input-row">
+              <input id="blockedInput" class="blocked-input" type="text" placeholder="업체명 또는 제조사명 입력 (예: 미미월드)" />
+              <button class="btn btn-ghost" id="blockedAddBtn" style="flex-shrink:0">추가</button>
+            </div>
+            <div class="blocked-tags" id="blockedTags">
+              <span class="blocked-empty">아직 등록된 거래처가 없습니다</span>
+            </div>
+          </div>
+        </details>
         <!-- 링크 추출기 -->
         <details class="extract-section" id="extractSection">
           <summary>🔗 검색결과 링크 추출 <span style="font-size:11px;color:var(--text-3);font-weight:400">(SSG 검색 URL → 상품 링크 목록)</span></summary>
@@ -1681,6 +1749,57 @@
           return [];
         }
       })();
+
+      /* ── 선배 거래처 목록 ─────────────────────────────── */
+      let blockedCompanies = (() => {
+        try { return JSON.parse(localStorage.getItem("isseaair_blocked") || "[]"); }
+        catch { return []; }
+      })();
+      function saveBlocked() { localStorage.setItem("isseaair_blocked", JSON.stringify(blockedCompanies)); }
+      function normComp(n) { return String(n||'').trim().replace(/\s+/g,' ').toLowerCase(); }
+      function isSeniorCompany(item) {
+        const mfr = normComp(item.제조사수입자);
+        const name = normComp(item.품명);
+        return blockedCompanies.some(b => {
+          const nb = normComp(b);
+          if (!nb) return false;
+          return mfr.includes(nb) || nb.includes(mfr) || name.includes(nb);
+        });
+      }
+      function renderBlockedTags() {
+        const wrap = document.getElementById('blockedTags');
+        const countEl = document.getElementById('blockedCount');
+        if (!wrap) return;
+        if (!blockedCompanies.length) {
+          wrap.innerHTML = '<span class="blocked-empty">아직 등록된 거래처가 없습니다</span>';
+          if (countEl) countEl.textContent = '';
+          return;
+        }
+        if (countEl) countEl.textContent = `(${blockedCompanies.length}개)`;
+        wrap.innerHTML = blockedCompanies.map((b, i) =>
+          `<span class="blocked-tag">${esc(b)}<button class="blocked-tag-del" onclick="removeBlocked(${i})">×</button></span>`
+        ).join('');
+      }
+      function addBlocked() {
+        const inp = document.getElementById('blockedInput');
+        const val = inp.value.trim();
+        if (!val) return;
+        if (blockedCompanies.some(b => normComp(b) === normComp(val))) {
+          showToast('이미 등록된 거래처입니다', 'warn'); return;
+        }
+        blockedCompanies.push(val);
+        saveBlocked();
+        renderBlockedTags();
+        inp.value = '';
+        renderScanResults(); // 기존 카드에 즉시 반영
+        showToast(`"${val}" 추가됨 — 해당 업체 카드 자동 불가 표시`, 'ok');
+      }
+      function removeBlocked(i) {
+        blockedCompanies.splice(i, 1);
+        saveBlocked();
+        renderBlockedTags();
+        renderScanResults();
+      }
 
       /* ══════════════════════════════════════════════════════
    FETCH — 웹에 게시된 CSV 직접 파싱
@@ -2418,13 +2537,14 @@
         );
 
         /* 통계 */
-        const doneCount   = scannedItems.filter(x => x.scanStatus === '완료').length;
-        const rejectCount = scannedItems.filter(x => x.scanStatus === '불가').length;
-        const pendCount   = scannedItems.length - doneCount - rejectCount;
+        const seniorCount = scannedItems.filter(x => isSeniorCompany(x)).length;
+        const doneCount   = scannedItems.filter(x => !isSeniorCompany(x) && x.scanStatus === '완료').length;
+        const rejectCount = scannedItems.filter(x => !isSeniorCompany(x) && x.scanStatus === '불가').length;
+        const pendCount   = scannedItems.length - doneCount - rejectCount - seniorCount;
         statBar.innerHTML = `
           <div class="scan-stat"><strong>${scannedItems.length}</strong>총 상품</div>
           <div class="scan-stat" style="border-color:rgba(26,127,55,.4)"><strong style="color:#1a7f37">${doneCount}</strong>완료</div>
-          <div class="scan-stat" style="border-color:rgba(207,34,46,.4)"><strong style="color:#cf222e">${rejectCount}</strong>불가</div>
+          <div class="scan-stat" style="border-color:rgba(207,34,46,.4)"><strong style="color:#cf222e">${rejectCount + seniorCount}</strong>불가${seniorCount?`<small style="font-size:10px;opacity:.7"> (선배 ${seniorCount})</small>`:''}</div>
           <div class="scan-stat"><strong>${pendCount}</strong>미처리</div>
           ${countries.slice(0,2).map(c=>`<div class="scan-stat"><strong>${groups[c].length}</strong>${esc(c)}</div>`).join('')}`;
 
@@ -2448,18 +2568,19 @@
               ${items
                 .map((item) => {
                   const phone = item.전화번호 || "";
-                  const st = item.scanStatus || "";
+                  const senior = isSeniorCompany(item);
+                  const st = senior ? '불가' : (item.scanStatus || "");
                   const cardClass = st === '불가' ? 'card-reject' : st === '완료' ? 'card-done' : '';
                   const urlEnc = esc(item.url);
-                  return `<div class="scan-card ${cardClass}">
-                  ${st ? `<div class="scan-status-tag ${st==='불가'?'tag-reject':'tag-done'}">${st==='불가'?'✕ 불가':'✓ 완료'}</div>` : ''}
+                  return `<div class="scan-card ${cardClass}${senior?' card-senior':''}">
+                  ${senior ? `<div class="scan-senior-tag">👤 선배 거래처</div>` : st ? `<div class="scan-status-tag ${st==='불가'?'tag-reject':'tag-done'}">${st==='불가'?'✕ 불가':'✓ 완료'}</div>` : ''}
                   <div class="scan-card-name">${esc(item.품명 || "품명 미확인")}</div>
-                  <div class="scan-card-mfr">🏭 ${esc(item.제조사수입자 || "—")}</div>
+                  <div class="scan-card-mfr">🏭 ${esc(item.제조사수입자 || "—")}${senior?`<span class="scan-senior-badge">선배 거래처</span>`:''}</div>
                   <div class="scan-card-phone ${phone ? "" : "empty"}">📞 ${phone ? esc(phone) : "전화번호 없음"}</div>
                   <div class="scan-card-actions">
                     <a href="${urlEnc}" target="_blank" rel="noopener" class="scan-card-btn">🔗</a>
-                    <button class="scan-card-btn reject${st==='불가'?' active':''}" onclick="setScanStatus('${urlEnc}','불가')">✕ 불가</button>
-                    <button class="scan-card-btn done${st==='완료'?' active':''}" onclick="setScanStatus('${urlEnc}','완료')">✓ 완료</button>
+                    <button class="scan-card-btn reject${st==='불가'&&!senior?' active':''}" onclick="setScanStatus('${urlEnc}','불가')" ${senior?'disabled title="선배 거래처 — 자동 불가"':''}>✕ 불가</button>
+                    <button class="scan-card-btn done${st==='완료'?' active':''}" onclick="setScanStatus('${urlEnc}','완료')" ${senior?'disabled':''}>✓ 완료</button>
                     <button class="scan-card-btn del" onclick="deleteScanItem('${urlEnc}')">🗑</button>
                   </div>
                 </div>`;
@@ -2645,6 +2766,9 @@
         .addEventListener("click", switchToScan);
       document.getElementById("scanBtn").addEventListener("click", runScan);
       document.getElementById("dedupScanBtn").addEventListener("click", deduplicateExisting);
+      document.getElementById("blockedAddBtn").addEventListener("click", addBlocked);
+      document.getElementById("blockedInput").addEventListener("keydown", e => { if (e.key === 'Enter') addBlocked(); });
+      renderBlockedTags();
       document
         .getElementById("clearScanBtn")
         .addEventListener("click", clearAllScan);
