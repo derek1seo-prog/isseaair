@@ -997,6 +997,26 @@
       }
       .scan-card-btn:hover { background: var(--bg); border-color: var(--text-3); color: var(--text); }
       .scan-card-btn.del:hover { border-color: #cf222e; color: #cf222e; background: #ffebe9; }
+      .scan-card-btn.reject { color: #cf222e; border-color: rgba(207,34,46,.35); background: #ffebe9; }
+      .scan-card-btn.reject:hover, .scan-card-btn.reject.active { background: #cf222e; color: #fff; border-color: #cf222e; }
+      .scan-card-btn.done { color: #1a7f37; border-color: rgba(26,127,55,.35); background: #dafbe1; }
+      .scan-card-btn.done:hover, .scan-card-btn.done.active { background: #1a7f37; color: #fff; border-color: #1a7f37; }
+      /* 카드 상태별 스타일 */
+      .scan-card.card-reject { border-color: #f85149; border-width: 2px; background: #fff8f7; opacity: .85; }
+      .scan-card.card-done   { border-color: #3fb950; border-width: 2px; background: #f8fff9; }
+      .scan-status-tag {
+        display: inline-flex; align-items: center; gap: 3px;
+        font-size: 11px; font-weight: 600; padding: 2px 7px;
+        border-radius: var(--r-pill); margin-bottom: 8px;
+      }
+      .scan-status-tag.tag-reject { background: #ffebe9; color: #cf222e; border: 1px solid rgba(207,34,46,.3); }
+      .scan-status-tag.tag-done   { background: #dafbe1; color: #1a7f37; border: 1px solid rgba(26,127,55,.3); }
+      .scan-dup-tag {
+        display: inline-flex; align-items: center; gap: 3px;
+        font-size: 10px; font-weight: 500; padding: 1px 6px;
+        border-radius: var(--r-pill); margin-bottom: 4px;
+        background: #fff8c5; color: #9a6700; border: 1px solid rgba(154,103,0,.3);
+      }
       .scan-empty {
         text-align: center; padding: 60px 24px;
         color: var(--text-3); font-size: 13px; line-height: 2;
@@ -1393,6 +1413,7 @@
      if (e.parameter.action === 'extractLinks') return extractLinks(e.parameter.url);
      if (e.parameter.action === 'saveToEmart') return saveToEmart(e.parameter);
      if (e.parameter.action === 'getEmartItems') return getEmartItems();
+     if (e.parameter.action === 'updateEmartStatus') return updateEmartStatus(e.parameter);
      return handle(e);
    }
    function doPost(e) { return handle(e); }
@@ -1404,13 +1425,13 @@
        let sheet = ss.getSheetByName('emart');
        if (!sheet) {
          sheet = ss.insertSheet('emart');
-         sheet.appendRow(['URL', '품명', '제조사/수입자', '제조국', '전화번호', '스캔일시']);
-         sheet.getRange(1,1,1,6).setFontWeight('bold').setBackground('#f1f5f9');
+         sheet.appendRow(['URL', '품명', '제조사/수입자', '제조국', '전화번호', '스캔일시', '상태']);
+         sheet.getRange(1,1,1,7).setFontWeight('bold').setBackground('#f1f5f9');
        } else if (sheet.getLastRow() === 0) {
-         sheet.appendRow(['URL', '품명', '제조사/수입자', '제조국', '전화번호', '스캔일시']);
-         sheet.getRange(1,1,1,6).setFontWeight('bold').setBackground('#f1f5f9');
+         sheet.appendRow(['URL', '품명', '제조사/수입자', '제조국', '전화번호', '스캔일시', '상태']);
+         sheet.getRange(1,1,1,7).setFontWeight('bold').setBackground('#f1f5f9');
        }
-       sheet.appendRow([p.url||'', p['품명']||'', p['제조사수입자']||'', p['제조국']||'', p['전화번호']||'', p.addedAt||'']);
+       sheet.appendRow([p.url||'', p['품명']||'', p['제조사수입자']||'', p['제조국']||'', p['전화번호']||'', p.addedAt||'', '']);
        return res({success: true});
      } catch(e) { return res({success: false, error: e.message}); }
    }
@@ -1421,11 +1442,38 @@
        const ss = SpreadsheetApp.getActiveSpreadsheet();
        const sheet = ss.getSheetByName('emart');
        if (!sheet || sheet.getLastRow() < 2) return res({success: true, items: []});
-       const rows = sheet.getRange(2, 1, sheet.getLastRow()-1, 6).getValues();
+       const cols = Math.max(sheet.getLastColumn(), 7);
+       const rows = sheet.getRange(2, 1, sheet.getLastRow()-1, cols).getValues();
        const items = rows.map(r => ({
-         url: r[0]||'', 품명: r[1]||'', 제조사수입자: r[2]||'', 제조국: r[3]||'', 전화번호: r[4]||'', addedAt: r[5]||''
+         url: r[0]||'', 품명: r[1]||'', 제조사수입자: r[2]||'', 제조국: r[3]||'', 전화번호: r[4]||'', addedAt: r[5]||'', scanStatus: r[6]||''
        })).filter(i => i.url);
        return res({success: true, items});
+     } catch(e) { return res({success: false, error: e.message}); }
+   }
+
+   // ── emart 상태 업데이트 ──────────────────────────────
+   function updateEmartStatus(p) {
+     try {
+       const ss = SpreadsheetApp.getActiveSpreadsheet();
+       const sheet = ss.getSheetByName('emart');
+       if (!sheet || sheet.getLastRow() < 2) return res({success: false, error: 'emart 시트 없음'});
+       // URL로 행 찾기
+       const urls = sheet.getRange(2, 1, sheet.getLastRow()-1, 1).getValues();
+       let found = -1;
+       for (let i = 0; i < urls.length; i++) {
+         if (urls[i][0] === p.url) { found = i+2; break; }
+       }
+       if (found < 0) return res({success: false, error: '해당 행을 찾지 못했습니다'});
+       // 상태 컬럼(7열) 확보 및 저장
+       if (sheet.getLastColumn() < 7) sheet.getRange(1,7).setValue('상태');
+       sheet.getRange(found, 7).setValue(p.status || '');
+       // 행 배경색
+       const ncols = Math.max(sheet.getLastColumn(), 7);
+       const rowRange = sheet.getRange(found, 1, 1, ncols);
+       if (p.status === '불가') rowRange.setBackground('#eeeeee');
+       else if (p.status === '완료') rowRange.setBackground('#d4edda');
+       else rowRange.setBackground(null);
+       return res({success: true});
      } catch(e) { return res({success: false, error: e.message}); }
    }
 
@@ -2216,8 +2264,7 @@
         const btn = document.getElementById("scanBtn");
         const prog = document.getElementById("scanProgress");
         btn.disabled = true;
-        let ok = 0,
-          fail = 0;
+        let ok = 0, fail = 0, dup = 0;
 
         for (let i = 0; i < urls.length; i++) {
           const url = urls[i];
@@ -2229,11 +2276,21 @@
             const res = await fetch(api.toString());
             const json = await res.json();
             if (json.success && json.data) {
-              if (!scannedItems.some((x) => x.url === url)) {
-                const item = { ...json.data, url, addedAt: new Date().toISOString() };
-                scannedItems.push(item);
-                saveItemToSheet(item);
+              const item = { ...json.data, url, addedAt: new Date().toISOString(), scanStatus: '' };
+              // 1순위: URL 중복
+              if (scannedItems.some((x) => x.url === url)) {
+                dup++; continue;
               }
+              // 2순위: 전화번호/품명 정규화 중복
+              if (isDuplicate(item, scannedItems)) {
+                dup++;
+                const dupBy = normPhone(item.전화번호) && scannedItems.some(x => normPhone(x.전화번호) === normPhone(item.전화번호))
+                  ? `전화번호(${item.전화번호})` : `품명(${item.품명})`;
+                showToast(`중복 제외: ${dupBy}`, "warn");
+                continue;
+              }
+              scannedItems.push(item);
+              saveItemToSheet(item);
               ok++;
             } else {
               fail++;
@@ -2247,11 +2304,47 @@
 
         saveScan();
         ta.value = "";
-        prog.textContent = `완료 — 성공 ${ok}개${
-          fail ? `, 실패 ${fail}개` : ""
-        }`;
+        prog.textContent = `완료 — 신규 ${ok}개${dup ? `, 중복 제외 ${dup}개` : ""}${fail ? `, 실패 ${fail}개` : ""}`;
         btn.disabled = false;
         renderScanResults();
+      }
+
+      /* ── 정규화 & 중복 검사 ─────────────────────────── */
+      function normPhone(p) {
+        if (!p) return '';
+        return String(p).replace(/[\s\-\(\)\.]/g, '').replace(/^(\+?82|0082)/, '0');
+      }
+      function normName(n) {
+        if (!n) return '';
+        return String(n).trim().replace(/\s+/g, ' ').toLowerCase();
+      }
+      function isDuplicate(item, list) {
+        const phone = normPhone(item.전화번호);
+        const name  = normName(item.품명);
+        return list.some(x => {
+          if (phone && normPhone(x.전화번호) === phone) return true;
+          if (name  && normName(x.품명)    === name)  return true;
+          return false;
+        });
+      }
+
+      /* ── 스캔 상태 변경 ────────────────────────────── */
+      async function setScanStatus(url, newStatus) {
+        const item = scannedItems.find(x => x.url === url);
+        if (!item) return;
+        // 같은 상태 클릭 시 토글 (해제)
+        item.scanStatus = item.scanStatus === newStatus ? '' : newStatus;
+        saveScan();
+        renderScanResults();
+        // Google Sheets 동기화
+        if (!APPS_SCRIPT_URL) return;
+        try {
+          const api = new URL(APPS_SCRIPT_URL);
+          api.searchParams.set('action', 'updateEmartStatus');
+          api.searchParams.set('url', url);
+          api.searchParams.set('status', item.scanStatus);
+          await fetch(api.toString());
+        } catch(e) { /* silent */ }
       }
 
       async function saveItemToSheet(item) {
@@ -2305,22 +2398,15 @@
         );
 
         /* 통계 */
+        const doneCount   = scannedItems.filter(x => x.scanStatus === '완료').length;
+        const rejectCount = scannedItems.filter(x => x.scanStatus === '불가').length;
+        const pendCount   = scannedItems.length - doneCount - rejectCount;
         statBar.innerHTML = `
-          <div class="scan-stat"><strong>${
-            scannedItems.length
-          }</strong>총 상품</div>
-          <div class="scan-stat"><strong>${
-            countries.length
-          }</strong>제조국 수</div>
-          ${countries
-            .slice(0, 3)
-            .map(
-              (c) =>
-                `<div class="scan-stat"><strong>${
-                  groups[c].length
-                }</strong>${esc(c)}</div>`
-            )
-            .join("")}`;
+          <div class="scan-stat"><strong>${scannedItems.length}</strong>총 상품</div>
+          <div class="scan-stat" style="border-color:rgba(26,127,55,.4)"><strong style="color:#1a7f37">${doneCount}</strong>완료</div>
+          <div class="scan-stat" style="border-color:rgba(207,34,46,.4)"><strong style="color:#cf222e">${rejectCount}</strong>불가</div>
+          <div class="scan-stat"><strong>${pendCount}</strong>미처리</div>
+          ${countries.slice(0,2).map(c=>`<div class="scan-stat"><strong>${groups[c].length}</strong>${esc(c)}</div>`).join('')}`;
 
         /* 국가별 카드 */
         container.innerHTML = countries
@@ -2342,30 +2428,19 @@
               ${items
                 .map((item) => {
                   const phone = item.전화번호 || "";
-                  return `<div class="scan-card">
-                  <div class="scan-card-name">${esc(
-                    item.품명 || "품명 미확인"
-                  )}</div>
-                  <div class="scan-card-mfr">🏭 ${esc(
-                    item.제조사수입자 || "—"
-                  )}</div>
-                  <div class="scan-card-phone ${phone ? "" : "empty"}">📞 ${
-                    phone ? esc(phone) : "전화번호 없음"
-                  }</div>
+                  const st = item.scanStatus || "";
+                  const cardClass = st === '불가' ? 'card-reject' : st === '완료' ? 'card-done' : '';
+                  const urlEnc = esc(item.url);
+                  return `<div class="scan-card ${cardClass}">
+                  ${st ? `<div class="scan-status-tag ${st==='불가'?'tag-reject':'tag-done'}">${st==='불가'?'✕ 불가':'✓ 완료'}</div>` : ''}
+                  <div class="scan-card-name">${esc(item.품명 || "품명 미확인")}</div>
+                  <div class="scan-card-mfr">🏭 ${esc(item.제조사수입자 || "—")}</div>
+                  <div class="scan-card-phone ${phone ? "" : "empty"}">📞 ${phone ? esc(phone) : "전화번호 없음"}</div>
                   <div class="scan-card-actions">
-                    <a href="${esc(
-                      item.url
-                    )}" target="_blank" rel="noopener" class="scan-card-btn">🔗 상품</a>
-                    ${
-                      phone
-                        ? `<button class="scan-card-btn" onclick="navigator.clipboard.writeText('${esc(
-                            phone
-                          )}');showToast('번호 복사됨','ok')">📋 복사</button>`
-                        : ""
-                    }
-                    <button class="scan-card-btn del" onclick="deleteScanItem('${esc(
-                      item.url
-                    )}')">🗑</button>
+                    <a href="${urlEnc}" target="_blank" rel="noopener" class="scan-card-btn">🔗</a>
+                    <button class="scan-card-btn reject${st==='불가'?' active':''}" onclick="setScanStatus('${urlEnc}','불가')">✕ 불가</button>
+                    <button class="scan-card-btn done${st==='완료'?' active':''}" onclick="setScanStatus('${urlEnc}','완료')">✓ 완료</button>
+                    <button class="scan-card-btn del" onclick="deleteScanItem('${urlEnc}')">🗑</button>
                   </div>
                 </div>`;
                 })
@@ -2386,16 +2461,29 @@
           const res = await fetch(url.toString());
           const json = await res.json();
           if (json.success && json.items.length) {
-            let added = 0;
-            json.items.forEach(item => {
-              if (!scannedItems.some(x => x.url === item.url)) {
-                scannedItems.push(item);
-                added++;
+            let added = 0, statusUpdated = 0;
+            json.items.forEach(sheetItem => {
+              const existing = scannedItems.find(x => x.url === sheetItem.url);
+              if (existing) {
+                // 시트의 상태가 있으면 로컬에 반영
+                if (sheetItem.scanStatus && existing.scanStatus !== sheetItem.scanStatus) {
+                  existing.scanStatus = sheetItem.scanStatus;
+                  statusUpdated++;
+                }
+              } else {
+                // 중복 체크 후 추가
+                if (!isDuplicate(sheetItem, scannedItems)) {
+                  scannedItems.push({ ...sheetItem, scanStatus: sheetItem.scanStatus || '' });
+                  added++;
+                }
               }
             });
             localStorage.setItem('isseaair_scan', JSON.stringify(scannedItems));
-            if (added > 0) showToast(`${added}개 상품을 불러왔습니다`, 'success');
-            else showToast('새 항목 없음 (이미 동기화됨)', 'info');
+            if (added > 0 || statusUpdated > 0) {
+              showToast(`${added}개 신규, ${statusUpdated}개 상태 동기화됨`, 'success');
+            } else {
+              showToast('새 항목 없음 (이미 동기화됨)', 'info');
+            }
           } else if (json.success) {
             showToast('시트에 저장된 항목이 없습니다', 'info');
           } else {
