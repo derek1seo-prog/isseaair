@@ -146,7 +146,7 @@
         border-bottom: 1px solid var(--border);
       }
       .header-in {
-        max-width: 920px;
+        max-width: var(--content-max, 920px);
         margin: 0 auto;
         display: flex;
         align-items: center;
@@ -344,7 +344,7 @@
 
       /* ── LAYOUT ──────────────────────────────────── */
       .shell {
-        max-width: 920px;
+        max-width: var(--content-max, 920px);
         margin: 0 auto;
         padding: 26px 24px 96px;
       }
@@ -1115,6 +1115,21 @@
           height: 46px;
         }
       }
+      @media (min-width: 900px) {
+        :root {
+          --content-max: 1040px;
+        }
+      }
+      @media (min-width: 1200px) {
+        :root {
+          --content-max: 1220px;
+        }
+      }
+      @media (min-width: 1600px) {
+        :root {
+          --content-max: 1360px;
+        }
+      }
       ::-webkit-scrollbar {
         width: 5px;
         height: 5px;
@@ -1520,13 +1535,23 @@
 
       /* ── 차단 거래처 ─────────────────────────────────── */
       function normComp(n) { return String(n || "").trim().replace(/\s+/g, " ").toLowerCase(); }
+      const GENERIC_MFR = new Set([
+        "상세페이지 참조", "상세페이지참조", "상세페이지 내용참조", "상세페이지 내용 참조",
+        "상세설명 참조", "상세설명참조", "상세정보 참조", "상세정보참조",
+        "상품상세 참조", "상품상세참조", "상품 상세페이지 참조", "상세페이지 참고",
+        "별도표기", "별도 표기", "별도표시", "별도 표시", "상세이미지 참조", "상세이미지참조",
+      ]);
+      function isGenericMfr(raw) {
+        return GENERIC_MFR.has(normComp(raw));
+      }
       function isSeniorCompany(item) {
-        const mfr = normComp(item.제조사수입자);
+        const mfrRaw = item.제조사수입자;
+        const mfr = isGenericMfr(mfrRaw) ? "" : normComp(mfrRaw);
         const name = normComp(item.품명);
         return blockedCompanies.some((b) => {
           const nb = normComp(b);
           if (!nb) return false;
-          return mfr.includes(nb) || nb.includes(mfr) || name.includes(nb);
+          return (mfr && (mfr.includes(nb) || nb.includes(mfr))) || (name && name.includes(nb));
         });
       }
       function renderBlockedTags() {
@@ -1978,10 +2003,10 @@
       function normMfr(n) { return n ? String(n).trim().replace(/\s+/g, " ").toLowerCase() : ""; }
       function isDuplicate(item, list) {
         const phone = normPhone(item.전화번호);
-        const mfr = normMfr(item.제조사수입자);
+        const mfr = isGenericMfr(item.제조사수입자) ? "" : normMfr(item.제조사수입자);
         return list.some((x) => {
           if (phone && phone.length >= 7 && normPhone(x.전화번호) === phone) return true;
-          if (mfr && normMfr(x.제조사수입자) === mfr) return true;
+          if (mfr && !isGenericMfr(x.제조사수입자) && normMfr(x.제조사수입자) === mfr) return true;
           return false;
         });
       }
