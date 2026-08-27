@@ -3,8 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>영업 관리</title>
+    <title>Scout</title>
     <link rel="icon" type="image/png" href="logo.png" />
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("isseaair_theme") === "light") {
+            document.documentElement.setAttribute("data-theme", "light");
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -29,18 +38,40 @@
         --text: #f2f3f5;
         --text-2: #9a9ea6;
         --text-3: #5c6066;
-        --white: #ffffff;
+        --fg: #ffffff;
+        --fg-contrast: #000000;
         --green: #3ddc84;
         --green-dim: rgba(61, 220, 132, 0.12);
         --red: #f66;
         --red-dim: rgba(255, 102, 102, 0.12);
         --amber: #f5b34d;
         --ring: rgba(255, 255, 255, 0.14);
+        --backdrop: rgba(0, 0, 0, 0.5);
         --r-xs: 5px;
         --r-sm: 8px;
         --r-md: 10px;
         --r-lg: 14px;
         --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      :root[data-theme="light"] {
+        --bg: #fafafa;
+        --surface: #ffffff;
+        --surface-2: #f3f3f4;
+        --surface-3: #eaeaec;
+        --border: #e7e7e9;
+        --border-2: #d7d7db;
+        --text: #16171a;
+        --text-2: #5b5e64;
+        --text-3: #96999f;
+        --fg: #141518;
+        --fg-contrast: #ffffff;
+        --green: #159a4a;
+        --green-dim: rgba(21, 154, 74, 0.1);
+        --red: #dc3545;
+        --red-dim: rgba(220, 53, 69, 0.1);
+        --amber: #b3720a;
+        --ring: rgba(0, 0, 0, 0.08);
+        --backdrop: rgba(20, 20, 22, 0.28);
       }
       html {
         font-family: "Inter", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -53,13 +84,51 @@
         min-height: 100vh;
         letter-spacing: -0.006em;
       }
+      * {
+        transition: background-color 0.18s ease, border-color 0.18s ease, color 0.15s ease;
+      }
       button,
       input,
       textarea {
         font-family: inherit;
       }
       ::selection {
-        background: rgba(255, 255, 255, 0.18);
+        background: rgba(128, 128, 128, 0.3);
+      }
+
+      /* ── TOOLTIP ─────────────────────────────────── */
+      [data-tip] {
+        position: relative;
+      }
+      [data-tip]::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: calc(100% + 7px);
+        left: 50%;
+        transform: translateX(-50%) translateY(3px);
+        background: var(--surface-3);
+        border: 1px solid var(--border-2);
+        color: var(--text);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0;
+        padding: 4px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.12s ease, transform 0.12s ease;
+        z-index: 500;
+      }
+      [data-tip].tip-below::after {
+        bottom: auto;
+        top: calc(100% + 7px);
+        transform: translateX(-50%) translateY(-3px);
+      }
+      [data-tip]:hover::after,
+      [data-tip]:focus-visible::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
       }
 
       /* ── HEADER ─────────────────────────────────── */
@@ -67,7 +136,7 @@
         position: sticky;
         top: 0;
         z-index: 100;
-        background: rgba(8, 9, 10, 0.85);
+        background: color-mix(in srgb, var(--bg) 85%, transparent);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         border-bottom: 1px solid var(--border);
@@ -77,33 +146,35 @@
         margin: 0 auto;
         display: flex;
         align-items: center;
-        gap: 14px;
-        height: 54px;
+        gap: 12px;
+        height: 52px;
         padding: 0 20px;
       }
       .brand {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 7px;
         flex-shrink: 0;
       }
       .brand-icon {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         border-radius: 6px;
         flex-shrink: 0;
         object-fit: cover;
       }
       .brand-name {
-        font-size: 13.5px;
-        font-weight: 600;
+        font-size: 11.5px;
+        font-weight: 700;
         color: var(--text);
-        letter-spacing: -0.01em;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
       }
 
       .search {
         flex: 1;
-        max-width: 320px;
+        max-width: 280px;
+        min-width: 70px;
         position: relative;
       }
       .search svg {
@@ -116,8 +187,8 @@
       }
       .search input {
         width: 100%;
-        height: 32px;
-        padding: 0 12px 0 30px;
+        height: 30px;
+        padding: 0 26px 0 30px;
         border: 1px solid var(--border);
         border-radius: var(--r-sm);
         font-size: 12.5px;
@@ -134,11 +205,49 @@
         background: var(--surface-2);
         box-shadow: 0 0 0 3px var(--ring);
       }
+      .search-clear {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%) scale(0.9);
+        width: 18px;
+        height: 18px;
+        border: none;
+        background: transparent;
+        color: var(--text-3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 4px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.12s ease, color 0.12s ease;
+      }
+      .search-clear:hover {
+        color: var(--text);
+        background: var(--surface-3);
+      }
+      .search.has-value .search-clear {
+        opacity: 1;
+        pointer-events: all;
+      }
 
+      .hdr-group {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .hdr-sep {
+        width: 1px;
+        height: 18px;
+        background: var(--border);
+        margin: 0 4px;
+        flex-shrink: 0;
+      }
       .hdr-right {
         display: flex;
         align-items: center;
-        gap: 6px;
         margin-left: auto;
         flex-shrink: 0;
       }
@@ -146,8 +255,8 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        padding: 0 9px;
-        height: 26px;
+        padding: 0 8px;
+        height: 24px;
         border-radius: var(--r-xs);
         font-size: 10.5px;
         color: var(--text-3);
@@ -180,8 +289,10 @@
         }
       }
       .iconbtn {
-        width: 30px;
-        height: 30px;
+        position: relative;
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
         border-radius: var(--r-sm);
         border: 1px solid transparent;
         background: transparent;
@@ -198,7 +309,7 @@
         color: var(--text);
       }
       .iconbtn:active {
-        transform: scale(0.93);
+        transform: scale(0.92);
       }
       .iconbtn.spin svg {
         animation: spin 0.7s linear infinite;
@@ -208,12 +319,29 @@
           transform: rotate(360deg);
         }
       }
+      .badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        min-width: 13px;
+        height: 13px;
+        padding: 0 3px;
+        border-radius: 999px;
+        background: var(--fg);
+        color: var(--fg-contrast);
+        font-size: 8.5px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+      }
 
       /* ── LAYOUT ──────────────────────────────────── */
       .shell {
         max-width: 920px;
         margin: 0 auto;
-        padding: 22px 20px 90px;
+        padding: 20px 20px 90px;
       }
 
       /* ── COMPOSER ────────────────────────────────── */
@@ -221,16 +349,16 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--r-lg);
-        padding: 12px;
-        margin-bottom: 22px;
-        transition: border-color 0.15s var(--ease);
+        padding: 11px;
+        margin-bottom: 20px;
+        transition: border-color 0.15s var(--ease), background-color 0.18s ease;
       }
       .composer:focus-within {
         border-color: var(--border-2);
       }
       .composer textarea {
         width: 100%;
-        min-height: 56px;
+        min-height: 50px;
         max-height: 200px;
         resize: vertical;
         border: none;
@@ -240,7 +368,7 @@
         font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
         font-size: 12px;
         line-height: 1.65;
-        padding: 4px 4px 8px;
+        padding: 3px 3px 7px;
       }
       .composer textarea::placeholder {
         color: var(--text-3);
@@ -250,7 +378,6 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        flex-wrap: wrap;
         padding-top: 8px;
         border-top: 1px solid var(--border);
       }
@@ -264,11 +391,14 @@
       /* ── BUTTONS ─────────────────────────────────── */
       .btn {
         appearance: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         border: 1px solid transparent;
         border-radius: var(--r-sm);
         font-size: 12.5px;
         font-weight: 500;
-        padding: 7px 14px;
+        padding: 7px 13px;
         cursor: pointer;
         transition: background 0.15s var(--ease), color 0.15s, border-color 0.15s, transform 0.1s;
         line-height: 1.2;
@@ -277,11 +407,11 @@
         transform: scale(0.97);
       }
       .btn-primary {
-        background: var(--white);
-        color: #000;
+        background: var(--fg);
+        color: var(--fg-contrast);
       }
       .btn-primary:hover {
-        background: #d8d8d8;
+        opacity: 0.85;
       }
       .btn-primary:disabled {
         opacity: 0.35;
@@ -327,16 +457,16 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--r-md);
-        padding: 9px 12px;
+        padding: 8px 12px;
         cursor: pointer;
-        transition: border-color 0.15s var(--ease), background 0.15s;
+        transition: border-color 0.15s var(--ease), background-color 0.18s ease;
       }
       .status-tab:hover {
         border-color: var(--border-2);
       }
       .status-tab.active {
         background: var(--surface-3);
-        border-color: var(--text-3);
+        border-color: var(--border-2);
       }
       .status-tab.active::after {
         content: "";
@@ -355,9 +485,10 @@
         color: var(--text);
       }
       .status-tab span {
-        font-size: 10.5px;
+        font-size: 10px;
         color: var(--text-3);
         font-weight: 500;
+        letter-spacing: 0.02em;
       }
       .status-tab.active span {
         color: var(--text-2);
@@ -401,9 +532,9 @@
         border-color: var(--border-2);
       }
       .date-chip.active {
-        background: var(--white);
-        border-color: var(--white);
-        color: #000;
+        background: var(--fg);
+        border-color: var(--fg);
+        color: var(--fg-contrast);
         font-weight: 600;
       }
       .date-chip b {
@@ -411,7 +542,7 @@
         opacity: 0.55;
       }
       .date-chip.active b {
-        opacity: 0.5;
+        opacity: 0.55;
       }
 
       /* ── BUCKET PANEL ────────────────────────────── */
@@ -420,11 +551,10 @@
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        flex-wrap: wrap;
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--r-md);
-        padding: 10px 14px;
+        padding: 8px 8px 8px 14px;
         margin-bottom: 14px;
       }
       .bucket-panel strong {
@@ -435,16 +565,17 @@
         font-size: 11.5px;
         color: var(--text-3);
         margin-left: 4px;
+        font-variant-numeric: tabular-nums;
       }
       .bucket-actions {
         display: flex;
-        gap: 6px;
+        gap: 2px;
       }
 
       /* ── GRID / DIVIDER ──────────────────────────── */
       .scan-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(266px, 1fr));
         gap: 8px;
       }
       .divider {
@@ -452,7 +583,7 @@
         display: flex;
         align-items: baseline;
         gap: 8px;
-        padding: 14px 2px 6px;
+        padding: 13px 2px 6px;
       }
       .divider:first-child {
         padding-top: 0;
@@ -485,12 +616,11 @@
         border: 1px solid var(--border);
         border-left: 2px solid var(--border);
         border-radius: var(--r-md);
-        padding: 11px 12px;
+        padding: 10px 11px;
         display: flex;
         flex-direction: column;
         gap: 7px;
-        animation: cardIn 0.24s var(--ease) both;
-        transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+        animation: cardIn 0.22s var(--ease) both;
       }
       @keyframes cardIn {
         from {
@@ -531,17 +661,19 @@
         white-space: nowrap;
         margin-top: 1px;
         font-variant-numeric: tabular-nums;
+        cursor: default;
       }
       .senior-flag {
         display: inline-block;
         font-size: 10px;
         color: var(--red);
-        font-weight: 500;
+        font-weight: 600;
+        letter-spacing: 0.02em;
       }
       .card-meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 3px 12px;
+        gap: 3px 11px;
       }
       .meta-item {
         display: inline-flex;
@@ -618,7 +750,7 @@
       }
       .note-editor textarea {
         width: 100%;
-        min-height: 48px;
+        min-height: 46px;
         resize: none;
         border: 1px solid var(--border-2);
         border-radius: var(--r-xs);
@@ -642,18 +774,16 @@
         margin-top: 1px;
       }
       .card-act {
+        position: relative;
         flex: 1;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 3px;
-        padding: 5px 4px;
+        height: 26px;
         border-radius: var(--r-xs);
         border: 1px solid var(--border);
         background: transparent;
         color: var(--text-2);
-        font-size: 11px;
-        font-weight: 500;
         text-decoration: none;
         cursor: pointer;
         transition: all 0.12s var(--ease);
@@ -665,21 +795,21 @@
       }
       .card-act[data-act="reject"].active {
         background: var(--red-dim);
-        border-color: rgba(255, 102, 102, 0.35);
+        border-color: color-mix(in srgb, var(--red) 35%, transparent);
         color: var(--red);
       }
       .card-act[data-act="done"].active {
         background: var(--green-dim);
-        border-color: rgba(61, 220, 132, 0.35);
+        border-color: color-mix(in srgb, var(--green) 35%, transparent);
         color: var(--green);
       }
       .card-act[data-act="del"]:hover {
         background: var(--red-dim);
-        border-color: rgba(255, 102, 102, 0.35);
+        border-color: color-mix(in srgb, var(--red) 35%, transparent);
         color: var(--red);
       }
       .card-act:disabled {
-        opacity: 0.35;
+        opacity: 0.3;
         cursor: default;
       }
 
@@ -687,113 +817,90 @@
       .empty-state {
         display: none;
         text-align: center;
-        padding: 70px 20px;
+        padding: 64px 20px;
       }
       .empty-title {
-        font-size: 13.5px;
-        font-weight: 600;
-        color: var(--text-2);
-        margin-bottom: 4px;
-      }
-      .empty-desc {
-        font-size: 12px;
+        font-size: 12.5px;
+        font-weight: 500;
         color: var(--text-3);
       }
       .sentinel {
         height: 1px;
       }
 
-      /* ── TOOLS (collapsed utility drawer) ─────────── */
-      .tools {
-        margin-top: 36px;
-        padding-top: 16px;
-        border-top: 1px solid var(--border);
+      /* ── SLIDE-OVER PANEL ─────────────────────────── */
+      .panel-backdrop {
+        position: fixed;
+        inset: 0;
+        background: var(--backdrop);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s var(--ease);
+        z-index: 250;
+      }
+      .panel-backdrop.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 360px;
+        max-width: 92vw;
+        background: var(--surface);
+        border-left: 1px solid var(--border);
+        z-index: 260;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        transform: translateX(100%);
+        transition: transform 0.25s var(--ease);
+        box-shadow: -20px 0 50px rgba(0, 0, 0, 0.25);
       }
-      .tool {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--r-sm);
-        padding: 10px 14px;
+      .panel.open {
+        transform: none;
       }
-      .tool summary {
-        font-size: 11.5px;
-        font-weight: 500;
-        color: var(--text-3);
-        cursor: pointer;
-        user-select: none;
-        list-style: none;
+      .panel-head {
         display: flex;
         align-items: center;
-        gap: 6px;
-        transition: color 0.12s;
-      }
-      .tool summary:hover {
-        color: var(--text-2);
-      }
-      .tool summary::-webkit-details-marker {
-        display: none;
-      }
-      .tool summary::before {
-        content: "";
-        width: 5px;
-        height: 5px;
-        border-right: 1.5px solid var(--text-3);
-        border-bottom: 1.5px solid var(--text-3);
-        transform: rotate(-45deg);
-        transition: transform 0.18s var(--ease);
+        justify-content: space-between;
+        padding: 15px 16px;
+        border-bottom: 1px solid var(--border);
         flex-shrink: 0;
       }
-      .tool[open] summary::before {
-        transform: rotate(45deg);
+      .panel-head span {
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
       }
-      .tool summary b {
-        color: var(--text-3);
-        font-weight: 400;
+      .panel-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
       }
-      .tool-body {
-        margin-top: 12px;
-        animation: cardIn 0.18s var(--ease) both;
+      .pane {
+        display: none;
       }
-      .tool-cap {
+      .pane.active {
+        display: block;
+        animation: cardIn 0.2s var(--ease) both;
+      }
+      .pane-cap {
         font-size: 11px;
         color: var(--text-3);
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         line-height: 1.6;
-      }
-      .bkmk-row {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      .bkmk-btn {
-        display: inline-flex;
-        align-items: center;
-        padding: 6px 13px;
-        border-radius: var(--r-xs);
-        background: var(--surface-3);
-        color: var(--text);
-        border: 1px solid var(--border-2);
-        font-size: 11.5px;
-        font-weight: 500;
-        text-decoration: none;
-        cursor: grab;
-        user-select: none;
-        transition: background 0.12s;
-      }
-      .bkmk-btn:hover {
-        background: #262a2e;
       }
       .field-row {
         display: flex;
-        gap: 8px;
+        gap: 6px;
         margin-bottom: 10px;
       }
       .field {
         flex: 1;
-        padding: 6px 10px;
+        min-width: 0;
+        padding: 7px 10px;
         border: 1px solid var(--border);
         border-radius: var(--r-xs);
         font-size: 12px;
@@ -821,7 +928,7 @@
         border-radius: 999px;
         background: var(--red-dim);
         color: var(--red);
-        border: 1px solid rgba(255, 102, 102, 0.3);
+        border: 1px solid color-mix(in srgb, var(--red) 30%, transparent);
         font-size: 11.5px;
         font-weight: 500;
       }
@@ -830,7 +937,7 @@
         height: 15px;
         border-radius: 50%;
         border: none;
-        background: rgba(255, 102, 102, 0.2);
+        background: color-mix(in srgb, var(--red) 20%, transparent);
         color: var(--red);
         cursor: pointer;
         display: flex;
@@ -842,11 +949,35 @@
       }
       .tag button:hover {
         background: var(--red);
-        color: #000;
+        color: var(--fg-contrast);
       }
       .tag-empty {
         font-size: 11.5px;
         color: var(--text-3);
+      }
+      .bkmk-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .bkmk-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 13px;
+        border-radius: var(--r-xs);
+        background: var(--surface-3);
+        color: var(--text);
+        border: 1px solid var(--border-2);
+        font-size: 11.5px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: grab;
+        user-select: none;
+        transition: background 0.12s;
+      }
+      .bkmk-btn:hover {
+        background: var(--surface-2);
+        border-color: var(--text-3);
       }
       .extract-out {
         background: var(--bg);
@@ -865,8 +996,7 @@
       }
       .row-actions {
         display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
+        gap: 4px;
         align-items: center;
       }
 
@@ -880,7 +1010,7 @@
         pointer-events: none;
       }
       .toast {
-        background: rgba(23, 24, 27, 0.92);
+        background: color-mix(in srgb, var(--surface-2) 92%, transparent);
         backdrop-filter: blur(8px);
         border: 1px solid var(--border-2);
         color: var(--text);
@@ -888,7 +1018,7 @@
         border-radius: 999px;
         font-size: 12.5px;
         font-weight: 500;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         opacity: 0;
         transform: translateY(6px) scale(0.98);
         transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
@@ -912,8 +1042,8 @@
       /* ── RESPONSIVE ──────────────────────────────── */
       @media (max-width: 640px) {
         .header-in {
-          padding: 0 14px;
-          gap: 10px;
+          padding: 0 12px;
+          gap: 8px;
         }
         .brand-name {
           display: none;
@@ -921,14 +1051,21 @@
         .search {
           max-width: none;
         }
+        .hdr-sep {
+          margin: 0 2px;
+        }
         .shell {
-          padding: 16px 14px 90px;
+          padding: 14px 14px 90px;
         }
         .status-tab b {
           font-size: 15px;
         }
         .scan-grid {
           grid-template-columns: 1fr;
+        }
+        .panel {
+          width: 100%;
+          max-width: 100%;
         }
         .lock-box {
           width: 88vw;
@@ -954,12 +1091,24 @@
         border-radius: 99px;
       }
 
-      /* ── LOCK SCREEN ─────────────────────────────── */
+      /* ── LOCK SCREEN (always dark, brand-fixed) ───── */
       .lock-screen {
+        --bg: #000;
+        --surface: #101113;
+        --surface-2: #17181b;
+        --surface-3: #1e2023;
+        --border: #1f2124;
+        --border-2: #2a2d31;
+        --text: #f2f3f5;
+        --text-2: #9a9ea6;
+        --text-3: #5c6066;
+        --fg: #ffffff;
+        --fg-contrast: #000000;
+        --red: #f66;
         position: fixed;
         inset: 0;
         z-index: 9999;
-        background: #000;
+        background: var(--bg);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -977,15 +1126,17 @@
         gap: 18px;
       }
       .lock-logo {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
         border-radius: 10px;
         object-fit: cover;
       }
       .lock-title {
-        font-size: 14.5px;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 700;
         color: var(--text);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
         margin-top: -6px;
       }
       .pin-dots {
@@ -1002,8 +1153,8 @@
         transition: all 0.15s var(--ease);
       }
       .pin-dot.filled {
-        background: var(--white);
-        border-color: var(--white);
+        background: var(--fg);
+        border-color: var(--fg);
         transform: scale(1.1);
       }
       .pin-dot.error {
@@ -1049,7 +1200,7 @@
     <div class="lock-screen" id="lockScreen">
       <div class="lock-box">
         <img class="lock-logo" src="logo.png" alt="" />
-        <div class="lock-title">영업 관리</div>
+        <div class="lock-title">Scout</div>
         <div class="pin-dots" id="pinDots">
           <div class="pin-dot" id="d0"></div>
           <div class="pin-dot" id="d1"></div>
@@ -1079,28 +1230,50 @@
       <div class="header-in">
         <div class="brand">
           <img class="brand-icon" src="logo.png" alt="" />
-          <span class="brand-name">영업 관리</span>
+          <span class="brand-name">Scout</span>
         </div>
-        <div class="search">
+        <div class="search" id="searchWrap">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-          <input id="searchInput" type="text" placeholder="검색" autocomplete="off" />
-        </div>
-        <div class="hdr-right">
-          <div class="sync">
-            <div class="sync-dot" id="syncDot"></div>
-            <span id="syncText">—</span>
-          </div>
-          <button class="iconbtn" id="refreshBtn" title="새로고침">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
-              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-              <path d="M21 3v5h-5" />
-              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-              <path d="M8 16H3v5" />
-            </svg>
+          <input id="searchInput" type="text" placeholder="Search" autocomplete="off" />
+          <button class="search-clear" id="searchClear" tabindex="-1" data-tip="Clear" aria-label="Clear search">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
           </button>
+        </div>
+
+        <div class="hdr-group">
+          <button class="iconbtn tip-below" id="blockedDock" data-tip="Blocklist" onclick="openPanel('Blocklist','Blocklist')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="m5.5 5.5 13 13" /></svg>
+            <span class="badge" id="blockedBadge" hidden></span>
+          </button>
+          <button class="iconbtn tip-below" data-tip="Bookmarklets" onclick="openPanel('Bookmarklet','Bookmarklets')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21 12 16l-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+          </button>
+          <button class="iconbtn tip-below" data-tip="Extract links" onclick="openPanel('Extract','Extract links')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+          </button>
+        </div>
+
+        <div class="hdr-sep"></div>
+
+        <div class="hdr-right">
+          <div class="hdr-group">
+            <button class="iconbtn tip-below" id="themeBtn" data-tip="Theme" onclick="toggleTheme()"></button>
+            <div class="sync">
+              <div class="sync-dot" id="syncDot"></div>
+              <span id="syncText">—</span>
+            </div>
+            <button class="iconbtn tip-below" id="refreshBtn" data-tip="Sync">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                <path d="M8 16H3v5" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -1108,11 +1281,18 @@
     <div class="shell">
       <!-- 링크 입력 -->
       <div class="composer">
-        <textarea id="scanUrlInput" placeholder="상품 링크 붙여넣기 (줄바꿈 구분)"></textarea>
+        <textarea id="scanUrlInput" placeholder="Paste product links…"></textarea>
         <div class="composer-bar">
-          <button class="btn btn-primary btn-sm" id="scanBtn">분석</button>
-          <button class="btn btn-ghost btn-sm" id="dedupScanBtn">중복 정리</button>
-          <button class="btn btn-ghost btn-sm" id="clearScanBtn">전체 삭제</button>
+          <button class="btn btn-primary btn-sm" id="scanBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
+            Scan
+          </button>
+          <button class="iconbtn" id="dedupScanBtn" data-tip="Remove duplicates">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-3" /><path d="M14 8h5a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-5" /></svg>
+          </button>
+          <button class="iconbtn" id="clearScanBtn" data-tip="Clear all">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
+          </button>
           <span class="composer-status" id="scanProgress"></span>
         </div>
       </div>
@@ -1129,53 +1309,60 @@
       <!-- 결과 -->
       <div class="scan-grid" id="scanResults"></div>
       <div class="empty-state" id="emptyState">
-        <div class="empty-title" id="emptyTitle">항목 없음</div>
-        <div class="empty-desc" id="emptyDesc"></div>
+        <div class="empty-title" id="emptyTitle">No items</div>
       </div>
       <div class="sentinel" id="scrollSentinel"></div>
-
-      <!-- 도구 -->
-      <div class="tools">
-        <details class="tool" id="bkmkSection">
-          <summary>북마클릿</summary>
-          <div class="tool-body">
-            <div class="tool-cap">드래그해서 북마크바에 설치 · SSG 상품/검색 페이지에서 클릭</div>
-            <div class="bkmk-row">
-              <a id="bkmkSaveBtn" class="bkmk-btn" draggable="true">상품 저장</a>
-              <a id="bkmkExtractBtn" class="bkmk-btn" draggable="true">링크 추출</a>
-            </div>
-          </div>
-        </details>
-
-        <details class="tool" id="blockedSection">
-          <summary>차단 거래처 <b id="blockedCount"></b></summary>
-          <div class="tool-body">
-            <div class="tool-cap">일치하는 제조사/업체명은 자동 불가 처리</div>
-            <div class="field-row">
-              <input id="blockedInput" class="field" type="text" placeholder="업체명" />
-              <button class="btn btn-ghost btn-sm" id="blockedAddBtn">추가</button>
-            </div>
-            <div class="tag-list" id="blockedTags"></div>
-          </div>
-        </details>
-
-        <details class="tool" id="extractSection">
-          <summary>링크 추출기</summary>
-          <div class="tool-body">
-            <div class="field-row">
-              <input id="extractUrlInput" class="field" type="text" placeholder="검색결과 URL" />
-              <button class="btn btn-primary btn-sm" id="extractBtn">추출</button>
-            </div>
-            <div class="row-actions">
-              <button class="btn btn-ghost btn-sm" id="extractCopyBtn" style="display:none">전체 복사</button>
-              <button class="btn btn-ghost btn-sm" id="extractToScanBtn" style="display:none">입력창에 추가</button>
-              <span id="extractStatus" style="font-size:11.5px;color:var(--text-3)"></span>
-            </div>
-            <div id="extractResult" class="extract-out" style="display:none"></div>
-          </div>
-        </details>
-      </div>
     </div>
+
+    <!-- ── SLIDE-OVER PANEL (Blocklist / Bookmarklets / Extract) ── -->
+    <div class="panel-backdrop" id="panelBackdrop" onclick="closePanel()"></div>
+    <aside class="panel" id="panel">
+      <div class="panel-head">
+        <span id="panelTitle"></span>
+        <button class="iconbtn" data-tip="Close" onclick="closePanel()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <div class="panel-body">
+        <div class="pane" id="paneBlocklist">
+          <div class="pane-cap">Auto-rejects matching manufacturers</div>
+          <div class="field-row">
+            <input id="blockedInput" class="field" type="text" placeholder="Company name" />
+            <button class="iconbtn" id="blockedAddBtn" data-tip="Add" style="border:1px solid var(--border)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+            </button>
+          </div>
+          <div class="tag-list" id="blockedTags"></div>
+        </div>
+
+        <div class="pane" id="paneBookmarklet">
+          <div class="pane-cap">Drag to bookmarks bar · run on SSG pages</div>
+          <div class="bkmk-row">
+            <a id="bkmkSaveBtn" class="bkmk-btn" draggable="true">Save product</a>
+            <a id="bkmkExtractBtn" class="bkmk-btn" draggable="true">Extract links</a>
+          </div>
+        </div>
+
+        <div class="pane" id="paneExtract">
+          <div class="field-row">
+            <input id="extractUrlInput" class="field" type="text" placeholder="Search results URL" />
+            <button class="iconbtn" id="extractBtn" data-tip="Extract" style="border:1px solid var(--border)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </button>
+          </div>
+          <div class="row-actions">
+            <span id="extractStatus" style="font-size:11.5px;color:var(--text-3)"></span>
+            <button class="iconbtn" id="extractCopyBtn" data-tip="Copy all" style="display:none">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+            </button>
+            <button class="iconbtn" id="extractToScanBtn" data-tip="Add to input" style="display:none">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+            </button>
+          </div>
+          <div id="extractResult" class="extract-out" style="display:none"></div>
+        </div>
+      </div>
+    </aside>
 
     <div class="toast-wrap"><div class="toast" id="toast"></div></div>
 
@@ -1318,24 +1505,25 @@
       }
       function renderBlockedTags() {
         const wrap = document.getElementById("blockedTags");
-        const countEl = document.getElementById("blockedCount");
+        const badge = document.getElementById("blockedBadge");
         if (!wrap) return;
         if (!blockedCompanies.length) {
-          wrap.innerHTML = '<span class="tag-empty">없음</span>';
-          if (countEl) countEl.textContent = "";
-          return;
+          wrap.innerHTML = '<span class="tag-empty">No entries</span>';
+          badge.hidden = true;
+        } else {
+          badge.hidden = false;
+          badge.textContent = blockedCompanies.length;
+          wrap.innerHTML = blockedCompanies
+            .map((b, i) => `<span class="tag">${esc(b)}<button onclick="removeBlocked(${i})">×</button></span>`)
+            .join("");
         }
-        if (countEl) countEl.textContent = blockedCompanies.length;
-        wrap.innerHTML = blockedCompanies
-          .map((b, i) => `<span class="tag">${esc(b)}<button onclick="removeBlocked(${i})">×</button></span>`)
-          .join("");
       }
       function addBlocked() {
         const inp = document.getElementById("blockedInput");
         const val = inp.value.trim();
         if (!val) return;
         if (blockedCompanies.some((b) => normComp(b) === normComp(val))) {
-          showToast("이미 등록됨", "warn");
+          showToast("Already blocked", "warn");
           return;
         }
         blockedCompanies.push(val);
@@ -1357,16 +1545,16 @@
       function dayStart(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
       function bucketOf(iso) {
         const d = iso ? new Date(iso) : new Date();
-        if (isNaN(d.getTime())) return { key: "unknown", label: "미상", rank: 9999 };
+        if (isNaN(d.getTime())) return { key: "unknown", label: "—", rank: 9999 };
         const diff = Math.round((dayStart(new Date()) - dayStart(d)) / 86400000);
-        if (diff <= 0) return { key: "d0", label: "오늘", rank: 0 };
-        if (diff === 1) return { key: "d1", label: "어제", rank: 1 };
-        if (diff < 7) return { key: "d" + diff, label: diff + "일 전", rank: diff };
-        if (diff < 30) { const w = Math.floor(diff / 7); return { key: "w" + w, label: w + "주 전", rank: 8 + w }; }
+        if (diff <= 0) return { key: "d0", label: "Today", rank: 0 };
+        if (diff === 1) return { key: "d1", label: "Yesterday", rank: 1 };
+        if (diff < 7) return { key: "d" + diff, label: diff + "d", rank: diff };
+        if (diff < 30) { const w = Math.floor(diff / 7); return { key: "w" + w, label: w + "w", rank: 8 + w }; }
         const m = Math.floor(diff / 30);
-        if (m < 12) return { key: "m" + m, label: m + "개월 전", rank: 100 + m };
+        if (m < 12) return { key: "m" + m, label: m + "mo", rank: 100 + m };
         const y = Math.floor(m / 12);
-        return { key: "y" + y, label: y + "년 전", rank: 1000 + y };
+        return { key: "y" + y, label: y + "y", rank: 1000 + y };
       }
       function exactDateTime(iso) {
         const d = new Date(iso);
@@ -1413,10 +1601,10 @@
         const counts = { all: list.length, pending: 0, done: 0, reject: 0 };
         list.forEach((i) => counts[statusOf(i)]++);
         const defs = [
-          ["all", "전체"],
-          ["pending", "미처리"],
-          ["done", "완료"],
-          ["reject", "불가"],
+          ["all", "All"],
+          ["pending", "Pending"],
+          ["done", "Done"],
+          ["reject", "Rejected"],
         ];
         document.getElementById("statusTabs").innerHTML = defs
           .map(
@@ -1443,7 +1631,7 @@
         });
         const keys = Object.keys(groups).sort((a, b) => groups[a].rank - groups[b].rank);
         const chips = [
-          `<button class="date-chip${!state.bucket ? " active" : ""}" data-bucket="">전체 <b>${list.length}</b></button>`,
+          `<button class="date-chip${!state.bucket ? " active" : ""}" data-bucket="">All <b>${list.length}</b></button>`,
         ];
         keys.forEach((k) => {
           chips.push(
@@ -1464,12 +1652,12 @@
           (scannedItems.find((i) => bucketOf(i.addedAt).key === state.bucket) || {}).addedAt
         );
         panel.style.display = "flex";
-        const statusLabel = { pending: " · 미처리", done: " · 완료", reject: " · 불가" }[state.status] || "";
+        const statusLabel = { pending: " · Pending", done: " · Done", reject: " · Rejected" }[state.status] || "";
         panel.innerHTML = `
-          <div><strong>${esc(b.label || "")}${statusLabel}</strong><span>${list.length}건</span></div>
+          <div><strong>${esc(b.label || "")}${statusLabel}</strong><span>${list.length}</span></div>
           <div class="bucket-actions">
-            <button class="btn btn-ghost btn-sm" onclick="copyCurrentList()">목록 복사</button>
-            <button class="btn btn-ghost btn-sm" onclick="setBucket(null)">해제</button>
+            <button class="iconbtn" data-tip="Copy list" onclick="copyCurrentList()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <button class="iconbtn" data-tip="Clear filter" onclick="setBucket(null)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
           </div>`;
       }
 
@@ -1485,6 +1673,18 @@
           '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.44 2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.56-.56a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
         note:
           '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>',
+        open:
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg>',
+        check:
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+        xcircle:
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>',
+        trash:
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>',
+        sun:
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.3"/><path d="M12 2.5v2.6M12 18.9v2.6M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>',
+        moon:
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>',
       };
 
       function cardHTML(item) {
@@ -1496,10 +1696,10 @@
         const note = getNote(url);
         return `<div class="card status-${st}" data-url="${urlEnc}">
           <div class="card-head">
-            <div class="card-title">${esc(item.품명 || "품명 미확인")}</div>
-            <div class="card-time" title="${esc(exactDateTime(item.addedAt))}">${esc(b.label)}</div>
+            <div class="card-title">${esc(item.품명 || "Untitled")}</div>
+            <div class="card-time" data-tip="${esc(exactDateTime(item.addedAt))}">${esc(b.label)}</div>
           </div>
-          ${senior ? '<div class="senior-flag">차단 거래처</div>' : ""}
+          ${senior ? '<div class="senior-flag">Blocked</div>' : ""}
           <div class="card-meta">
             <span class="meta-item">${ICON.factory}<span title="${esc(item.제조사수입자 || "")}">${esc(item.제조사수입자 || "—")}</span></span>
             <span class="meta-item">${ICON.pin}<span>${esc(item.제조국 || "—")}</span></span>
@@ -1507,18 +1707,18 @@
           </div>
           <div class="card-note${note ? " has-note" : ""}">
             <div class="note-row">
-              <button class="note-toggle" onclick="toggleNote(this)" title="메모">${ICON.note}</button>
+              <button class="note-toggle" onclick="toggleNote(this)" data-tip="Note">${ICON.note}</button>
               <div class="note-preview" onclick="toggleNote(this.parentElement.querySelector('.note-toggle'))">${esc(note)}</div>
             </div>
             <div class="note-editor"><div class="note-editor-inner">
-              <textarea placeholder="메모" oninput="onNoteInput(this,'${urlEnc}')">${esc(note)}</textarea>
+              <textarea placeholder="Note" oninput="onNoteInput(this,'${urlEnc}')">${esc(note)}</textarea>
             </div></div>
           </div>
           <div class="card-foot">
-            <a href="${urlEnc}" target="_blank" rel="noopener" class="card-act">열기</a>
-            <button class="card-act" data-act="reject" onclick="setScanStatus('${urlEnc}','불가')" ${senior ? "disabled" : ""}>불가</button>
-            <button class="card-act" data-act="done" onclick="setScanStatus('${urlEnc}','완료')" ${senior ? "disabled" : ""}>완료</button>
-            <button class="card-act" data-act="del" onclick="deleteScanItem('${urlEnc}')">삭제</button>
+            <a href="${urlEnc}" target="_blank" rel="noopener" class="card-act" data-tip="Open">${ICON.open}</a>
+            <button class="card-act" data-act="done" data-tip="Done" onclick="setScanStatus('${urlEnc}','완료')" ${senior ? "disabled" : ""}>${ICON.check}</button>
+            <button class="card-act" data-act="reject" data-tip="Reject" onclick="setScanStatus('${urlEnc}','불가')" ${senior ? "disabled" : ""}>${ICON.xcircle}</button>
+            <button class="card-act" data-act="del" data-tip="Delete" onclick="deleteScanItem('${urlEnc}')">${ICON.trash}</button>
           </div>
         </div>`;
       }
@@ -1537,7 +1737,7 @@
       }
 
       function dividerHTML(b, count) {
-        return `<div class="divider"><button class="divider-label" onclick="setBucket('${esc(b.key)}')">${esc(b.label)}</button><span class="divider-count">${count}개</span></div>`;
+        return `<div class="divider"><button class="divider-label" onclick="setBucket('${esc(b.key)}')">${esc(b.label)}</button><span class="divider-count">${count}</span></div>`;
       }
 
       function toEl(html) {
@@ -1553,7 +1753,6 @@
         const end = Math.min(start + renderCtl.batch, list.length);
         if (start >= end) return;
 
-        // 배치 내 버킷별 개수 미리 계산 (구분선용)
         const frag = document.createDocumentFragment();
         for (let idx = start; idx < end; idx++) {
           const item = list[idx];
@@ -1586,15 +1785,13 @@
         if (!scannedItems.length) {
           container.style.display = "none";
           empty.style.display = "block";
-          document.getElementById("emptyTitle").textContent = "항목 없음";
-          document.getElementById("emptyDesc").textContent = "링크를 붙여넣고 분석을 시작하세요";
+          document.getElementById("emptyTitle").textContent = "No items";
           return;
         }
         if (!list.length) {
           container.style.display = "none";
           empty.style.display = "block";
-          document.getElementById("emptyTitle").textContent = "결과 없음";
-          document.getElementById("emptyDesc").textContent = "";
+          document.getElementById("emptyTitle").textContent = "No results";
           return;
         }
         container.style.display = "grid";
@@ -1609,12 +1806,12 @@
 
       function copyCurrentList() {
         const items = renderCtl.list;
-        if (!items.length) { showToast("항목 없음", "warn"); return; }
+        if (!items.length) { showToast("Nothing to copy", "warn"); return; }
         const lines = items.map((i) => [i.품명 || "", i.제조사수입자 || "", i.전화번호 || "", i.url || ""].join("\t"));
         navigator.clipboard
           .writeText(lines.join("\n"))
-          .then(() => showToast(`${items.length}건 복사됨`, "ok"))
-          .catch(() => showToast("복사 실패", "warn"));
+          .then(() => showToast(`Copied ${items.length}`, "ok"))
+          .catch(() => showToast("Copy failed", "warn"));
       }
 
       /* ── 메모 ────────────────────────────────────────── */
@@ -1667,14 +1864,14 @@
         saveScan();
         resetRender();
         const removed = before - scannedItems.length;
-        showToast(removed > 0 ? `중복 ${removed}개 제거됨` : "중복 없음", removed > 0 ? "ok" : "");
+        showToast(removed > 0 ? `Removed ${removed} duplicate${removed === 1 ? "" : "s"}` : "No duplicates", removed > 0 ? "ok" : "");
       }
 
       async function runScan() {
         const ta = document.getElementById("scanUrlInput");
         const urls = ta.value.split("\n").map((u) => u.trim()).filter((u) => /^https?:\/\//.test(u));
-        if (!urls.length) { showToast("URL을 입력하세요", "warn"); return; }
-        if (!APPS_SCRIPT_URL) { showToast("APPS_SCRIPT_URL 미설정", "warn"); return; }
+        if (!urls.length) { showToast("Enter a URL", "warn"); return; }
+        if (!APPS_SCRIPT_URL) { showToast("APPS_SCRIPT_URL not set", "warn"); return; }
 
         const btn = document.getElementById("scanBtn");
         const prog = document.getElementById("scanProgress");
@@ -1706,7 +1903,7 @@
 
         saveScan();
         ta.value = "";
-        prog.textContent = ok || dup || fail ? `신규 ${ok}${dup ? ` · 중복 ${dup}` : ""}${fail ? ` · 실패 ${fail}` : ""}` : "";
+        prog.textContent = ok || dup || fail ? `+${ok}${dup ? ` · dup ${dup}` : ""}${fail ? ` · fail ${fail}` : ""}` : "";
         btn.disabled = false;
         state.bucket = null;
         resetRender();
@@ -1752,7 +1949,7 @@
         resetRender();
       }
       function clearAllScan() {
-        if (!confirm(`${scannedItems.length}건을 모두 삭제할까요?`)) return;
+        if (!confirm(`Delete ${scannedItems.length} items?`)) return;
         scannedItems = [];
         saveScan();
         state.bucket = null;
@@ -1765,7 +1962,7 @@
         url.searchParams.set("action", "getEmartItems");
         const res = await fetch(url.toString());
         const json = await res.json();
-        if (!json.success) throw new Error(json.error || "불러오기 실패");
+        if (!json.success) throw new Error(json.error || "load failed");
         let added = 0, statusUpdated = 0;
         (json.items || []).forEach((sheetItem) => {
           const existing = scannedItems.find((x) => x.url === sheetItem.url);
@@ -1782,16 +1979,16 @@
 
       async function refreshFromSheet() {
         const btn = document.getElementById("refreshBtn");
-        setSyncState("loading", "동기화 중");
+        setSyncState("loading", "Syncing");
         btn.classList.add("spin");
         try {
           const { added, statusUpdated } = await loadEmartItems();
           resetRender();
           const now = new Date();
           setSyncState("ok", `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`);
-          if (added || statusUpdated) showToast(`신규 ${added} · 갱신 ${statusUpdated}`, "ok");
+          if (added || statusUpdated) showToast(`+${added} new · ${statusUpdated} updated`, "ok");
         } catch (e) {
-          setSyncState("err", "오류");
+          setSyncState("err", "Error");
         } finally {
           btn.classList.remove("spin");
         }
@@ -1800,6 +1997,40 @@
         document.getElementById("syncDot").className = "sync-dot" + (st ? " " + st : "");
         document.getElementById("syncText").textContent = txt;
       }
+
+      /* ══════════════════════════════════════════════════════
+   SLIDE-OVER PANEL
+   ══════════════════════════════════════════════════════ */
+      function openPanel(key, title) {
+        document.querySelectorAll(".pane").forEach((p) => p.classList.remove("active"));
+        document.getElementById("pane" + key).classList.add("active");
+        document.getElementById("panelTitle").textContent = title;
+        document.getElementById("panel").classList.add("open");
+        document.getElementById("panelBackdrop").classList.add("open");
+      }
+      function closePanel() {
+        document.getElementById("panel").classList.remove("open");
+        document.getElementById("panelBackdrop").classList.remove("open");
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closePanel();
+      });
+
+      /* ══════════════════════════════════════════════════════
+   THEME
+   ══════════════════════════════════════════════════════ */
+      function updateThemeIcon() {
+        const isLight = document.documentElement.getAttribute("data-theme") === "light";
+        document.getElementById("themeBtn").innerHTML = isLight ? ICON.moon : ICON.sun;
+      }
+      function toggleTheme() {
+        const isLight = document.documentElement.getAttribute("data-theme") === "light";
+        if (isLight) document.documentElement.removeAttribute("data-theme");
+        else document.documentElement.setAttribute("data-theme", "light");
+        localStorage.setItem("isseaair_theme", isLight ? "dark" : "light");
+        updateThemeIcon();
+      }
+      updateThemeIcon();
 
       /* ══════════════════════════════════════════════════════
    HELPERS
@@ -1820,10 +2051,21 @@
       /* ══════════════════════════════════════════════════════
    EVENTS
    ══════════════════════════════════════════════════════ */
-      document.getElementById("searchInput").addEventListener("input", (e) => {
+      const searchWrap = document.getElementById("searchWrap");
+      const searchInput = document.getElementById("searchInput");
+      searchInput.addEventListener("input", (e) => {
         state.search = e.target.value;
+        searchWrap.classList.toggle("has-value", !!e.target.value);
         resetRender();
       });
+      document.getElementById("searchClear").addEventListener("click", () => {
+        searchInput.value = "";
+        state.search = "";
+        searchWrap.classList.remove("has-value");
+        resetRender();
+        searchInput.focus();
+      });
+
       document.getElementById("refreshBtn").addEventListener("click", refreshFromSheet);
       document.getElementById("scanBtn").addEventListener("click", runScan);
       document.getElementById("dedupScanBtn").addEventListener("click", deduplicateExisting);
@@ -1866,7 +2108,7 @@
         const resultEl = document.getElementById("extractResult");
         const copyBtn = document.getElementById("extractCopyBtn");
         const toScanBtn = document.getElementById("extractToScanBtn");
-        statusEl.textContent = "추출 중";
+        statusEl.textContent = "Extracting…";
         resultEl.style.display = "none";
         copyBtn.style.display = "none";
         toScanBtn.style.display = "none";
@@ -1876,28 +2118,27 @@
           api.searchParams.set("url", url);
           const res = await fetch(api.toString());
           const json = await res.json();
-          if (!json.success) throw new Error(json.error || "추출 실패");
+          if (!json.success) throw new Error(json.error || "failed");
           const links = json.links;
-          if (!links.length) { statusEl.textContent = "결과 없음"; return; }
-          statusEl.textContent = `${links.length}개`;
+          if (!links.length) { statusEl.textContent = "No results"; return; }
+          statusEl.textContent = `${links.length} links`;
           resultEl.textContent = links.join("\n");
           resultEl.style.display = "block";
           copyBtn.style.display = "";
           toScanBtn.style.display = "";
           copyBtn.onclick = () => {
             navigator.clipboard.writeText(links.join("\n"));
-            copyBtn.textContent = "복사됨";
-            setTimeout(() => { copyBtn.textContent = "전체 복사"; }, 1400);
+            showToast("Copied", "ok");
           };
           toScanBtn.onclick = () => {
             const ta = document.getElementById("scanUrlInput");
             const existing = ta.value.trim();
             ta.value = (existing ? existing + "\n" : "") + links.join("\n");
-            document.getElementById("extractSection").removeAttribute("open");
-            showToast(`${links.length}개 추가됨`);
+            closePanel();
+            showToast(`${links.length} added`);
           };
         } catch (e) {
-          statusEl.textContent = "오류";
+          statusEl.textContent = "Error";
         }
       }
       document.getElementById("extractBtn").addEventListener("click", runExtract);
@@ -1923,7 +2164,7 @@
         }
         function shake() {
           dots.forEach((d) => d.classList.add("error"));
-          errEl.textContent = "비밀번호 오류";
+          errEl.textContent = "Incorrect PIN";
           setTimeout(() => { pin = ""; updateDots(); }, 700);
         }
         function submit() {
@@ -1960,15 +2201,15 @@ d['전화번호']=fld(['A/S 책임자 및 전화번호','고객센터','전화�
 d.addedAt=new Date().toISOString();
 var u=new URL(S);Object.keys(d).forEach(function(k){u.searchParams.set(k,d[k]);});
 var el=document.createElement('div');el.style.cssText='position:fixed;top:20px;right:20px;z-index:99999;background:#111;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;font-family:sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.5);border:1px solid #333';
-el.textContent='저장 중';document.body.appendChild(el);
-fetch(u.toString()).then(function(r){return r.json();}).then(function(j){el.style.borderColor=j.success?'#3ddc84':'#f66';el.textContent=j.success?'저장됨: '+(d['품명']||'—'):'오류: '+j.error;setTimeout(function(){el.remove();},2600);}).catch(function(e){el.style.borderColor='#f66';el.textContent='오류: '+e.message;setTimeout(function(){el.remove();},2600);});
+el.textContent='Saving';document.body.appendChild(el);
+fetch(u.toString()).then(function(r){return r.json();}).then(function(j){el.style.borderColor=j.success?'#3ddc84':'#f66';el.textContent=j.success?'Saved: '+(d['품명']||'—'):'Error: '+j.error;setTimeout(function(){el.remove();},2600);}).catch(function(e){el.style.borderColor='#f66';el.textContent='Error: '+e.message;setTimeout(function(){el.remove();},2600);});
 })()`;
         const extractBkmkCode = `(function(){
 var as=document.querySelectorAll('a[href*="itemView.ssg"]');var ls=[];
 as.forEach(function(a){var h=a.href;if(h&&ls.indexOf(h)<0)ls.push(h);});
-if(!ls.length){alert('링크 없음');return;}
+if(!ls.length){alert('No links found');return;}
 var t=document.createElement('div');t.style.cssText='position:fixed;top:20px;right:20px;z-index:99999;background:#111;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;font-family:sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.5);border:1px solid #333';
-t.innerHTML=ls.length+'개 복사됨';
+t.textContent=ls.length+' links copied';
 document.body.appendChild(t);
 if(navigator.clipboard){navigator.clipboard.writeText(ls.join('\n'));}else{var ta=document.createElement('textarea');ta.value=ls.join('\n');ta.style.cssText='position:fixed;top:-9999px';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
 setTimeout(function(){t.remove();},2600);
