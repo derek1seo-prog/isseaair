@@ -74,15 +74,17 @@
         --backdrop: rgba(20, 20, 22, 0.28);
       }
       html {
-        font-family: "Inter", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Noto Sans KR", "Segoe UI", Helvetica, Arial, sans-serif;
         font-size: 14px;
+        line-height: 1.5;
         -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       body {
         background: var(--bg);
         color: var(--text);
         min-height: 100vh;
-        letter-spacing: -0.006em;
+        letter-spacing: -0.008em;
       }
       * {
         transition: background-color 0.18s ease, border-color 0.18s ease, color 0.15s ease;
@@ -146,29 +148,22 @@
         margin: 0 auto;
         display: flex;
         align-items: center;
-        gap: 12px;
-        height: 52px;
-        padding: 0 20px;
+        gap: 14px;
+        height: 56px;
+        padding: 0 24px;
       }
       .brand {
         display: flex;
         align-items: center;
-        gap: 7px;
         flex-shrink: 0;
       }
       .brand-icon {
-        width: 22px;
-        height: 22px;
-        border-radius: 6px;
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
         flex-shrink: 0;
         object-fit: cover;
-      }
-      .brand-name {
-        font-size: 11.5px;
-        font-weight: 700;
-        color: var(--text);
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
+        display: block;
       }
 
       .search {
@@ -236,13 +231,13 @@
       .hdr-group {
         display: flex;
         align-items: center;
-        gap: 3px;
+        gap: 5px;
       }
       .hdr-sep {
         width: 1px;
         height: 18px;
         background: var(--border);
-        margin: 0 4px;
+        margin: 0 6px;
         flex-shrink: 0;
       }
       .hdr-right {
@@ -319,6 +314,14 @@
           transform: rotate(360deg);
         }
       }
+      .iconbtn-danger {
+        color: var(--red);
+      }
+      .iconbtn-danger:hover {
+        background: var(--red-dim);
+        border-color: color-mix(in srgb, var(--red) 40%, transparent);
+        color: var(--red);
+      }
       .badge {
         position: absolute;
         top: -3px;
@@ -341,7 +344,7 @@
       .shell {
         max-width: 920px;
         margin: 0 auto;
-        padding: 20px 20px 90px;
+        padding: 26px 24px 96px;
       }
 
       /* ── COMPOSER ────────────────────────────────── */
@@ -349,8 +352,8 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--r-lg);
-        padding: 11px;
-        margin-bottom: 20px;
+        padding: 14px;
+        margin-bottom: 26px;
         transition: border-color 0.15s var(--ease), background-color 0.18s ease;
       }
       .composer:focus-within {
@@ -377,8 +380,8 @@
       .composer-bar {
         display: flex;
         align-items: center;
-        gap: 6px;
-        padding-top: 8px;
+        gap: 8px;
+        padding-top: 11px;
         border-top: 1px solid var(--border);
       }
       .composer-status {
@@ -444,8 +447,8 @@
       /* ── STATUS TABS ─────────────────────────────── */
       .status-tabs {
         display: flex;
-        gap: 4px;
-        margin-bottom: 8px;
+        gap: 6px;
+        margin-bottom: 12px;
       }
       .status-tab {
         position: relative;
@@ -503,10 +506,10 @@
       /* ── DATE CHIPS ──────────────────────────────── */
       .date-chip-bar {
         display: none;
-        gap: 6px;
+        gap: 8px;
         overflow-x: auto;
         scrollbar-width: none;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
       }
       .date-chip-bar::-webkit-scrollbar {
         display: none;
@@ -554,8 +557,8 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--r-md);
-        padding: 8px 8px 8px 14px;
-        margin-bottom: 14px;
+        padding: 10px 10px 10px 16px;
+        margin-bottom: 18px;
       }
       .bucket-panel strong {
         font-size: 12.5px;
@@ -576,14 +579,14 @@
       .scan-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(266px, 1fr));
-        gap: 8px;
+        gap: 10px;
       }
       .divider {
         grid-column: 1 / -1;
         display: flex;
         align-items: baseline;
         gap: 8px;
-        padding: 13px 2px 6px;
+        padding: 18px 2px 8px;
       }
       .divider:first-child {
         padding-top: 0;
@@ -616,10 +619,10 @@
         border: 1px solid var(--border);
         border-left: 2px solid var(--border);
         border-radius: var(--r-md);
-        padding: 10px 11px;
+        padding: 13px 14px;
         display: flex;
         flex-direction: column;
-        gap: 7px;
+        gap: 9px;
         animation: cardIn 0.22s var(--ease) both;
       }
       @keyframes cardIn {
@@ -649,9 +652,10 @@
         gap: 8px;
       }
       .card-title {
-        font-size: 13px;
+        font-size: 13.5px;
         font-weight: 600;
-        line-height: 1.4;
+        line-height: 1.45;
+        letter-spacing: -0.008em;
         color: var(--text);
       }
       .card-time {
@@ -673,13 +677,13 @@
       .card-meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 3px 11px;
+        gap: 4px 12px;
       }
       .meta-item {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        font-size: 11.5px;
+        gap: 5px;
+        font-size: 12px;
         color: var(--text-2);
         max-width: 100%;
         min-width: 0;
@@ -770,8 +774,8 @@
 
       .card-foot {
         display: flex;
-        gap: 4px;
-        margin-top: 1px;
+        gap: 6px;
+        margin-top: 2px;
       }
       .card-act {
         position: relative;
@@ -865,7 +869,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 15px 16px;
+        padding: 18px 20px;
         border-bottom: 1px solid var(--border);
         flex-shrink: 0;
       }
@@ -877,7 +881,7 @@
       .panel-body {
         flex: 1;
         overflow-y: auto;
-        padding: 16px;
+        padding: 20px;
       }
       .pane {
         display: none;
@@ -887,15 +891,15 @@
         animation: cardIn 0.2s var(--ease) both;
       }
       .pane-cap {
-        font-size: 11px;
+        font-size: 11.5px;
         color: var(--text-3);
-        margin-bottom: 12px;
+        margin-bottom: 14px;
         line-height: 1.6;
       }
       .field-row {
         display: flex;
-        gap: 6px;
-        margin-bottom: 10px;
+        gap: 8px;
+        margin-bottom: 12px;
       }
       .field {
         flex: 1;
@@ -918,7 +922,7 @@
       .tag-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 6px;
+        gap: 7px;
       }
       .tag {
         display: inline-flex;
@@ -957,7 +961,7 @@
       }
       .bkmk-row {
         display: flex;
-        gap: 8px;
+        gap: 10px;
         flex-wrap: wrap;
       }
       .bkmk-btn {
@@ -996,7 +1000,7 @@
       }
       .row-actions {
         display: flex;
-        gap: 4px;
+        gap: 6px;
         align-items: center;
       }
 
@@ -1042,11 +1046,8 @@
       /* ── RESPONSIVE ──────────────────────────────── */
       @media (max-width: 640px) {
         .header-in {
-          padding: 0 12px;
+          padding: 0 16px;
           gap: 8px;
-        }
-        .brand-name {
-          display: none;
         }
         .search {
           max-width: none;
@@ -1055,7 +1056,7 @@
           margin: 0 2px;
         }
         .shell {
-          padding: 14px 14px 90px;
+          padding: 18px 16px 90px;
         }
         .status-tab b {
           font-size: 15px;
@@ -1069,7 +1070,7 @@
         }
         .lock-box {
           width: 88vw;
-          padding: 30px 22px 26px;
+          padding: 34px 26px 30px;
         }
         .pin-keypad {
           grid-template-columns: repeat(3, 62px);
@@ -1116,28 +1117,20 @@
       .lock-box {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 38px 34px 34px;
+        border-radius: 18px;
+        padding: 42px 36px 36px;
         width: 300px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 18px;
+        gap: 22px;
       }
       .lock-logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+        width: 52px;
+        height: 52px;
+        border-radius: 13px;
         object-fit: cover;
-      }
-      .lock-title {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--text);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-top: -6px;
       }
       .pin-dots {
         display: flex;
@@ -1200,7 +1193,6 @@
     <div class="lock-screen" id="lockScreen">
       <div class="lock-box">
         <img class="lock-logo" src="logo.png" alt="" />
-        <div class="lock-title">Scout</div>
         <div class="pin-dots" id="pinDots">
           <div class="pin-dot" id="d0"></div>
           <div class="pin-dot" id="d1"></div>
@@ -1229,8 +1221,7 @@
     <header class="header">
       <div class="header-in">
         <div class="brand">
-          <img class="brand-icon" src="logo.png" alt="" />
-          <span class="brand-name">Scout</span>
+          <img class="brand-icon" src="logo.png" alt="Scout" />
         </div>
         <div class="search" id="searchWrap">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
@@ -1290,7 +1281,7 @@
           <button class="iconbtn" id="dedupScanBtn" data-tip="Remove duplicates">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-3" /><path d="M14 8h5a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-5" /></svg>
           </button>
-          <button class="iconbtn" id="clearScanBtn" data-tip="Clear all">
+          <button class="iconbtn iconbtn-danger" id="clearScanBtn" data-tip="Clear all">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
           </button>
           <span class="composer-status" id="scanProgress"></span>
