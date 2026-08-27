@@ -20,23 +20,29 @@
         padding: 0;
       }
       :root {
-        --primary: #0969da;
-        --primary-dark: #0757ba;
-        --primary-light: #ddf4ff;
-        --bg: #f6f8fa;
-        --surface: #ffffff;
-        --border: #d0d7de;
-        --border-muted: #d8dee4;
-        --text: #1f2328;
-        --text-2: #656d76;
-        --text-3: #6e7781;
-        --header-bg: #24292f;
-        --green: #2da44e;
-        --green-dark: #2c974b;
-        --shadow-sm: 0 1px 0 rgba(31,35,40,.04);
-        --shadow-md: 0 3px 6px rgba(140,149,159,.15);
-        --shadow-lg: 0 8px 24px rgba(140,149,159,.2);
-        --r: 6px;
+        --bg: #0a0a0a;
+        --surface: #141414;
+        --surface-2: #1c1c1c;
+        --border: #262626;
+        --border-strong: #383838;
+        --text: #f5f5f5;
+        --text-2: #a3a3a3;
+        --text-3: #6b6b6b;
+        --header-bg: #000000;
+        --white: #ffffff;
+        --green: #4ade80;
+        --green-bg: rgba(74, 222, 128, 0.1);
+        --green-border: rgba(74, 222, 128, 0.35);
+        --red: #f87171;
+        --red-bg: rgba(248, 113, 113, 0.1);
+        --red-border: rgba(248, 113, 113, 0.35);
+        --amber: #fbbf24;
+        --amber-bg: rgba(251, 191, 36, 0.1);
+        --amber-border: rgba(251, 191, 36, 0.3);
+        --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+        --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+        --r: 8px;
         --r-sm: 6px;
         --r-pill: 999px;
       }
@@ -56,14 +62,14 @@
         top: 0;
         z-index: 100;
         background: var(--header-bg);
-        border-bottom: 1px solid #30363d;
+        border-bottom: 1px solid var(--border);
         padding: 0 24px;
       }
       .header-top {
         display: flex;
         align-items: center;
         gap: 16px;
-        height: 62px;
+        height: 58px;
       }
       .logo {
         display: flex;
@@ -72,23 +78,24 @@
         flex-shrink: 0;
       }
       .logo-icon {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         flex-shrink: 0;
         object-fit: cover;
-        border: 1px solid rgba(255,255,255,.2);
+        border: 1px solid var(--border-strong);
       }
       .logo-text {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 600;
         white-space: nowrap;
-        color: #e6edf3;
+        color: var(--text);
+        letter-spacing: -0.01em;
       }
 
       .search-wrap {
         flex: 1;
-        max-width: 360px;
+        max-width: 340px;
         position: relative;
       }
       .search-ico {
@@ -96,73 +103,36 @@
         left: 10px;
         top: 50%;
         transform: translateY(-50%);
-        color: rgba(230,237,243,.5);
+        color: var(--text-3);
         pointer-events: none;
       }
       .search-input {
         width: 100%;
-        height: 34px;
+        height: 32px;
         padding: 0 12px 0 32px;
-        border: 1px solid #30363d;
-        border-radius: var(--r);
+        border: 1px solid var(--border);
+        border-radius: var(--r-sm);
         font-family: inherit;
         font-size: 13px;
-        color: #e6edf3;
-        background: rgba(255,255,255,.085);
+        color: var(--text);
+        background: var(--surface);
         outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        transition: border-color 0.15s, background 0.15s;
       }
       .search-input::placeholder {
-        color: rgba(230,237,243,.4);
+        color: var(--text-3);
       }
       .search-input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(9,105,218,.3);
-        background: #fff;
-        color: var(--text);
+        border-color: var(--border-strong);
+        background: var(--surface-2);
       }
-      .search-input:focus ~ .search-ico,
-      .search-input:focus + .search-ico { color: var(--text-3); }
 
       .hdr-right {
         display: flex;
         align-items: center;
         gap: 8px;
         flex-shrink: 0;
-      }
-
-      /* view toggle */
-      .view-toggle {
-        display: flex;
-        background: transparent;
-        border: none;
-        border-radius: 0;
-        padding: 0;
-        gap: 0;
-      }
-      .view-btn {
-        padding: 6px 14px;
-        border: none;
-        cursor: pointer;
-        font-family: inherit;
-        font-size: 13px;
-        font-weight: 500;
-        color: rgba(230,237,243,.7);
-        background: transparent;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        transition: color 0.15s;
-        border-bottom: 2px solid transparent;
-        height: 62px;
-        position: relative;
-        top: 1px;
-      }
-      .view-btn:hover { color: #e6edf3; }
-      .view-btn.active {
-        color: #e6edf3;
-        font-weight: 600;
-        border-bottom-color: #f78166;
+        margin-left: auto;
       }
 
       .sync-pill {
@@ -170,32 +140,47 @@
         align-items: center;
         gap: 5px;
         padding: 4px 10px;
-        border-radius: var(--r);
-        border: 1px solid #30363d;
+        border-radius: var(--r-sm);
+        border: 1px solid var(--border);
         background: transparent;
         font-size: 11px;
-        color: rgba(230,237,243,.6);
+        color: var(--text-2);
         white-space: nowrap;
       }
       .sync-dot {
-        width: 7px;
-        height: 7px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        background: rgba(230,237,243,.4);
+        background: var(--text-3);
         transition: background 0.3s;
       }
-      .sync-dot.ok  { background: #3fb950; }
-      .sync-dot.err { background: #f85149; }
-      .sync-dot.loading { background: #58a6ff; animation: blink 1s infinite; }
-      @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+      .sync-dot.ok {
+        background: var(--green);
+      }
+      .sync-dot.err {
+        background: var(--red);
+      }
+      .sync-dot.loading {
+        background: var(--amber);
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.35;
+        }
+      }
 
       .icon-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: var(--r);
-        border: 1px solid #30363d;
+        width: 30px;
+        height: 30px;
+        border-radius: var(--r-sm);
+        border: 1px solid var(--border);
         background: transparent;
-        color: rgba(230,237,243,.7);
+        color: var(--text-2);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -203,554 +188,137 @@
         transition: all 0.15s;
       }
       .icon-btn:hover {
-        background: rgba(255,255,255,.1);
-        color: #e6edf3;
-        border-color: #8b949e;
-      }
-
-      /* ── FILTER BAR ──────────────────────────────── */
-      .filter-bar {
-        background: var(--surface);
-        border-bottom: 1px solid var(--border);
-        padding: 0 24px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        overflow-x: auto;
-        scrollbar-width: none;
-        height: 46px;
-      }
-      .filter-bar::-webkit-scrollbar { display: none; }
-      .filter-label {
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--text-2);
-        white-space: nowrap;
-        margin-right: 2px;
-      }
-      .filter-sep {
-        width: 1px;
-        height: 16px;
-        background: var(--border);
-        flex-shrink: 0;
-      }
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 3px 10px;
-        border-radius: var(--r-pill);
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text-2);
-        font-size: 12px;
-        font-weight: 500;
-        font-family: inherit;
-        cursor: pointer;
-        white-space: nowrap;
-        flex-shrink: 0;
-        transition: all 0.12s;
-      }
-      .chip:hover {
-        background: var(--bg);
-        border-color: var(--text-3);
+        background: var(--surface-2);
         color: var(--text);
+        border-color: var(--border-strong);
       }
-      .chip.active {
-        background: #0969da1a;
-        border-color: var(--primary);
-        color: var(--primary);
-        font-weight: 600;
+      .icon-btn.spin svg {
+        animation: spin 0.8s linear infinite;
       }
-      .chip-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
-
-      /* ── TOOLBAR ─────────────────────────────────── */
-      .toolbar {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 24px 8px;
-        flex-wrap: wrap;
-      }
-      .sub-filter { display: flex; gap: 0; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
-      .sub-btn {
-        padding: 5px 14px;
-        border: none;
-        border-right: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text-2);
-        font-size: 12px;
-        font-weight: 500;
-        font-family: inherit;
-        cursor: pointer;
-        transition: all 0.12s;
-      }
-      .sub-btn:last-child { border-right: none; }
-      .sub-btn:hover { background: var(--bg); color: var(--text); }
-      .sub-btn.active { background: var(--bg); color: var(--text); font-weight: 600; }
-      .count-badge {
-        background: #0969da1a;
-        color: var(--primary);
-        padding: 2px 8px;
-        border-radius: var(--r-pill);
-        font-size: 12px;
-        font-weight: 600;
-        border: 1px solid rgba(9,105,218,.2);
-      }
-      .sort-wrap {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .sort-label { font-size: 12px; color: var(--text-3); }
-      .sort-sel {
-        border: 1px solid var(--border);
-        border-radius: var(--r);
-        padding: 5px 9px;
-        font-size: 12px;
-        font-family: inherit;
-        color: var(--text);
-        background: var(--surface);
-        cursor: pointer;
-        outline: none;
-      }
-      .sort-sel:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(9,105,218,.15); }
 
       /* ── MAIN ────────────────────────────────────── */
       .main {
-        padding: 16px 24px 48px;
+        padding: 20px 24px 60px;
+        max-width: 1080px;
+        margin: 0 auto;
       }
 
-      /* ── BOARD VIEW ──────────────────────────────── */
-      .board-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 12px;
+      /* ── DATE CHIP BAR ───────────────────────────── */
+      .date-chip-bar {
+        display: none;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+        margin-bottom: 14px;
       }
-      .card {
-        background: var(--surface);
-        border-radius: var(--r);
-        border: 1px solid var(--border);
-        overflow: hidden;
-        cursor: pointer;
-        position: relative;
-        transition: box-shadow 0.15s, border-color 0.15s;
-        display: flex;
+      .date-chip-bar::-webkit-scrollbar {
+        display: none;
       }
-      .card:hover {
-        box-shadow: var(--shadow-md);
-        border-color: #8c959f;
-      }
-      .card-accent {
-        width: 4px;
+      .date-chip {
         flex-shrink: 0;
-      }
-      .card-body {
-        flex: 1;
-        padding: 14px 16px;
-        min-width: 0;
-      }
-
-      .card-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 8px;
-        margin-bottom: 6px;
-      }
-      .card-name {
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1.4;
-        color: var(--primary);
-      }
-      .card-name:hover { text-decoration: underline; }
-      .card-item {
-        font-size: 12px;
-        color: var(--text-2);
-        margin-top: 1px;
-      }
-      .status-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        padding: 2px 8px;
+        gap: 6px;
+        padding: 6px 12px;
         border-radius: var(--r-pill);
-        font-size: 11px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        font-size: 12px;
         font-weight: 500;
-        white-space: nowrap;
-        flex-shrink: 0;
-        border: 1px solid transparent;
-      }
-
-      .card-info {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px 12px;
-        margin-bottom: 8px;
-      }
-      .card-info-item {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 12px;
-        color: var(--text-2);
-      }
-
-      .card-memo {
-        font-size: 12px;
-        color: var(--text-2);
-        line-height: 1.6;
-        background: var(--bg);
-        border-radius: var(--r);
-        padding: 7px 10px;
-        border: 1px solid var(--border);
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        min-height: 32px;
-      }
-      .card-memo.empty {
-        color: var(--text-3);
-        font-style: italic;
-      }
-
-      .card-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid var(--border);
-      }
-      .card-date {
-        font-size: 11px;
-        color: var(--text-3);
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-      .card-person {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--text-2);
-      }
-
-      /* ── LIST VIEW ───────────────────────────────── */
-      .list-wrap {
-        overflow-x: auto;
-        border-radius: var(--r);
-        border: 1px solid var(--border);
-        background: var(--surface);
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-      }
-      thead th {
-        padding: 10px 16px;
-        text-align: left;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--text-2);
-        background: var(--bg);
-        border-bottom: 1px solid var(--border);
-        white-space: nowrap;
-        position: sticky;
-        top: 0;
-      }
-      tbody tr {
-        border-bottom: 1px solid var(--border);
-        cursor: pointer;
-        transition: background 0.1s;
-      }
-      tbody tr:last-child { border-bottom: none; }
-      tbody tr:hover { background: #f6f8fa; }
-      tbody td {
-        padding: 10px 16px;
-        vertical-align: middle;
-      }
-      .td-name {
-        font-weight: 600;
-        white-space: nowrap;
-        color: var(--primary);
-      }
-      .td-item { font-size: 12px; color: var(--text-2); }
-      .td-memo {
-        max-width: 260px;
-        font-size: 12px;
-        color: var(--text-2);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .td-date { white-space: nowrap; font-size: 12px; color: var(--text-2); }
-      .td-person { white-space: nowrap; font-weight: 600; font-size: 12px; }
-      .td-price { white-space: nowrap; font-size: 12px; color: var(--text-2); }
-
-      /* ── EMPTY / ERROR ───────────────────────────── */
-      .state-box {
-        grid-column: 1/-1;
-        text-align: center;
-        padding: 72px 24px;
-      }
-      .state-icon {
-        font-size: 48px;
-        margin-bottom: 14px;
-        opacity: 0.45;
-      }
-      .state-title {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--text-2);
-        margin-bottom: 8px;
-      }
-      .state-desc {
-        font-size: 13px;
-        color: var(--text-3);
-        line-height: 1.7;
-      }
-      .state-steps {
-        display: inline-block;
-        text-align: left;
-        margin-top: 16px;
-        background: var(--bg);
-        border: 1.5px solid var(--border);
-        border-radius: var(--r);
-        padding: 14px 18px;
-        font-size: 12px;
-        color: var(--text-2);
-        line-height: 2;
-      }
-      .state-steps code {
-        background: #e2e8f0;
-        padding: 1px 6px;
-        border-radius: 4px;
-        font-family: monospace;
-      }
-
-      /* skeleton */
-      .skel {
-        background: linear-gradient(
-          90deg,
-          #f1f5f9 25%,
-          #e2e8f0 50%,
-          #f1f5f9 75%
-        );
-        background-size: 200% 100%;
-        animation: shimmer 1.4s infinite;
-        border-radius: var(--r);
-        height: 170px;
-      }
-      @keyframes shimmer {
-        0% {
-          background-position: 200% 0;
-        }
-        100% {
-          background-position: -200% 0;
-        }
-      }
-
-      /* ── DETAIL OVERLAY ──────────────────────────── */
-      .overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 300;
-        padding: 20px;
-        background: rgba(15, 23, 42, 0.42);
-        backdrop-filter: blur(3px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.22s;
-      }
-      .overlay.open {
-        opacity: 1;
-        pointer-events: all;
-      }
-      .modal {
-        background: var(--surface);
-        border-radius: var(--r);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-lg);
-        width: 100%;
-        max-width: 560px;
-        max-height: 88vh;
-        display: flex;
-        flex-direction: column;
-        transform: translateY(16px) scale(0.98);
-        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        overflow: hidden;
-      }
-      .overlay.open .modal { transform: none; }
-
-      .modal-header {
-        display: flex;
-        align-items: stretch;
-        gap: 0;
-        border-bottom: 1px solid var(--border);
-        flex-shrink: 0;
-        background: var(--bg);
-      }
-      .modal-accent { width: 4px; flex-shrink: 0; }
-      .modal-header-content { flex: 1; padding: 16px 18px; }
-      .modal-name { font-size: 17px; font-weight: 600; line-height: 1.3; }
-      .modal-item { font-size: 12px; color: var(--text-2); margin-top: 2px; }
-      .modal-close {
-        align-self: flex-start;
-        margin: 12px 14px;
-        width: 28px;
-        height: 28px;
-        border-radius: var(--r);
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text-2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.12s;
-      }
-      .modal-close:hover { background: var(--bg); color: var(--text); border-color: var(--text-3); }
-
-      .modal-body {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px 24px;
-      }
-      .detail-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-        margin-bottom: 18px;
-      }
-      .detail-item {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-      .detail-label {
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--text-3);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-      .detail-value {
-        font-size: 13px;
-        color: var(--text);
-        font-weight: 500;
-      }
-      .detail-value a {
-        color: var(--primary);
-        text-decoration: none;
-      }
-      .detail-value a:hover {
-        text-decoration: underline;
-      }
-      .memo-section {
-        margin-top: 4px;
-      }
-      .memo-label {
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--text-3);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-      }
-      .memo-content {
-        background: var(--bg);
-        border: 1.5px solid var(--border);
-        border-radius: var(--r-sm);
-        padding: 14px 16px;
-        font-size: 13px;
-        color: var(--text-2);
-        line-height: 1.8;
-        white-space: pre-wrap;
-        word-break: break-word;
-        min-height: 60px;
-      }
-      .memo-content.empty {
-        color: var(--text-3);
-        font-style: italic;
-      }
-
-      /* ── EDIT MODE ───────────────────────────────── */
-      .modal-edit-btn {
-        align-self: flex-start;
-        margin: 12px 0;
-        width: 28px;
-        height: 28px;
-        border-radius: var(--r);
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text-2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.12s;
-      }
-      .modal-edit-btn:hover { background: var(--bg); color: var(--text); }
-      .modal-edit-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
-      .edit-input,
-      .edit-select {
-        width: 100%;
-        padding: 5px 10px;
-        border: 1px solid var(--border);
-        border-radius: var(--r);
         font-family: inherit;
-        font-size: 13px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.12s;
+      }
+      .date-chip:hover {
+        border-color: var(--border-strong);
         color: var(--text);
+      }
+      .date-chip.today {
+        border-color: var(--border-strong);
+      }
+      .date-chip.today::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--green);
+        flex-shrink: 0;
+      }
+      .date-chip.active {
+        background: var(--white);
+        border-color: var(--white);
+        color: #000;
+        font-weight: 700;
+      }
+      .date-chip-count {
+        font-size: 11px;
+        font-weight: 600;
+        opacity: 0.6;
+      }
+
+      /* ── SCAN INPUT SECTION ──────────────────────── */
+      .scan-input-section {
         background: var(--surface);
-        outline: none;
-        transition: border-color 0.15s, box-shadow 0.15s;
+        border-radius: var(--r);
+        border: 1px solid var(--border);
+        padding: 16px 18px;
+        margin-bottom: 14px;
       }
-      .edit-input:focus, .edit-select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(9,105,218,.15);
+      .section-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
       }
-      .edit-textarea {
+      .section-desc {
+        font-size: 12px;
+        color: var(--text-3);
+        margin-bottom: 10px;
+      }
+      .scan-url-input {
         width: 100%;
-        min-height: 110px;
+        min-height: 76px;
         resize: vertical;
         padding: 8px 10px;
         border: 1px solid var(--border);
-        border-radius: var(--r);
-        font-family: inherit;
-        font-size: 13px;
+        border-radius: var(--r-sm);
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+        font-size: 12px;
         color: var(--text);
-        line-height: 1.7;
-        background: var(--surface);
+        line-height: 1.6;
+        background: var(--bg);
         outline: none;
-        transition: border-color 0.15s, box-shadow 0.15s;
+        transition: border-color 0.15s;
       }
-      .edit-textarea:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(9,105,218,.15);
+      .scan-url-input:focus {
+        border-color: var(--border-strong);
       }
-      .modal-footer {
+      .scan-url-input::placeholder {
+        color: var(--text-3);
+      }
+      .scan-actions {
         display: flex;
         align-items: center;
         gap: 8px;
-        flex-shrink: 0;
-        padding: 12px 20px;
-        border-top: 1px solid var(--border);
-        background: var(--bg);
+        margin-top: 10px;
+        flex-wrap: wrap;
       }
+      .scan-progress {
+        font-size: 12px;
+        color: var(--text-3);
+      }
+
       .btn {
-        padding: 5px 16px;
-        border-radius: var(--r);
+        padding: 6px 16px;
+        border-radius: var(--r-sm);
         font-family: inherit;
         font-size: 13px;
         font-weight: 500;
@@ -760,18 +328,419 @@
         line-height: 20px;
       }
       .btn-primary {
-        background: var(--green);
-        color: #fff;
-        border-color: rgba(31,35,40,.15);
+        background: var(--white);
+        color: #000;
       }
-      .btn-primary:hover { background: var(--green-dark); }
-      .btn-primary:disabled { opacity: 0.6; cursor: default; }
+      .btn-primary:hover {
+        background: #d4d4d4;
+      }
+      .btn-primary:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
       .btn-ghost {
-        background: var(--surface);
-        color: var(--text);
+        background: transparent;
+        color: var(--text-2);
         border-color: var(--border);
       }
-      .btn-ghost:hover { background: var(--bg); border-color: var(--text-3); }
+      .btn-ghost:hover {
+        background: var(--surface-2);
+        border-color: var(--border-strong);
+        color: var(--text);
+      }
+      .btn-sm {
+        padding: 4px 11px;
+        font-size: 12px;
+      }
+
+      /* ── STAT BAR ────────────────────────────────── */
+      .scan-stat-bar {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .scan-stat {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r-sm);
+        padding: 8px 14px;
+        font-size: 11px;
+        color: var(--text-3);
+      }
+      .scan-stat strong {
+        display: block;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      /* ── DATE SECTIONS / PANEL ───────────────────── */
+      .date-section {
+        margin-bottom: 22px;
+      }
+      .date-section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+        padding: 0;
+        background: none;
+        border: none;
+        font-family: inherit;
+        cursor: pointer;
+        color: var(--text);
+      }
+      .date-section-header:hover .date-section-label {
+        text-decoration: underline;
+      }
+      .date-section-label {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .date-section-count {
+        font-size: 11px;
+        color: var(--text-3);
+        font-weight: 500;
+      }
+
+      .date-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 12px 16px;
+        margin-bottom: 14px;
+      }
+      .date-panel-title {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .date-panel-title span {
+        font-weight: 500;
+        color: var(--text-3);
+        margin-left: 6px;
+      }
+      .date-panel-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* ── SCAN CARD GRID ──────────────────────────── */
+      .scan-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 8px;
+      }
+      .scan-card {
+        background: var(--surface);
+        border-radius: var(--r-sm);
+        border: 1px solid var(--border);
+        padding: 12px 14px;
+        transition: border-color 0.15s;
+      }
+      .scan-card:hover {
+        border-color: var(--border-strong);
+      }
+      .scan-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 6px;
+        margin-bottom: 6px;
+      }
+      .scan-card-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.4;
+      }
+      .scan-card-badge {
+        flex-shrink: 0;
+        font-size: 10px;
+        color: var(--text-3);
+        border: 1px solid var(--border);
+        border-radius: var(--r-pill);
+        padding: 1px 7px;
+        white-space: nowrap;
+      }
+      .scan-card-mfr {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-bottom: 2px;
+      }
+      .scan-card-phone {
+        font-size: 12px;
+        color: var(--text-2);
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+      .scan-card-phone.empty {
+        color: var(--text-3);
+      }
+      .scan-card-tag {
+        display: inline-flex;
+        align-items: center;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: var(--r-pill);
+        margin-bottom: 8px;
+      }
+      .scan-card-tag.tag-reject {
+        background: var(--red-bg);
+        color: var(--red);
+        border: 1px solid var(--red-border);
+      }
+      .scan-card-tag.tag-done {
+        background: var(--green-bg);
+        color: var(--green);
+        border: 1px solid var(--green-border);
+      }
+      .scan-card-actions {
+        display: flex;
+        gap: 4px;
+      }
+      .scan-card-btn {
+        flex: 1;
+        padding: 4px 6px;
+        border-radius: var(--r-sm);
+        font-size: 11px;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-2);
+        transition: all 0.12s;
+        text-decoration: none;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .scan-card-btn:hover {
+        background: var(--surface-2);
+        border-color: var(--border-strong);
+        color: var(--text);
+      }
+      .scan-card-btn.del:hover {
+        border-color: var(--red-border);
+        color: var(--red);
+        background: var(--red-bg);
+      }
+      .scan-card-btn.reject.active {
+        background: var(--red);
+        color: #000;
+        border-color: var(--red);
+      }
+      .scan-card-btn.done.active {
+        background: var(--green);
+        color: #000;
+        border-color: var(--green);
+      }
+      .scan-card.card-reject {
+        border-color: var(--red-border);
+        opacity: 0.75;
+      }
+      .scan-card.card-done {
+        border-color: var(--green-border);
+      }
+      .scan-card.card-senior {
+        border-color: var(--red-border);
+        opacity: 0.75;
+      }
+
+      .scan-empty {
+        text-align: center;
+        padding: 60px 24px;
+        color: var(--text-3);
+        font-size: 13px;
+        line-height: 2;
+      }
+
+      /* ── TOOL SECTIONS (collapsed by default) ────── */
+      .tool-sections {
+        margin-top: 32px;
+        padding-top: 18px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .tool-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r-sm);
+        padding: 12px 16px;
+      }
+      .tool-section summary {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-2);
+        cursor: pointer;
+        user-select: none;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .tool-section summary::-webkit-details-marker {
+        display: none;
+      }
+      .tool-section summary::before {
+        content: "›";
+        font-size: 13px;
+        color: var(--text-3);
+        transition: transform 0.2s;
+        display: inline-block;
+      }
+      .tool-section[open] summary::before {
+        transform: rotate(90deg);
+      }
+      .tool-section summary .count {
+        color: var(--text-3);
+        font-weight: 400;
+      }
+      .tool-body {
+        margin-top: 12px;
+      }
+      .tool-desc {
+        font-size: 12px;
+        color: var(--text-3);
+        margin-bottom: 10px;
+        line-height: 1.6;
+      }
+      .bkmk-btns {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .bkmk-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        border-radius: var(--r-sm);
+        background: var(--surface-2);
+        color: var(--text);
+        border: 1px solid var(--border-strong);
+        font-size: 12px;
+        font-weight: 500;
+        font-family: inherit;
+        text-decoration: none;
+        cursor: grab;
+        user-select: none;
+        transition: background 0.12s;
+      }
+      .bkmk-btn:hover {
+        background: #262626;
+      }
+      .bkmk-btn:active {
+        cursor: grabbing;
+      }
+      .bkmk-steps {
+        font-size: 11.5px;
+        color: var(--text-3);
+        line-height: 1.9;
+        background: var(--bg);
+        border-radius: var(--r-sm);
+        border: 1px solid var(--border);
+        padding: 10px 14px;
+      }
+      .bkmk-steps b {
+        color: var(--text-2);
+      }
+      .extract-body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .extract-result {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--r-sm);
+        padding: 10px 12px;
+        font-size: 12px;
+        color: var(--text-2);
+        max-height: 200px;
+        overflow-y: auto;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+      }
+      .extract-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .blocked-input-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .blocked-input {
+        flex: 1;
+        padding: 5px 10px;
+        border: 1px solid var(--border);
+        border-radius: var(--r-sm);
+        font-family: inherit;
+        font-size: 13px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+      }
+      .blocked-input:focus {
+        border-color: var(--border-strong);
+      }
+      .blocked-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .blocked-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px 3px 12px;
+        border-radius: var(--r-pill);
+        background: var(--red-bg);
+        color: var(--red);
+        border: 1px solid var(--red-border);
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .blocked-tag-del {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(248, 113, 113, 0.2);
+        color: var(--red);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        line-height: 1;
+        padding: 0;
+      }
+      .blocked-tag-del:hover {
+        background: var(--red);
+        color: #000;
+      }
+      .blocked-empty {
+        font-size: 12px;
+        color: var(--text-3);
+        font-style: italic;
+      }
 
       /* ── TOAST ───────────────────────────────────── */
       .toast-wrap {
@@ -783,8 +752,9 @@
         pointer-events: none;
       }
       .toast {
-        background: #1e293b;
-        color: #fff;
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        color: var(--text);
         padding: 9px 18px;
         border-radius: var(--r-pill);
         font-size: 13px;
@@ -800,63 +770,65 @@
         transform: none;
       }
       .toast.warn {
-        background: #dc2626;
+        background: var(--red);
+        border-color: var(--red);
+        color: #000;
       }
       .toast.ok {
-        background: #059669;
+        background: var(--green);
+        border-color: var(--green);
+        color: #000;
       }
 
       /* ── RESPONSIVE ──────────────────────────────── */
       @media (max-width: 640px) {
-        .header { padding: 0; }
-        .header-top { flex-wrap: wrap; height: auto; padding: 10px 14px 0; gap: 8px; }
-        .logo-icon { width: 26px; height: 26px; }
-        .logo-text { display: none; }
-        .search-wrap { flex: 1; max-width: none; }
-        .search-input { height: 32px; font-size: 12px; }
-        .hdr-right { gap: 6px; order: 3; }
-        .sync-pill { padding: 4px 7px; }
-        .sync-pill span { display: none; }
-        .view-toggle {
-          order: 10; flex: 0 0 100%;
-          border-top: 1px solid #30363d;
+        .header {
+          padding: 0;
         }
-        .view-btn {
-          flex: 1; justify-content: center;
-          padding: 9px 4px; font-size: 12px; height: auto;
-          top: 0; border-bottom: 2px solid transparent;
+        .header-top {
+          flex-wrap: wrap;
+          height: auto;
+          padding: 10px 14px;
+          gap: 8px;
         }
-        .view-btn.active { border-bottom-color: #f78166; }
-
-        .filter-bar { padding: 0 14px; height: 42px; }
-        .chip { padding: 2px 8px; font-size: 11px; }
-        .toolbar { padding: 8px 14px 6px; gap: 6px; }
-
-        .main { padding: 0 12px 80px; }
-        .board-grid { grid-template-columns: 1fr; gap: 8px; }
-
-        .list-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { min-width: 520px; }
-
-        .detail-grid { grid-template-columns: 1fr; }
-        .overlay { align-items: flex-end; padding: 0; }
-        .modal {
-          max-width: 100%; max-height: 90vh;
-          border-radius: 12px 12px 0 0;
-          align-self: flex-end;
-          border-bottom: none;
+        .logo-icon {
+          width: 24px;
+          height: 24px;
         }
-        .modal-body { padding: 0 16px 12px; }
-        .modal-footer { padding: 10px 16px; }
-
-        .extract-section { padding: 12px 14px; }
-        .scan-input-section { padding: 12px 14px; }
-        .scan-actions { flex-wrap: wrap; gap: 8px; }
-        .scan-card-grid { grid-template-columns: 1fr; }
-
-        .lock-box { width: 90vw; padding: 32px 24px 28px; }
-        .pin-keypad { grid-template-columns: repeat(3, 64px); gap: 8px; }
-        .pin-key { height: 48px; font-size: 17px; }
+        .search-wrap {
+          flex: 1;
+          max-width: none;
+          order: 3;
+          flex: 0 0 100%;
+        }
+        .hdr-right {
+          margin-left: auto;
+        }
+        .sync-pill span {
+          display: none;
+        }
+        .main {
+          padding: 14px 12px 80px;
+        }
+        .scan-card-grid {
+          grid-template-columns: 1fr;
+        }
+        .scan-actions {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .lock-box {
+          width: 90vw;
+          padding: 32px 24px 28px;
+        }
+        .pin-keypad {
+          grid-template-columns: repeat(3, 64px);
+          gap: 8px;
+        }
+        .pin-key {
+          height: 48px;
+          font-size: 17px;
+        }
       }
       ::-webkit-scrollbar {
         width: 5px;
@@ -866,258 +838,103 @@
         background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: var(--border-strong);
         border-radius: 99px;
       }
 
-      /* ── SCAN VIEW ───────────────────────────────── */
-      .scan-wrap { display: none; }
-      /* ── 북마클릿 설치 섹션 ── */
-      .bkmk-section {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--r);
-        padding: 16px 20px;
-        margin-bottom: 10px;
-      }
-      .bkmk-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-      .bkmk-desc { font-size: 12px; color: var(--text-2); margin-bottom: 12px; }
-      .bkmk-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-      .bkmk-btn {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 5px 14px; border-radius: var(--r);
-        background: var(--green); color: #fff;
-        font-size: 13px; font-weight: 500; font-family: inherit;
-        text-decoration: none; cursor: grab; user-select: none;
-        border: 1px solid rgba(31,35,40,.15);
-        transition: background .12s;
-      }
-      .bkmk-btn:hover { background: var(--green-dark); }
-      .bkmk-btn:active { cursor: grabbing; }
-      .bkmk-btn-alt { background: var(--primary); }
-      .bkmk-btn-alt:hover { background: var(--primary-dark); }
-      .bkmk-steps {
-        font-size: 12px; color: var(--text-2); line-height: 2;
-        background: var(--bg); border-radius: var(--r);
-        border: 1px solid var(--border);
-        padding: 10px 14px;
-      }
-      .bkmk-steps b { color: var(--text); }
-      .extract-section {
-        background: var(--surface);
-        border-radius: var(--r);
-        border: 1px solid var(--border);
-        padding: 16px 20px;
-        margin-bottom: 10px;
-      }
-      .extract-section summary {
-        font-size: 13px; font-weight: 600; color: var(--text);
-        cursor: pointer; user-select: none; list-style: none;
-        display: flex; align-items: center; gap: 6px;
-      }
-      .extract-section summary::-webkit-details-marker { display: none; }
-      .extract-section summary::before { content: '▶'; font-size: 10px; color: var(--text-3); transition: transform .2s; }
-      .extract-section[open] summary::before { transform: rotate(90deg); }
-      .extract-body { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
-      .extract-result {
-        background: var(--bg); border: 1px solid var(--border);
-        border-radius: var(--r); padding: 10px 12px;
-        font-size: 12px; color: var(--text-2);
-        max-height: 200px; overflow-y: auto; line-height: 1.8;
-        white-space: pre-wrap; word-break: break-all;
-        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-      }
-      .extract-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-      .scan-input-section {
-        background: var(--surface);
-        border-radius: var(--r);
-        border: 1px solid var(--border);
-        padding: 16px 20px;
-        margin-bottom: 16px;
-      }
-      .scan-url-input {
-        width: 100%; min-height: 76px; resize: vertical;
-        padding: 8px 10px;
-        border: 1px solid var(--border);
-        border-radius: var(--r);
-        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-        font-size: 12px; color: var(--text); line-height: 1.6;
-        background: var(--bg); outline: none;
-        transition: border-color 0.15s, box-shadow 0.15s;
-      }
-      .scan-url-input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(9,105,218,.15);
-        background: #fff;
-      }
-      .scan-url-input::placeholder { color: var(--text-3); }
-      .scan-actions { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-      .scan-progress { font-size: 12px; color: var(--text-3); }
-      .country-section { margin-bottom: 20px; }
-      .country-header {
-        display: flex; align-items: center; gap: 8px;
-        margin-bottom: 10px; padding: 8px 14px;
-        border-radius: var(--r); font-size: 13px; font-weight: 600;
-        border: 1px solid transparent;
-      }
-      .country-count {
-        font-size: 11px; font-weight: 500;
-        padding: 1px 7px; border-radius: var(--r-pill);
-        background: rgba(255,255,255,.5);
-      }
-      .scan-card-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-        gap: 8px;
-      }
-      .scan-card {
-        background: var(--surface);
-        border-radius: var(--r);
-        border: 1px solid var(--border);
-        padding: 12px 14px;
-        transition: border-color 0.15s, box-shadow 0.15s;
-      }
-      .scan-card:hover { box-shadow: var(--shadow-md); border-color: #8c959f; }
-      .scan-card-name {
-        font-size: 13px; font-weight: 600;
-        color: var(--primary); margin-bottom: 5px; line-height: 1.4;
-      }
-      .scan-card-mfr { font-size: 12px; color: var(--text-2); margin-bottom: 2px; }
-      .scan-card-phone { font-size: 12px; color: var(--text-2); font-weight: 500; margin-bottom: 10px; }
-      .scan-card-phone.empty { color: var(--text-3); }
-      .scan-card-actions { display: flex; gap: 4px; }
-      .scan-card-btn {
-        flex: 1; padding: 4px 6px;
-        border-radius: var(--r); font-size: 11px; font-weight: 500;
-        font-family: inherit; cursor: pointer;
-        border: 1px solid var(--border);
-        background: var(--surface); color: var(--text-2);
-        transition: all 0.12s; text-decoration: none; text-align: center;
-        display: inline-flex; align-items: center; justify-content: center; gap: 3px;
-      }
-      .scan-card-btn:hover { background: var(--bg); border-color: var(--text-3); color: var(--text); }
-      .scan-card-btn.del:hover { border-color: #cf222e; color: #cf222e; background: #ffebe9; }
-      .scan-card-btn.reject { color: #cf222e; border-color: rgba(207,34,46,.35); background: #ffebe9; }
-      .scan-card-btn.reject:hover, .scan-card-btn.reject.active { background: #cf222e; color: #fff; border-color: #cf222e; }
-      .scan-card-btn.done { color: #1a7f37; border-color: rgba(26,127,55,.35); background: #dafbe1; }
-      .scan-card-btn.done:hover, .scan-card-btn.done.active { background: #1a7f37; color: #fff; border-color: #1a7f37; }
-      /* 카드 상태별 스타일 */
-      .scan-card.card-reject { border-color: #f85149; border-width: 2px; background: #fff8f7; opacity: .85; }
-      .scan-card.card-done   { border-color: #3fb950; border-width: 2px; background: #f8fff9; }
-      .scan-status-tag {
-        display: inline-flex; align-items: center; gap: 3px;
-        font-size: 11px; font-weight: 600; padding: 2px 7px;
-        border-radius: var(--r-pill); margin-bottom: 8px;
-      }
-      .scan-status-tag.tag-reject { background: #ffebe9; color: #cf222e; border: 1px solid rgba(207,34,46,.3); }
-      .scan-status-tag.tag-done   { background: #dafbe1; color: #1a7f37; border: 1px solid rgba(26,127,55,.3); }
-      .scan-dup-tag {
-        display: inline-flex; align-items: center; gap: 3px;
-        font-size: 10px; font-weight: 500; padding: 1px 6px;
-        border-radius: var(--r-pill); margin-bottom: 4px;
-        background: #fff8c5; color: #9a6700; border: 1px solid rgba(154,103,0,.3);
-      }
-      /* ── 선배 거래처 섹션 ── */
-      .blocked-section {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--r); padding: 16px 20px; margin-bottom: 10px;
-      }
-      .blocked-section summary {
-        font-size: 13px; font-weight: 600; color: var(--text);
-        cursor: pointer; user-select: none; list-style: none;
-        display: flex; align-items: center; gap: 6px;
-      }
-      .blocked-section summary::-webkit-details-marker { display: none; }
-      .blocked-section summary::before { content: '▶'; font-size: 10px; color: var(--text-3); transition: transform .2s; }
-      .blocked-section[open] summary::before { transform: rotate(90deg); }
-      .blocked-body { margin-top: 14px; }
-      .blocked-desc { font-size: 12px; color: var(--text-2); margin-bottom: 12px; line-height: 1.6; }
-      .blocked-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
-      .blocked-input {
-        flex: 1; padding: 5px 10px; border: 1px solid var(--border); border-radius: var(--r);
-        font-family: inherit; font-size: 13px; color: var(--text); background: var(--bg);
-        outline: none;
-      }
-      .blocked-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(9,105,218,.15); }
-      .blocked-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-      .blocked-tag {
-        display: inline-flex; align-items: center; gap: 5px;
-        padding: 3px 10px 3px 12px; border-radius: var(--r-pill);
-        background: #ffebe9; color: #cf222e; border: 1px solid rgba(207,34,46,.3);
-        font-size: 12px; font-weight: 500;
-      }
-      .blocked-tag-del {
-        width: 16px; height: 16px; border-radius: 50%; border: none;
-        background: rgba(207,34,46,.2); color: #cf222e; cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 11px; line-height: 1; padding: 0;
-      }
-      .blocked-tag-del:hover { background: #cf222e; color: #fff; }
-      .blocked-empty { font-size: 12px; color: var(--text-3); font-style: italic; }
-      /* 선배 거래처 카드 태그 */
-      .scan-senior-tag {
-        display: inline-flex; align-items: center; gap: 3px;
-        font-size: 11px; font-weight: 600; padding: 2px 7px;
-        border-radius: var(--r-pill); margin-bottom: 4px;
-        background: #ffebe9; color: #cf222e; border: 1px solid rgba(207,34,46,.3);
-      }
-      .scan-card.card-senior { border-color: #f85149; border-width: 2px; background: #fff8f7; opacity: .85; }
-      .scan-senior-badge {
-        font-size: 10px; font-weight: 500; padding: 1px 6px;
-        border-radius: var(--r-pill); margin-left: 4px;
-        background: #fff8c5; color: #9a6700; border: 1px solid rgba(154,103,0,.3);
-        vertical-align: middle;
-      }
-      .scan-empty {
-        text-align: center; padding: 60px 24px;
-        color: var(--text-3); font-size: 13px; line-height: 2;
-      }
-      .scan-empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
-      .scan-stat-bar {
-        display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center;
-      }
-      .scan-stat {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--r); padding: 8px 14px;
-        font-size: 12px; color: var(--text-2);
-      }
-      .scan-stat strong { display: block; font-size: 20px; font-weight: 600; color: var(--text); }
       /* ── LOCK SCREEN ─────────────────────────────── */
       .lock-screen {
-        position: fixed; inset: 0; z-index: 9999;
-        background: #0d1117;
-        display: flex; align-items: center; justify-content: center;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       .lock-box {
-        background: #161b22;
-        border: 1px solid #30363d;
+        background: var(--surface);
+        border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 40px 36px 36px; width: 320px;
-        box-shadow: 0 16px 48px rgba(0,0,0,.5);
-        display: flex; flex-direction: column; align-items: center; gap: 20px;
+        padding: 40px 36px 36px;
+        width: 320px;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
       }
-      .lock-logo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid #30363d; }
-      .lock-title { font-size: 16px; font-weight: 600; color: #e6edf3; }
-      .lock-subtitle { font-size: 13px; color: #8d96a0; margin-top: -12px; }
-      .pin-dots { display: flex; gap: 14px; margin: 4px 0; }
+      .lock-logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border-strong);
+      }
+      .lock-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .lock-subtitle {
+        font-size: 13px;
+        color: var(--text-3);
+        margin-top: -12px;
+      }
+      .pin-dots {
+        display: flex;
+        gap: 14px;
+        margin: 4px 0;
+      }
       .pin-dot {
-        width: 12px; height: 12px; border-radius: 50%;
-        border: 2px solid #30363d; background: transparent;
-        transition: all .2s;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid var(--border-strong);
+        background: transparent;
+        transition: all 0.2s;
       }
-      .pin-dot.filled { background: #2f81f7; border-color: #2f81f7; }
-      .pin-dot.error { background: #f85149; border-color: #f85149; }
-      .pin-keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 10px; }
+      .pin-dot.filled {
+        background: var(--white);
+        border-color: var(--white);
+      }
+      .pin-dot.error {
+        background: var(--red);
+        border-color: var(--red);
+      }
+      .pin-keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 72px);
+        gap: 10px;
+      }
       .pin-key {
-        height: 52px; border-radius: var(--r);
-        border: 1px solid #30363d; background: #21262d;
-        font-size: 18px; font-weight: 500; color: #e6edf3;
-        cursor: pointer; transition: all .12s; font-family: inherit;
+        height: 52px;
+        border-radius: var(--r-sm);
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.12s;
+        font-family: inherit;
       }
-      .pin-key:hover { background: #30363d; border-color: #8b949e; }
-      .pin-key:active { background: #161b22; }
-      .pin-key.del { font-size: 14px; color: #8d96a0; }
-      .lock-error { font-size: 12px; color: #f85149; height: 16px; }
+      .pin-key:hover {
+        background: #262626;
+        border-color: var(--border-strong);
+      }
+      .pin-key:active {
+        background: #111;
+      }
+      .pin-key.del {
+        font-size: 14px;
+        color: var(--text-3);
+      }
+      .lock-error {
+        font-size: 12px;
+        color: var(--red);
+        height: 16px;
+      }
     </style>
   </head>
   <body>
@@ -1175,63 +992,16 @@
             id="searchInput"
             class="search-input"
             type="text"
-            placeholder="업체명, 담당자, 메모 검색..."
+            placeholder="품명, 제조사, 전화번호 검색..."
             autocomplete="off"
           />
         </div>
-        <div class="view-toggle">
-            <button class="view-btn active" id="btnBoard">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.3"
-              >
-                <rect x="3" y="3" width="7" height="7" rx="1" />
-                <rect x="14" y="3" width="7" height="7" rx="1" />
-                <rect x="3" y="14" width="7" height="7" rx="1" />
-                <rect x="14" y="14" width="7" height="7" rx="1" />
-              </svg>
-              보드
-            </button>
-            <button class="view-btn" id="btnList">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.3"
-              >
-                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
-              </svg>
-              목록
-            </button>
-            <button class="view-btn" id="btnScan">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.3"
-                stroke-linecap="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-                <path d="M11 8v6M8 11h6" />
-              </svg>
-              스캔
-            </button>
-          </div>
         <div class="hdr-right">
           <div class="sync-pill">
             <div class="sync-dot" id="syncDot"></div>
             <span id="syncText">미연결</span>
           </div>
-          <button class="icon-btn" id="refreshBtn" title="새로고침">
+          <button class="icon-btn" id="refreshBtn" title="시트에서 새로고침">
             <svg
               width="13"
               height="13"
@@ -1251,225 +1021,95 @@
       </div>
     </header>
 
-    <!-- ── FILTER BAR (상태) ────────────────────────────── -->
-    <div class="filter-bar" id="filterBar">
-      <span class="filter-label">상태</span>
-      <button class="chip active" data-filter="status" data-val="전체">
-        전체
-      </button>
-    </div>
-
-    <!-- ── TOOLBAR ─────────────────────────────────────── -->
-    <div class="toolbar">
-      <div class="sub-filter" id="itemFilter">
-        <span class="filter-label" style="line-height: 2">아이템</span>
-        <button class="sub-btn active" data-filter="item" data-val="전체">
-          전체
-        </button>
-      </div>
-      <span class="count-badge" id="countBadge">0건</span>
-      <div class="sort-wrap">
-        <span class="sort-label">정렬:</span>
-        <select id="sortSel" class="sort-sel">
-          <option value="date">최근연락일</option>
-          <option value="name">업체명</option>
-        </select>
-      </div>
-    </div>
-
     <!-- ── MAIN ────────────────────────────────────────── -->
     <main class="main" id="main">
-      <div class="board-grid" id="boardGrid">
-        <div class="state-box">
-          <div class="state-icon">📊</div>
-          <div class="state-title">스프레드시트 연결 중...</div>
-          <div class="state-desc">잠시 기다려 주세요.</div>
+      <!-- 스캔 입력 -->
+      <div class="scan-input-section">
+        <div class="section-title">쇼핑몰 상품 링크 분석</div>
+        <div class="section-desc">
+          SSG·쿠팡·11번가·스마트스토어 링크를 붙여넣으세요 (여러 개는 줄바꿈으로 구분)
         </div>
-      </div>
-      <div class="list-wrap" id="listWrap" style="display: none">
-        <table>
-          <thead>
-            <tr>
-              <th>업체명</th>
-              <th>아이템</th>
-              <th>상태</th>
-              <th>담당자</th>
-              <th>견적구간</th>
-              <th>최근연락일</th>
-              <th>연락처</th>
-              <th>비고</th>
-            </tr>
-          </thead>
-          <tbody id="listBody"></tbody>
-        </table>
+        <textarea
+          id="scanUrlInput"
+          class="scan-url-input"
+          placeholder="https://emart.ssg.com/item/itemView.ssg?itemId=...&#10;https://www.coupang.com/vp/products/..."
+        ></textarea>
+        <div class="scan-actions">
+          <button class="btn btn-primary" id="scanBtn">분석 시작</button>
+          <button class="btn btn-ghost" id="dedupScanBtn">중복 정리</button>
+          <button class="btn btn-ghost" id="clearScanBtn">전체 삭제</button>
+          <span id="scanProgress" class="scan-progress"></span>
+        </div>
       </div>
 
-      <!-- ── SCAN VIEW ─────────────────────────────────── -->
-      <div class="scan-wrap" id="scanWrap">
-        <!-- 북마클릿 -->
-        <div class="bkmk-section" id="bkmkSection">
-          <div class="bkmk-title">📌 북마클릿 설치</div>
-          <div class="bkmk-desc">아래 버튼을 북마크 바로 드래그해서 설치하세요 → SSG 페이지에서 클릭</div>
-          <div class="bkmk-btns">
-            <a id="bkmkSaveBtn" class="bkmk-btn" draggable="true">💾 상품 저장</a>
-            <a id="bkmkExtractBtn" class="bkmk-btn bkmk-btn-alt" draggable="true">🔗 링크 추출</a>
+      <!-- 통계 -->
+      <div id="scanStatBar" class="scan-stat-bar"></div>
+
+      <!-- 날짜별 필터 -->
+      <div class="date-chip-bar" id="dateChips"></div>
+
+      <!-- 결과 -->
+      <div id="scanResults"></div>
+
+      <!-- 도구 (접힘) -->
+      <div class="tool-sections">
+        <details class="tool-section" id="bkmkSection">
+          <summary>북마클릿 설치 안내</summary>
+          <div class="tool-body">
+            <div class="tool-desc">
+              아래 버튼을 북마크 바로 드래그해서 설치하세요 → SSG 페이지에서 클릭<br />
+              ① 상품 페이지에서 <b style="color:var(--text-2)">상품 저장</b> 클릭 → 자동 저장<br />
+              ② 검색결과 페이지에서 <b style="color:var(--text-2)">링크 추출</b> 클릭 → 복사 후 아래 붙여넣기
+            </div>
+            <div class="bkmk-btns">
+              <a id="bkmkSaveBtn" class="bkmk-btn" draggable="true">상품 저장</a>
+              <a id="bkmkExtractBtn" class="bkmk-btn" draggable="true">링크 추출</a>
+            </div>
           </div>
-          <div class="bkmk-steps">
-            <div>① SSG 상품 페이지 열기 → <b>상품 저장</b> 클릭 → emart 탭 자동 저장</div>
-            <div>② SSG 검색결과 페이지 열기 → <b>링크 추출</b> 클릭 → 링크 복사 후 아래 붙여넣기</div>
-          </div>
-        </div>
-        <!-- 선배 거래처 -->
-        <details class="blocked-section" id="blockedSection">
-          <summary>👥 선배 거래처 목록 <span id="blockedCount" style="font-size:11px;color:var(--text-3);font-weight:400"></span></summary>
-          <div class="blocked-body">
-            <div class="blocked-desc">
-              여기에 입력한 제조사/업체명이 스캔 카드에 나타나면 <b>자동으로 불가 표시</b>됩니다.<br>
+        </details>
+
+        <details class="tool-section" id="blockedSection">
+          <summary>선배 거래처 목록 <span class="count" id="blockedCount"></span></summary>
+          <div class="tool-body">
+            <div class="tool-desc">
+              여기에 입력한 제조사/업체명이 스캔 카드에 나타나면 자동으로 불가 표시됩니다.<br />
               부분 일치도 감지됩니다 (예: "삼익가구" 입력 시 "삼익가구OEM" 자동 차단)
             </div>
             <div class="blocked-input-row">
               <input id="blockedInput" class="blocked-input" type="text" placeholder="업체명 또는 제조사명 입력 (예: 미미월드)" />
-              <button class="btn btn-ghost" id="blockedAddBtn" style="flex-shrink:0">추가</button>
+              <button class="btn btn-ghost btn-sm" id="blockedAddBtn" style="flex-shrink:0">추가</button>
             </div>
             <div class="blocked-tags" id="blockedTags">
               <span class="blocked-empty">아직 등록된 거래처가 없습니다</span>
             </div>
           </div>
         </details>
-        <!-- 링크 추출기 -->
-        <details class="extract-section" id="extractSection">
-          <summary>🔗 검색결과 링크 추출 <span style="font-size:11px;color:var(--text-3);font-weight:400">(SSG 검색 URL → 상품 링크 목록)</span></summary>
-          <div class="extract-body">
-            <input id="extractUrlInput" class="scan-url-input" style="min-height:unset;height:38px;resize:none"
+
+        <details class="tool-section" id="extractSection">
+          <summary>검색결과 링크 추출기</summary>
+          <div class="tool-body extract-body">
+            <input id="extractUrlInput" class="scan-url-input" style="min-height:unset;height:36px;resize:none"
               placeholder="https://emart.ssg.com/search.ssg?target=all&query=가구" />
             <div class="extract-actions">
-              <button class="btn btn-primary" id="extractBtn">링크 추출</button>
-              <button class="btn btn-ghost" id="extractCopyBtn" style="display:none">전체 복사</button>
-              <button class="btn btn-ghost" id="extractToScanBtn" style="display:none">스캔 입력창에 추가</button>
+              <button class="btn btn-primary btn-sm" id="extractBtn">링크 추출</button>
+              <button class="btn btn-ghost btn-sm" id="extractCopyBtn" style="display:none">전체 복사</button>
+              <button class="btn btn-ghost btn-sm" id="extractToScanBtn" style="display:none">스캔 입력창에 추가</button>
               <span id="extractStatus" style="font-size:12px;color:var(--text-3);align-self:center"></span>
             </div>
             <div id="extractResult" class="extract-result" style="display:none"></div>
           </div>
         </details>
-        <div class="scan-input-section">
-          <div
-            style="
-              font-size: 13px;
-              font-weight: 600;
-              color: var(--text);
-              margin-bottom: 4px;
-            "
-          >
-            쇼핑몰 상품 링크 분석
-          </div>
-          <div
-            style="font-size: 12px; color: var(--text-3); margin-bottom: 10px"
-          >
-            SSG·쿠팡·11번가·스마트스토어 링크를 붙여넣으세요 (여러 개는
-            줄바꿈으로 구분)
-          </div>
-          <textarea
-            id="scanUrlInput"
-            class="scan-url-input"
-            placeholder="https://emart.ssg.com/item/itemView.ssg?itemId=...&#10;https://www.coupang.com/vp/products/..."
-          ></textarea>
-          <div class="scan-actions">
-            <button class="btn btn-primary" id="scanBtn">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-              분석 시작
-            </button>
-            <button class="btn btn-ghost" id="dedupScanBtn">🔁 중복 정리</button>
-            <button class="btn btn-ghost" id="clearScanBtn">전체 삭제</button>
-            <span id="scanProgress" class="scan-progress"></span>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div id="scanStatBar" class="scan-stat-bar" style="flex:1;margin-bottom:0"></div>
-          <button id="emartSyncBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:12px;padding:4px 10px;white-space:nowrap" onclick="loadEmartItems()">☁ 시트에서 불러오기</button>
-        </div>
-        <div id="scanResults"></div>
       </div>
     </main>
-
-    <!-- ── DETAIL MODAL ─────────────────────────────────── -->
-    <div class="overlay" id="overlay">
-      <div class="modal">
-        <div class="modal-header">
-          <div class="modal-accent" id="modalAccent"></div>
-          <div class="modal-header-content">
-            <div class="modal-name" id="modalName"></div>
-            <div class="modal-item" id="modalItem"></div>
-          </div>
-          <button class="modal-edit-btn" id="modalEditBtn" title="편집">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.3"
-              stroke-linecap="round"
-            >
-              <path
-                d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-              />
-              <path
-                d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-              />
-            </svg>
-          </button>
-          <button class="modal-close" id="modalClose">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.3"
-              stroke-linecap="round"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div class="modal-body" id="modalBody"></div>
-        <div class="modal-footer" id="modalFooter" style="display: none">
-          <button class="btn btn-primary" id="saveBtn">저장</button>
-          <button class="btn btn-ghost" id="cancelBtn">취소</button>
-          <span
-            id="saveStatus"
-            style="font-size: 12px; color: #ef4444; margin-left: 4px"
-          ></span>
-        </div>
-      </div>
-    </div>
 
     <!-- ── TOAST ────────────────────────────────────────── -->
     <div class="toast-wrap"><div class="toast" id="toast"></div></div>
 
     <script>
       /* ══════════════════════════════════════════════════════
-   CONFIG — 시트 ID 고정
+   CONFIG
    ══════════════════════════════════════════════════════ */
-      /* 웹에 게시된 CSV URL (파일→웹에 게시 후 생성된 e/ ID 사용) */
-      const CSV_URL =
-        "https://docs.google.com/spreadsheets/d/e/2PACX-1vTEDBmEByiiDk9ayxyeaAtmjScg3h4Wc6TqOAjBKhYDZabIwKIwKEsD5EEbSH8Q1SK3WectpIr5z0VM/pub?output=csv&gid=0";
-      const INTERVAL = 60; // 자동 새로고침 (초)
-
-      /* ── 양방향 동기화 설정 ────────────────────────────────
-   아래 순서로 Apps Script를 배포한 뒤 URL을 입력하세요.
-
+      /* ── Google Apps Script 배포 안내 ──────────────────────
    1. 스프레드시트 → 확장 프로그램 → Apps Script
    2. 아래 코드를 붙여넣고 저장 (Ctrl+S)
    3. 배포 → 새 배포 → 유형: 웹앱
@@ -1477,15 +1117,14 @@
    4. 생성된 웹앱 URL을 아래 APPS_SCRIPT_URL에 붙여넣기
 
    ── Apps Script 코드 (전체 교체) ─────────────────────
-   function doGet(e)  {
+   function doGet(e) {
      if (e.parameter.action === 'scrape') return scrapeProduct(e.parameter.url);
      if (e.parameter.action === 'extractLinks') return extractLinks(e.parameter.url);
      if (e.parameter.action === 'saveToEmart') return saveToEmart(e.parameter);
      if (e.parameter.action === 'getEmartItems') return getEmartItems();
      if (e.parameter.action === 'updateEmartStatus') return updateEmartStatus(e.parameter);
-     return handle(e);
+     return res({success:false, error:'알 수 없는 요청'});
    }
-   function doPost(e) { return handle(e); }
 
    // ── emart 탭 저장 ─────────────────────────────────────
    function saveToEmart(p) {
@@ -1526,17 +1165,14 @@
        const ss = SpreadsheetApp.getActiveSpreadsheet();
        const sheet = ss.getSheetByName('emart');
        if (!sheet || sheet.getLastRow() < 2) return res({success: false, error: 'emart 시트 없음'});
-       // URL로 행 찾기
        const urls = sheet.getRange(2, 1, sheet.getLastRow()-1, 1).getValues();
        let found = -1;
        for (let i = 0; i < urls.length; i++) {
          if (urls[i][0] === p.url) { found = i+2; break; }
        }
        if (found < 0) return res({success: false, error: '해당 행을 찾지 못했습니다'});
-       // 상태 컬럼(7열) 확보 및 저장
        if (sheet.getLastColumn() < 7) sheet.getRange(1,7).setValue('상태');
        sheet.getRange(found, 7).setValue(p.status || '');
-       // 행 배경색
        const ncols = Math.max(sheet.getLastColumn(), 7);
        const rowRange = sheet.getRange(found, 1, 1, ncols);
        if (p.status === '불가') rowRange.setBackground('#eeeeee');
@@ -1556,7 +1192,6 @@
          },
          muteHttpExceptions: true, followRedirects: true
        }).getContentText('UTF-8');
-       // Next.js __NEXT_DATA__ JSON에서 itemId 추출
        const ndm = html.match(/<script id="__NEXT_DATA__" type="application\/json">([^<]+)<\/script>/);
        if (ndm) {
          const jsonStr = ndm[1];
@@ -1617,131 +1252,21 @@
      const m = text.match(/0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}/);
      return m ? m[0].replace(/[.\s]/g,'-') : text.slice(0,30);
    }
-   function handle(e) {
-     try {
-       const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-       const headers = sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];
-       const name  = e.parameter.name;
-       const col   = e.parameter.col;
-       const value = e.parameter.value;
-       const nameIdx = headers.indexOf('업체명');
-       const colIdx  = headers.indexOf(col);
-       if (nameIdx < 0 || colIdx < 0) return res({success:false, error:'컬럼 없음'});
-       const vals = sheet.getDataRange().getValues();
-       for (let i = 1; i < vals.length; i++) {
-         if (String(vals[i][nameIdx]).trim() === String(name).trim()) {
-           sheet.getRange(i+1, colIdx+1).setValue(value);
-           return res({success:true});
-         }
-       }
-       return res({success:false, error:'업체를 찾을 수 없습니다'});
-     } catch(err) { return res({success:false, error:err.message}); }
-   }
    function res(d) {
      return ContentService.createTextOutput(JSON.stringify(d))
        .setMimeType(ContentService.MimeType.JSON);
-   }
-   // ── 시트 자동 포맷 (onEdit 트리거 — 재배포 불필요, 그냥 추가) ──
-   function onEdit(e) {
-     const headers = e.source.getActiveSheet()
-       .getRange(1,1,1,e.source.getActiveSheet().getLastColumn()).getValues()[0];
-     const phoneCol = headers.indexOf('연락처') + 1;
-     if (e.range.getColumn() === phoneCol && e.range.getRow() > 1) {
-       const fmt = formatPhoneGS(String(e.value || ''));
-       if (fmt !== e.value) e.range.setValue(fmt);
-     }
-   }
-   function formatPhoneGS(raw) {
-     const d = raw.replace(/[^0-9]/g,'').slice(0,11);
-     if (!d) return '';
-     if (d.startsWith('02')) {
-       if (d.length<=2) return d;
-       if (d.length<=5) return d.slice(0,2)+'-'+d.slice(2);
-       if (d.length<=9) return d.slice(0,2)+'-'+d.slice(2,d.length-4)+'-'+d.slice(-4);
-       return d.slice(0,2)+'-'+d.slice(2,6)+'-'+d.slice(6);
-     }
-     if (d.length<=3) return d;
-     if (d.length<=7) return d.slice(0,3)+'-'+d.slice(3);
-     if (d.length<=10) return d.slice(0,3)+'-'+d.slice(3,d.length-4)+'-'+d.slice(-4);
-     return d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7);
    }
    ────────────────────────────────────────────────────── */
       const APPS_SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbwfxzELul4VddxeCBIZ0_EgU7nSF9e84R87ZktbsD1obcgShMaWWSCuZYXpRP2AjduE1w/exec"; // ← 웹앱 URL 붙여넣기
 
-      /* 컬럼 헤더 → 내부 키 매핑 */
-      const COL = {
-        name: "업체명",
-        phone: "연락처",
-        address: "주소",
-        memo: "비고",
-        person: "담당자",
-        email: "이메일",
-        price: "견적구간",
-        status: "상태",
-        item: "아이템",
-        date: "최근연락일",
-      };
-
-      /* 상태 → 색상 (동적으로도 대응) */
-      const STATUS_OPTIONS = ["거래성사", "영업중", "거래불가", "보류"];
-      const STATUS_PALETTE = [
-        {
-          keys: ["거래성사", "성사", "계약", "완료"],
-          color: "#1a7f37",
-          bg: "#dafbe1",
-          border: "rgba(26,127,55,.3)",
-        },
-        {
-          keys: ["영업중", "진행중", "진행", "컨택중", "컨택", "제안", "미팅"],
-          color: "#9a6700",
-          bg: "#fff8c5",
-          border: "rgba(154,103,0,.3)",
-        },
-        {
-          keys: ["거래불가", "영업불가", "불가"],
-          color: "#cf222e",
-          bg: "#ffebe9",
-          border: "rgba(207,34,46,.3)",
-        },
-        { keys: ["보류", "대기", "홀드"], color: "#57606a", bg: "#eaeef2", border: "rgba(87,96,106,.3)" },
-      ];
-      const FALLBACK_COLORS = [
-        "#8B5CF6",
-        "#F59E0B",
-        "#06B6D4",
-        "#84CC16",
-        "#EC4899",
-      ];
-      const _colorCache = {};
-      function statusMeta(s) {
-        if (!s) return { color: "#57606a", bg: "#eaeef2", border: "rgba(87,96,106,.3)" };
-        if (_colorCache[s]) return _colorCache[s];
-        const lower = s.toLowerCase();
-        for (const p of STATUS_PALETTE) {
-          if (p.keys.some((k) => lower.includes(k.toLowerCase()))) {
-            return (_colorCache[s] = p);
-          }
-        }
-        const i =
-          Math.abs([...s].reduce((a, c) => a + c.charCodeAt(0), 0)) %
-          FALLBACK_COLORS.length;
-        return (_colorCache[s] = { color: FALLBACK_COLORS[i], bg: "#eaeef2", border: "rgba(87,96,106,.3)" });
-      }
-
       /* ══════════════════════════════════════════════════════
    STATE
    ══════════════════════════════════════════════════════ */
-      let clients = [];
-      let itemVals = [];
       let state = {
-        view: "board", // 'board' | 'list' | 'scan'
         search: "",
-        statusFilter: "전체",
-        itemFilter: "전체",
-        sort: "date",
+        dateFilter: null, // 'YYYY-MM-DD' | null(전체)
       };
-      let refreshTimer = null;
       let scannedItems = (() => {
         try {
           return JSON.parse(localStorage.getItem("isseaair_scan") || "[]");
@@ -1749,6 +1274,14 @@
           return [];
         }
       })();
+
+      const COUNTRY_LABEL = {
+        중국: "중국",
+        한국: "한국",
+        미국: "미국",
+        일본: "일본",
+        베트남: "베트남",
+      };
 
       /* ── 선배 거래처 목록 ─────────────────────────────── */
       let blockedCompanies = (() => {
@@ -1791,7 +1324,7 @@
         saveBlocked();
         renderBlockedTags();
         inp.value = '';
-        renderScanResults(); // 기존 카드에 즉시 반영
+        renderScanResults();
         showToast(`"${val}" 추가됨 — 해당 업체 카드 자동 불가 표시`, 'ok');
       }
       function removeBlocked(i) {
@@ -1802,566 +1335,30 @@
       }
 
       /* ══════════════════════════════════════════════════════
-   FETCH — 웹에 게시된 CSV 직접 파싱
+   날짜 헬퍼
    ══════════════════════════════════════════════════════ */
-      async function fetchData() {
-        const url = CSV_URL + "&cachebust=" + Date.now();
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const text = await res.text();
-        return parseCSV(text);
+      function dateKey(iso) {
+        const d = iso ? new Date(iso) : new Date();
+        if (isNaN(d.getTime())) return "미상";
+        const y = d.getFullYear(),
+          m = d.getMonth() + 1,
+          day = d.getDate();
+        return `${y}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       }
-
-      function parseCSV(text) {
-        /* RFC 4180 호환 CSV 파서 — 셀 내 줄바꿈·쉼표 처리 */
-        const rows = [];
-        let row = [],
-          field = "",
-          inQ = false;
-        for (let i = 0; i < text.length; i++) {
-          const ch = text[i],
-            nx = text[i + 1];
-          if (inQ) {
-            if (ch === '"' && nx === '"') {
-              field += '"';
-              i++;
-            } else if (ch === '"') {
-              inQ = false;
-            } else {
-              field += ch;
-            }
-          } else {
-            if (ch === '"') {
-              inQ = true;
-            } else if (ch === ",") {
-              row.push(field.trim());
-              field = "";
-            } else if (ch === "\n") {
-              row.push(field.trim());
-              if (row.some((v) => v)) rows.push(row);
-              row = [];
-              field = "";
-            } else if (ch !== "\r") {
-              field += ch;
-            }
-          }
-        }
-        if (field || row.length) {
-          row.push(field.trim());
-          if (row.some((v) => v)) rows.push(row);
-        }
-
-        if (rows.length < 2) return [];
-        const headers = rows[0];
-        return rows
-          .slice(1)
-          .map((r) => {
-            const obj = {};
-            headers.forEach((h, i) => {
-              obj[h] = r[i] || "";
-            });
-            return obj;
-          })
-          .filter((r) => r[COL.name] && r[COL.name].trim() !== "");
+      function todayKey() {
+        return dateKey(new Date().toISOString());
       }
-
-      async function sync() {
-        setSyncState("loading", "불러오는 중...");
-        try {
-          const rows = await fetchData();
-          clients = rows;
-
-          /* 아이템 필터 동적 수집 */
-          itemVals = [...new Set(rows.map((r) => r[COL.item]).filter(Boolean))];
-
-          buildFilters();
-          render();
-
-          const now = new Date();
-          setSyncState(
-            "ok",
-            `${String(now.getHours()).padStart(2, "0")}:${String(
-              now.getMinutes()
-            ).padStart(2, "0")} 동기화`
-          );
-        } catch (e) {
-          setSyncState("err", "연결 오류");
-          if (clients.length === 0) renderError(e.message);
-          showToast("데이터를 가져오지 못했습니다.", "warn");
-        }
-      }
-
-      function startTimer() {
-        clearInterval(refreshTimer);
-        if (INTERVAL > 0) refreshTimer = setInterval(sync, INTERVAL * 1000);
-      }
-
-      function setSyncState(st, txt) {
-        document.getElementById("syncDot").className =
-          "sync-dot" + (st ? " " + st : "");
-        document.getElementById("syncText").textContent = txt;
-      }
-
-      /* ══════════════════════════════════════════════════════
-   BUILD DYNAMIC FILTERS
-   ══════════════════════════════════════════════════════ */
-      function buildFilters() {
-        /* 상태 chips */
-        const bar = document.getElementById("filterBar");
-        bar.innerHTML = `<span class="filter-label">상태</span>`;
-        ["전체", ...STATUS_OPTIONS].forEach((v) => {
-          const m = statusMeta(v);
-          const active = state.statusFilter === v ? "active" : "";
-          const dot =
-            v !== "전체"
-              ? `<span class="chip-dot" style="background:${m.color}"></span>`
-              : "";
-          const el = document.createElement("button");
-          el.className = `chip ${active}`;
-          el.dataset.filter = "status";
-          el.dataset.val = v;
-          el.innerHTML = dot + v;
-          bar.appendChild(el);
-        });
-
-        /* 아이템 sub-filter */
-        const iWrap = document.getElementById("itemFilter");
-        iWrap.innerHTML = `<span class="filter-label" style="line-height:2">아이템</span>`;
-        ["전체", ...itemVals].forEach((v) => {
-          const active = state.itemFilter === v ? "active" : "";
-          const el = document.createElement("button");
-          el.className = `sub-btn ${active}`;
-          el.dataset.filter = "item";
-          el.dataset.val = v;
-          el.textContent = v;
-          iWrap.appendChild(el);
-        });
-      }
-
-      /* ══════════════════════════════════════════════════════
-   FILTER + SORT
-   ══════════════════════════════════════════════════════ */
-      function getFiltered() {
-        let list = [...clients];
-        const q = state.search.trim().toLowerCase();
-        if (q)
-          list = list.filter(
-            (r) =>
-              (r[COL.name] || "").toLowerCase().includes(q) ||
-              (r[COL.person] || "").toLowerCase().includes(q) ||
-              (r[COL.memo] || "").toLowerCase().includes(q) ||
-              (r[COL.item] || "").toLowerCase().includes(q)
-          );
-        if (state.statusFilter !== "전체")
-          list = list.filter((r) => r[COL.status] === state.statusFilter);
-        if (state.itemFilter !== "전체")
-          list = list.filter((r) => r[COL.item] === state.itemFilter);
-        list.sort((a, b) => {
-          if (state.sort === "date")
-            return (b[COL.date] || "").localeCompare(a[COL.date] || "");
-          return (a[COL.name] || "").localeCompare(b[COL.name] || "", "ko");
-        });
-        return list;
-      }
-
-      /* ══════════════════════════════════════════════════════
-   RENDER
-   ══════════════════════════════════════════════════════ */
-      function render() {
-        if (state.view === "scan") {
-          renderScanResults();
-          return;
-        }
-        const list = getFiltered();
-        document.getElementById("countBadge").textContent = `${list.length}건`;
-        if (state.view === "board") renderBoard(list);
-        else renderList(list);
-      }
-
-      /* BOARD */
-      function renderBoard(list) {
-        document.getElementById("boardGrid").style.display = "";
-        document.getElementById("listWrap").style.display = "none";
-        const grid = document.getElementById("boardGrid");
-
-        if (list.length === 0) {
-          grid.innerHTML = emptyHTML();
-          return;
-        }
-
-        grid.innerHTML = list
-          .map((r, idx) => {
-            const m = statusMeta(r[COL.status]);
-            const memo = r[COL.memo] || "";
-            return `
-    <div class="card" data-idx="${idx}">
-      <div class="card-accent" style="background:${m.color}"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div>
-            <div class="card-name">${esc(r[COL.name])}</div>
-            <div class="card-item">${esc(r[COL.item])}</div>
-          </div>
-          <span class="status-badge" style="color:${m.color};background:${m.bg};border-color:${m.border||'transparent'}">${esc(r[COL.status] || "—")}</span>
-        </div>
-        <div class="card-info">
-          ${
-            r[COL.phone]
-              ? `<span class="card-info-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.44 2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.56-.56a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>${esc(
-                  r[COL.phone]
-                )}</span>`
-              : ""
-          }
-          ${
-            r[COL.address]
-              ? `<span class="card-info-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(
-                  r[COL.address]
-                )}</span>`
-              : ""
-          }
-          ${
-            r[COL.price]
-              ? `<span class="card-info-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>${esc(
-                  r[COL.price]
-                )}</span>`
-              : ""
-          }
-        </div>
-        <div class="card-memo ${memo ? "" : "empty"}">${esc(
-              memo || "비고 없음"
-            )}</div>
-        <div class="card-footer">
-          <span class="card-date">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            ${esc(r[COL.date] || "—")}
-          </span>
-          <span class="card-person">${esc(r[COL.person] || "")}</span>
-        </div>
-      </div>
-    </div>`;
-          })
-          .join("");
-
-        grid.querySelectorAll(".card").forEach((el) => {
-          el.addEventListener("click", () => openModal(list[+el.dataset.idx]));
-        });
-      }
-
-      /* LIST */
-      function renderList(list) {
-        document.getElementById("boardGrid").style.display = "none";
-        document.getElementById("listWrap").style.display = "";
-        const tbody = document.getElementById("listBody");
-
-        if (list.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:60px;color:var(--text-3)">결과 없음</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = list
-          .map((r, idx) => {
-            const m = statusMeta(r[COL.status]);
-            return `
-    <tr data-idx="${idx}">
-      <td>
-        <div class="td-name" style="display:flex;align-items:center;gap:7px">
-          <span style="width:3px;height:30px;border-radius:3px;background:${
-            m.color
-          };flex-shrink:0;display:inline-block"></span>
-          ${esc(r[COL.name])}
-        </div>
-      </td>
-      <td class="td-item">${esc(r[COL.item] || "—")}</td>
-      <td><span class="status-badge" style="color:${m.color};background:${m.bg};border-color:${m.border||'transparent'}">${esc(r[COL.status] || "—")}</span></td>
-      <td class="td-person">${esc(r[COL.person] || "—")}</td>
-      <td class="td-price">${esc(r[COL.price] || "—")}</td>
-      <td class="td-date">${esc(r[COL.date] || "—")}</td>
-      <td class="td-date">${esc(r[COL.phone] || "—")}</td>
-      <td class="td-memo">${esc(r[COL.memo] || "")}</td>
-    </tr>`;
-          })
-          .join("");
-
-        tbody.querySelectorAll("tr").forEach((el) => {
-          el.addEventListener("click", () => openModal(list[+el.dataset.idx]));
-        });
-      }
-
-      /* ── EMPTY / ERROR ── */
-      function emptyHTML() {
-        return `<div class="state-box">
-    <div class="state-icon">🔍</div>
-    <div class="state-title">검색 결과가 없습니다</div>
-    <div class="state-desc">다른 검색어나 필터를 사용해보세요</div>
-  </div>`;
-      }
-
-      function renderError(msg) {
-        const g = document.getElementById("boardGrid");
-        const needs403 = msg.includes("403") || msg.includes("404");
-        g.innerHTML = `<div class="state-box">
-    <div class="state-icon">📋</div>
-    <div class="state-title">${
-      needs403
-        ? "스프레드시트 공개 설정이 필요합니다"
-        : "데이터를 불러올 수 없습니다"
-    }</div>
-    <div class="state-desc">${
-      needs403 ? "아래 순서대로 설정해주세요" : msg
-    }</div>
-    ${
-      needs403
-        ? `<div class="state-steps">
-      스프레드시트 → <code>파일</code> → <code>웹에 게시</code> → <code>게시</code> 클릭 후<br>
-      이 페이지 새로고침 버튼을 눌러주세요.
-    </div>`
-        : ""
-    }
-  </div>`;
-      }
-
-      /* ══════════════════════════════════════════════════════
-   DETAIL MODAL
-   ══════════════════════════════════════════════════════ */
-      let _currentRow = null;
-      let _editMode = false;
-
-      function renderModalBody(r, editMode) {
-        const m = statusMeta(r[COL.status]);
-        document.getElementById("modalAccent").style.background = m.color;
-        document.getElementById("modalName").textContent = r[COL.name] || "";
-        document.getElementById("modalItem").textContent = r[COL.item] || "";
-
-        if (editMode) {
-          const opts = ["", ...STATUS_OPTIONS]
-            .map(
-              (v) =>
-                `<option value="${esc(v)}" ${
-                  v === r[COL.status] ? "selected" : ""
-                }>${esc(v || "선택 안 함")}</option>`
-            )
-            .join("");
-          document.getElementById("modalBody").innerHTML = `
-      <div class="detail-grid">
-        <div class="detail-item">
-          <div class="detail-label">상태</div>
-          <select class="edit-select" data-col="${COL.status}">${opts}</select>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">담당자</div>
-          <input class="edit-input" type="text" data-col="${
-            COL.person
-          }" value="${esc(r[COL.person] || "")}">
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">연락처</div>
-          <input class="edit-input" type="tel" data-col="${
-            COL.phone
-          }" value="${esc(r[COL.phone] || "")}">
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">이메일</div>
-          <input class="edit-input" type="email" data-col="${
-            COL.email
-          }" value="${esc(r[COL.email] || "")}">
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">견적구간</div>
-          <input class="edit-input" type="text" data-col="${
-            COL.price
-          }" value="${esc(r[COL.price] || "")}">
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">최근연락일</div>
-          <input class="edit-input" type="text" data-col="${
-            COL.date
-          }" placeholder="예: 2025-05-16" value="${esc(r[COL.date] || "")}">
-        </div>
-        <div class="detail-item" style="grid-column:1/-1">
-          <div class="detail-label">주소</div>
-          <input class="edit-input" type="text" data-col="${
-            COL.address
-          }" value="${esc(r[COL.address] || "")}">
-        </div>
-      </div>
-      <div class="memo-section">
-        <div class="memo-label">비고 / 영업 메모</div>
-        <textarea class="edit-textarea" data-col="${COL.memo}">${esc(
-            r[COL.memo] || ""
-          )}</textarea>
-      </div>`;
-        } else {
-          document.getElementById("modalBody").innerHTML = `
-      <div class="detail-grid">
-        <div class="detail-item">
-          <div class="detail-label">상태</div>
-          <div class="detail-value"><span class="status-badge" style="color:${m.color};background:${m.bg};border-color:${m.border||'transparent'}">${esc(r[COL.status] || "—")}</span></div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">담당자</div>
-          <div class="detail-value">${esc(r[COL.person] || "—")}</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">연락처</div>
-          <div class="detail-value">${
-            r[COL.phone]
-              ? `<a href="tel:${esc(r[COL.phone])}">${esc(r[COL.phone])}</a>`
-              : "—"
-          }</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">이메일</div>
-          <div class="detail-value">${
-            r[COL.email]
-              ? `<a href="mailto:${esc(r[COL.email])}">${esc(r[COL.email])}</a>`
-              : "—"
-          }</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">견적구간</div>
-          <div class="detail-value">${esc(r[COL.price] || "—")}</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">최근연락일</div>
-          <div class="detail-value">${esc(r[COL.date] || "—")}</div>
-        </div>
-        <div class="detail-item" style="grid-column:1/-1">
-          <div class="detail-label">주소</div>
-          <div class="detail-value">${esc(r[COL.address] || "—")}</div>
-        </div>
-      </div>
-      <div class="memo-section">
-        <div class="memo-label">비고 / 영업 메모</div>
-        <div class="memo-content ${r[COL.memo] ? "" : "empty"}">${esc(
-            r[COL.memo] || "내용 없음"
-          )}</div>
-      </div>`;
-        }
-      }
-
-      function openModal(r) {
-        _currentRow = r;
-        _editMode = false;
-        document.getElementById("modalEditBtn").classList.remove("active");
-        document.getElementById("modalFooter").style.display = "none";
-        renderModalBody(r, false);
-        document.getElementById("overlay").classList.add("open");
-      }
-
-      function closeModal() {
-        document.getElementById("overlay").classList.remove("open");
-        _editMode = false;
-      }
-
-      function enterEditMode() {
-        if (!APPS_SCRIPT_URL) {
-          showToast(
-            "index.html 상단 APPS_SCRIPT_URL을 먼저 설정해주세요",
-            "warn"
-          );
-          return;
-        }
-        _editMode = true;
-        document.getElementById("modalEditBtn").classList.add("active");
-        document.getElementById("modalFooter").style.display = "flex";
-        document.getElementById("saveStatus").textContent = "";
-        renderModalBody(_currentRow, true);
-      }
-
-      function exitEditMode() {
-        _editMode = false;
-        document.getElementById("modalEditBtn").classList.remove("active");
-        document.getElementById("modalFooter").style.display = "none";
-        renderModalBody(_currentRow, false);
-      }
-
-      /* ══════════════════════════════════════════════════════
-   SAVE / UPDATE CELL
-   ══════════════════════════════════════════════════════ */
-      async function saveEdits() {
-        const inputs = document
-          .getElementById("modalBody")
-          .querySelectorAll("[data-col]");
-        const changes = [];
-        inputs.forEach((el) => {
-          const col = el.dataset.col;
-          const newVal = el.value.trim();
-          if (newVal !== (_currentRow[col] || "").trim())
-            changes.push({ col, value: newVal });
-        });
-
-        if (changes.length === 0) {
-          exitEditMode();
-          return;
-        }
-
-        const saveBtn = document.getElementById("saveBtn");
-        const saveStatus = document.getElementById("saveStatus");
-        saveBtn.textContent = "저장 중...";
-        saveBtn.disabled = true;
-        saveStatus.textContent = "";
-
-        try {
-          await Promise.all(
-            changes.map((c) =>
-              updateCell(_currentRow[COL.name], c.col, c.value)
-            )
-          );
-
-          /* 로컬 데이터 즉시 반영 */
-          changes.forEach((c) => {
-            _currentRow[c.col] = c.value;
-          });
-          const idx = clients.findIndex(
-            (r) => r[COL.name] === _currentRow[COL.name]
-          );
-          if (idx !== -1) clients[idx] = { ...clients[idx], ..._currentRow };
-
-          /* 상태·아이템이 바뀌면 필터 재빌드 */
-          if (changes.some((c) => c.col === COL.status || c.col === COL.item)) {
-            itemVals = [
-              ...new Set(clients.map((r) => r[COL.item]).filter(Boolean)),
-            ];
-            buildFilters();
-          }
-          render();
-          exitEditMode();
-          showToast("저장되었습니다", "ok");
-        } catch (e) {
-          saveStatus.textContent = e.message || "저장 실패";
-          saveBtn.textContent = "저장";
-          saveBtn.disabled = false;
-        }
-      }
-
-      async function updateCell(name, col, value) {
-        const url = new URL(APPS_SCRIPT_URL);
-        url.searchParams.set("name", name);
-        url.searchParams.set("col", col);
-        url.searchParams.set("value", value);
-        const res = await fetch(url.toString());
-        if (!res.ok) throw new Error(`서버 오류 (HTTP ${res.status})`);
-        let json;
-        try {
-          json = await res.json();
-        } catch {
-          throw new Error("응답 파싱 실패");
-        }
-        if (!json.success) throw new Error(json.error || "저장 실패");
+      function dateLabel(key) {
+        if (key === "미상") return "날짜 미상";
+        const [y, m, d] = key.split("-").map(Number);
+        const dt = new Date(y, m - 1, d);
+        const weekday = ["일", "월", "화", "수", "목", "금", "토"][dt.getDay()];
+        return `${m}/${d} (${weekday})`;
       }
 
       /* ══════════════════════════════════════════════════════
    SCAN — 상품 스캔
    ══════════════════════════════════════════════════════ */
-      const COUNTRY_STYLE = {
-        중국: { bg: "#FFF7ED", color: "#EA580C" },
-        한국: { bg: "#EFF6FF", color: "#2563EB" },
-        미국: { bg: "#F0FDF4", color: "#15803D" },
-        일본: { bg: "#FDF2F8", color: "#9D174D" },
-        베트남: { bg: "#ECFDF5", color: "#059669" },
-        미확인: { bg: "#F9FAFB", color: "#6B7280" },
-      };
-
       function saveScan() {
         localStorage.setItem("isseaair_scan", JSON.stringify(scannedItems));
       }
@@ -2397,11 +1394,9 @@
             const json = await res.json();
             if (json.success && json.data) {
               const item = { ...json.data, url, addedAt: new Date().toISOString(), scanStatus: '' };
-              // 1순위: URL 중복
               if (scannedItems.some((x) => x.url === url)) {
                 dup++; continue;
               }
-              // 2순위: 전화번호/제조사 정규화 중복
               if (isDuplicate(item, scannedItems)) {
                 dup++;
                 const ph = normPhone(item.전화번호);
@@ -2428,22 +1423,21 @@
         ta.value = "";
         prog.textContent = `완료 — 신규 ${ok}개${dup ? `, 중복 제외 ${dup}개` : ""}${fail ? `, 실패 ${fail}개` : ""}`;
         btn.disabled = false;
+        state.dateFilter = null;
         renderScanResults();
       }
 
       /* ── 정규화 & 중복 검사 ─────────────────────────── */
       function normPhone(p) {
         if (!p) return '';
-        // 숫자만 추출해서 비교 (고객센터 텍스트 포함된 경우도 숫자만)
         const digits = String(p).replace(/[^0-9]/g, '');
-        if (digits.length >= 7) return digits; // 7자리 이상이면 숫자만 비교
+        if (digits.length >= 7) return digits;
         return String(p).replace(/[\s\-\(\)\.]/g, '').toLowerCase();
       }
       function normMfr(n) {
         if (!n) return '';
         return String(n).trim().replace(/\s+/g, ' ').toLowerCase();
       }
-      // 중복 판단: 1순위 전화번호, 2순위 제조사/수입자(업체명)
       function isDuplicate(item, list) {
         const phone = normPhone(item.전화번호);
         const mfr   = normMfr(item.제조사수입자);
@@ -2453,7 +1447,6 @@
           return false;
         });
       }
-      // 기존 데이터 소급 중복 정리
       function deduplicateExisting() {
         const before = scannedItems.length;
         const deduped = [];
@@ -2471,11 +1464,9 @@
       async function setScanStatus(url, newStatus) {
         const item = scannedItems.find(x => x.url === url);
         if (!item) return;
-        // 같은 상태 클릭 시 토글 (해제)
         item.scanStatus = item.scanStatus === newStatus ? '' : newStatus;
         saveScan();
         renderScanResults();
-        // Google Sheets 동기화
         if (!APPS_SCRIPT_URL) return;
         try {
           const api = new URL(APPS_SCRIPT_URL);
@@ -2512,90 +1503,165 @@
           return;
         scannedItems = [];
         saveScan();
+        state.dateFilter = null;
         renderScanResults();
       }
 
+      function selectDate(key) {
+        state.dateFilter = state.dateFilter === key ? null : key;
+        renderScanResults();
+        window.scrollTo({ top: document.getElementById("dateChips").offsetTop - 70, behavior: "smooth" });
+      }
+
+      function copyDateList() {
+        const items = getFilteredScanItems();
+        if (!items.length) {
+          showToast("복사할 항목이 없습니다", "warn");
+          return;
+        }
+        const lines = items.map((i) =>
+          [i.품명 || "", i.제조사수입자 || "", i.전화번호 || "", i.url || ""].join("\t")
+        );
+        navigator.clipboard
+          .writeText(lines.join("\n"))
+          .then(() => showToast(`${items.length}개 항목 복사됨`, "ok"))
+          .catch(() => showToast("복사 실패", "warn"));
+      }
+
+      function getFilteredScanItems() {
+        const q = state.search.trim().toLowerCase();
+        let list = scannedItems;
+        if (q) {
+          list = list.filter(
+            (i) =>
+              (i.품명 || "").toLowerCase().includes(q) ||
+              (i.제조사수입자 || "").toLowerCase().includes(q) ||
+              (i.전화번호 || "").includes(q)
+          );
+        }
+        if (state.dateFilter) {
+          list = list.filter((i) => dateKey(i.addedAt) === state.dateFilter);
+        }
+        return list;
+      }
+
+      function renderDateChips() {
+        const wrap = document.getElementById("dateChips");
+        if (!scannedItems.length) {
+          wrap.style.display = "none";
+          wrap.innerHTML = "";
+          return;
+        }
+        wrap.style.display = "flex";
+        const groups = {};
+        scannedItems.forEach((item) => {
+          const k = dateKey(item.addedAt);
+          (groups[k] = groups[k] || []).push(item);
+        });
+        const keys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+        const today = todayKey();
+        const chips = [
+          `<button class="date-chip ${!state.dateFilter ? "active" : ""}" data-date="">전체 <span class="date-chip-count">${scannedItems.length}</span></button>`,
+        ];
+        keys.forEach((k) => {
+          const active = state.dateFilter === k ? "active" : "";
+          const isToday = k === today ? "today" : "";
+          const label = k === today ? "오늘" : k === "미상" ? "미상" : dateLabel(k).split(" ")[0];
+          chips.push(
+            `<button class="date-chip ${active} ${isToday}" data-date="${esc(k)}">${esc(label)} <span class="date-chip-count">${groups[k].length}</span></button>`
+          );
+        });
+        wrap.innerHTML = chips.join("");
+      }
+
+      function cardHTML(item) {
+        const phone = item.전화번호 || "";
+        const senior = isSeniorCompany(item);
+        const st = senior ? '불가' : (item.scanStatus || "");
+        const cardClass = st === '불가' ? 'card-reject' : st === '완료' ? 'card-done' : '';
+        const urlEnc = esc(item.url);
+        const country = (item.제조국 || "").trim();
+        return `<div class="scan-card ${cardClass}${senior ? ' card-senior' : ''}">
+          <div class="scan-card-top">
+            <div class="scan-card-name">${esc(item.품명 || "품명 미확인")}</div>
+            ${country ? `<span class="scan-card-badge">${esc(country)}</span>` : ""}
+          </div>
+          ${senior ? `<div class="scan-card-tag tag-reject">선배 거래처</div>` : st ? `<div class="scan-card-tag ${st === '불가' ? 'tag-reject' : 'tag-done'}">${st === '불가' ? '불가' : '완료'}</div>` : ""}
+          <div class="scan-card-mfr">${esc(item.제조사수입자 || "제조사 미확인")}</div>
+          <div class="scan-card-phone ${phone ? "" : "empty"}">${phone ? esc(phone) : "전화번호 없음"}</div>
+          <div class="scan-card-actions">
+            <a href="${urlEnc}" target="_blank" rel="noopener" class="scan-card-btn">열기</a>
+            <button class="scan-card-btn reject${st === '불가' && !senior ? ' active' : ''}" onclick="setScanStatus('${urlEnc}','불가')" ${senior ? 'disabled title="선배 거래처 — 자동 불가"' : ''}>불가</button>
+            <button class="scan-card-btn done${st === '완료' ? ' active' : ''}" onclick="setScanStatus('${urlEnc}','완료')" ${senior ? 'disabled' : ''}>완료</button>
+            <button class="scan-card-btn del" onclick="deleteScanItem('${urlEnc}')">삭제</button>
+          </div>
+        </div>`;
+      }
+
       function renderScanResults() {
-        /* 통계 바 */
+        renderDateChips();
+
         const statBar = document.getElementById("scanStatBar");
         const container = document.getElementById("scanResults");
 
         if (!scannedItems.length) {
           statBar.innerHTML = '<span style="color:var(--text-3);font-size:12px">항목 없음</span>';
-          container.innerHTML = `<div class="scan-empty"><div class="scan-empty-icon">🔍</div>분석된 상품이 없습니다<br>위에 쇼핑몰 링크를 붙여넣고 분석 시작을 눌러보세요</div>`;
+          container.innerHTML = `<div class="scan-empty">분석된 상품이 없습니다<br>위에 쇼핑몰 링크를 붙여넣고 분석 시작을 눌러보세요</div>`;
           return;
         }
 
-        /* 제조국별 그룹 */
-        const groups = {};
-        scannedItems.forEach((item) => {
-          const c = (item.제조국 || "미확인").trim() || "미확인";
-          (groups[c] = groups[c] || []).push(item);
-        });
-        const countries = Object.keys(groups).sort(
-          (a, b) => groups[b].length - groups[a].length
-        );
+        const items = getFilteredScanItems();
 
-        /* 통계 */
-        const seniorCount = scannedItems.filter(x => isSeniorCompany(x)).length;
-        const doneCount   = scannedItems.filter(x => !isSeniorCompany(x) && x.scanStatus === '완료').length;
-        const rejectCount = scannedItems.filter(x => !isSeniorCompany(x) && x.scanStatus === '불가').length;
-        const pendCount   = scannedItems.length - doneCount - rejectCount - seniorCount;
+        const seniorCount = items.filter(x => isSeniorCompany(x)).length;
+        const doneCount   = items.filter(x => !isSeniorCompany(x) && x.scanStatus === '완료').length;
+        const rejectCount = items.filter(x => !isSeniorCompany(x) && x.scanStatus === '불가').length;
+        const pendCount   = items.length - doneCount - rejectCount - seniorCount;
         statBar.innerHTML = `
-          <div class="scan-stat"><strong>${scannedItems.length}</strong>총 상품</div>
-          <div class="scan-stat" style="border-color:rgba(26,127,55,.4)"><strong style="color:#1a7f37">${doneCount}</strong>완료</div>
-          <div class="scan-stat" style="border-color:rgba(207,34,46,.4)"><strong style="color:#cf222e">${rejectCount + seniorCount}</strong>불가${seniorCount?`<small style="font-size:10px;opacity:.7"> (선배 ${seniorCount})</small>`:''}</div>
-          <div class="scan-stat"><strong>${pendCount}</strong>미처리</div>
-          ${countries.slice(0,2).map(c=>`<div class="scan-stat"><strong>${groups[c].length}</strong>${esc(c)}</div>`).join('')}`;
+          <div class="scan-stat"><strong>${items.length}</strong>${state.dateFilter ? "선택 항목" : "총 상품"}</div>
+          <div class="scan-stat"><strong style="color:var(--green)">${doneCount}</strong>완료</div>
+          <div class="scan-stat"><strong style="color:var(--red)">${rejectCount + seniorCount}</strong>불가${seniorCount ? `<small style="opacity:.7"> (선배 ${seniorCount})</small>` : ''}</div>
+          <div class="scan-stat"><strong>${pendCount}</strong>미처리</div>`;
 
-        /* 국가별 카드 */
-        container.innerHTML = countries
-          .map((country) => {
-            const items = groups[country];
-            const s = COUNTRY_STYLE[country] || {
-              bg: "#F9FAFB",
-              color: "#6B7280",
-            };
-            return `<div class="country-section">
-            <div class="country-header" style="background:${s.bg};color:${
-              s.color
-            }">
-              🌏 ${esc(country)} <span class="country-count">${
-              items.length
-            }개 업체</span>
+        if (!items.length) {
+          container.innerHTML = `<div class="scan-empty">해당 조건에 맞는 항목이 없습니다</div>`;
+          return;
+        }
+
+        if (state.dateFilter) {
+          const label = dateLabel(state.dateFilter);
+          container.innerHTML = `
+            <div class="date-panel-header">
+              <div class="date-panel-title">${esc(label)}<span>추가된 ${items.length}건</span></div>
+              <div class="date-panel-actions">
+                <button class="btn btn-ghost btn-sm" onclick="copyDateList()">목록 복사</button>
+                <button class="btn btn-ghost btn-sm" onclick="selectDate('${esc(state.dateFilter)}')">전체 보기</button>
+              </div>
             </div>
-            <div class="scan-card-grid">
-              ${items
-                .map((item) => {
-                  const phone = item.전화번호 || "";
-                  const senior = isSeniorCompany(item);
-                  const st = senior ? '불가' : (item.scanStatus || "");
-                  const cardClass = st === '불가' ? 'card-reject' : st === '완료' ? 'card-done' : '';
-                  const urlEnc = esc(item.url);
-                  return `<div class="scan-card ${cardClass}${senior?' card-senior':''}">
-                  ${senior ? `<div class="scan-senior-tag">👤 선배 거래처</div>` : st ? `<div class="scan-status-tag ${st==='불가'?'tag-reject':'tag-done'}">${st==='불가'?'✕ 불가':'✓ 완료'}</div>` : ''}
-                  <div class="scan-card-name">${esc(item.품명 || "품명 미확인")}</div>
-                  <div class="scan-card-mfr">🏭 ${esc(item.제조사수입자 || "—")}${senior?`<span class="scan-senior-badge">선배 거래처</span>`:''}</div>
-                  <div class="scan-card-phone ${phone ? "" : "empty"}">📞 ${phone ? esc(phone) : "전화번호 없음"}</div>
-                  <div class="scan-card-actions">
-                    <a href="${urlEnc}" target="_blank" rel="noopener" class="scan-card-btn">🔗</a>
-                    <button class="scan-card-btn reject${st==='불가'&&!senior?' active':''}" onclick="setScanStatus('${urlEnc}','불가')" ${senior?'disabled title="선배 거래처 — 자동 불가"':''}>✕ 불가</button>
-                    <button class="scan-card-btn done${st==='완료'?' active':''}" onclick="setScanStatus('${urlEnc}','완료')" ${senior?'disabled':''}>✓ 완료</button>
-                    <button class="scan-card-btn del" onclick="deleteScanItem('${urlEnc}')">🗑</button>
-                  </div>
-                </div>`;
-                })
-                .join("")}
-            </div>
-          </div>`;
-          })
-          .join("");
+            <div class="scan-card-grid">${items.map(cardHTML).join("")}</div>`;
+        } else {
+          const groups = {};
+          items.forEach((item) => {
+            const k = dateKey(item.addedAt);
+            (groups[k] = groups[k] || []).push(item);
+          });
+          const keys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+          container.innerHTML = keys
+            .map((k) => {
+              const groupItems = groups[k].slice().sort((a, b) => (b.addedAt || "").localeCompare(a.addedAt || ""));
+              return `<div class="date-section">
+                <button class="date-section-header" onclick="selectDate('${esc(k)}')">
+                  <span class="date-section-label">${esc(dateLabel(k))}</span>
+                  <span class="date-section-count">${groupItems.length}개</span>
+                </button>
+                <div class="scan-card-grid">${groupItems.map(cardHTML).join("")}</div>
+              </div>`;
+            })
+            .join("");
+        }
       }
 
       async function loadEmartItems() {
-        if (!APPS_SCRIPT_URL) return;
-        const btn = document.getElementById('emartSyncBtn');
-        if (btn) { btn.textContent = '⏳ 불러오는 중...'; btn.disabled = true; }
+        if (!APPS_SCRIPT_URL) return { added: 0, statusUpdated: 0 };
         try {
           const url = new URL(APPS_SCRIPT_URL);
           url.searchParams.set('action', 'getEmartItems');
@@ -2606,83 +1672,56 @@
             json.items.forEach(sheetItem => {
               const existing = scannedItems.find(x => x.url === sheetItem.url);
               if (existing) {
-                // 시트의 상태가 있으면 로컬에 반영
                 if (sheetItem.scanStatus && existing.scanStatus !== sheetItem.scanStatus) {
                   existing.scanStatus = sheetItem.scanStatus;
                   statusUpdated++;
                 }
               } else {
-                // 중복 체크 후 추가
                 if (!isDuplicate(sheetItem, scannedItems)) {
                   scannedItems.push({ ...sheetItem, scanStatus: sheetItem.scanStatus || '' });
                   added++;
                 }
               }
             });
-            localStorage.setItem('isseaair_scan', JSON.stringify(scannedItems));
-            if (added > 0 || statusUpdated > 0) {
-              showToast(`${added}개 신규, ${statusUpdated}개 상태 동기화됨`, 'success');
-            } else {
-              showToast('새 항목 없음 (이미 동기화됨)', 'info');
-            }
+            saveScan();
+            return { added, statusUpdated };
           } else if (json.success) {
-            showToast('시트에 저장된 항목이 없습니다', 'info');
+            return { added: 0, statusUpdated: 0 };
           } else {
-            showToast('불러오기 실패: ' + json.error, 'error');
+            throw new Error(json.error || '불러오기 실패');
           }
-        } catch(e) {
-          showToast('불러오기 오류: ' + e.message, 'error');
         } finally {
           renderScanResults();
-          if (btn) { btn.textContent = '☁ 시트에서 불러오기'; btn.disabled = false; }
         }
       }
 
-      function switchToScan() {
-        state.view = "scan";
-        document.getElementById("btnBoard").classList.remove("active");
-        document.getElementById("btnList").classList.remove("active");
-        document.getElementById("btnScan").classList.add("active");
-        document.getElementById("boardGrid").style.display = "none";
-        document.getElementById("listWrap").style.display = "none";
-        document.getElementById("scanWrap").style.display = "block";
-        document.getElementById("filterBar").style.display = "none";
-        document.querySelector(".toolbar").style.display = "none";
-        renderScanResults();
-        loadEmartItems();
+      async function refreshFromSheet() {
+        const btn = document.getElementById('refreshBtn');
+        setSyncState('loading', '불러오는 중...');
+        if (btn) btn.classList.add('spin');
+        try {
+          const { added, statusUpdated } = await loadEmartItems();
+          const now = new Date();
+          setSyncState('ok', `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")} 동기화`);
+          if (added > 0 || statusUpdated > 0) {
+            showToast(`${added}개 신규, ${statusUpdated}개 상태 동기화됨`, 'ok');
+          }
+        } catch (e) {
+          setSyncState('err', '연결 오류');
+          showToast('불러오기 오류: ' + e.message, 'warn');
+        } finally {
+          if (btn) btn.classList.remove('spin');
+        }
       }
 
-      function switchFromScan() {
-        document.getElementById("scanWrap").style.display = "none";
-        document.getElementById("filterBar").style.display = "";
-        document.querySelector(".toolbar").style.display = "";
-        document.getElementById("scanProgress").textContent = "";
+      function setSyncState(st, txt) {
+        document.getElementById("syncDot").className = "sync-dot" + (st ? " " + st : "");
+        document.getElementById("syncText").textContent = txt;
       }
 
       /* ══════════════════════════════════════════════════════
    HELPERS
    ══════════════════════════════════════════════════════ */
-      function formatPhone(raw) {
-        const d = raw.replace(/\D/g, "").slice(0, 11);
-        if (!d) return "";
-        if (d.startsWith("02")) {
-          if (d.length <= 2) return d;
-          if (d.length <= 5) return d.slice(0, 2) + "-" + d.slice(2);
-          if (d.length <= 9)
-            return (
-              d.slice(0, 2) + "-" + d.slice(2, d.length - 4) + "-" + d.slice(-4)
-            );
-          return d.slice(0, 2) + "-" + d.slice(2, 6) + "-" + d.slice(6);
-        }
-        if (d.length <= 3) return d;
-        if (d.length <= 7) return d.slice(0, 3) + "-" + d.slice(3);
-        if (d.length <= 10)
-          return (
-            d.slice(0, 3) + "-" + d.slice(3, d.length - 4) + "-" + d.slice(-4)
-          );
-        return d.slice(0, 3) + "-" + d.slice(3, 7) + "-" + d.slice(7);
-      }
-
       function esc(s) {
         return String(s || "")
           .replace(/&/g, "&amp;")
@@ -2705,73 +1744,25 @@
    ══════════════════════════════════════════════════════ */
       document.getElementById("searchInput").addEventListener("input", (e) => {
         state.search = e.target.value;
-        render();
+        renderScanResults();
       });
 
-      document.getElementById("modalBody").addEventListener("input", (e) => {
-        if (e.target.dataset.col === COL.phone) {
-          const el = e.target;
-          const formatted = formatPhone(el.value);
-          if (formatted !== el.value) el.value = formatted;
-        }
-      });
+      document.getElementById("refreshBtn").addEventListener("click", refreshFromSheet);
 
-      document.getElementById("filterBar").addEventListener("click", (e) => {
-        const btn = e.target.closest('[data-filter="status"]');
-        if (!btn) return;
-        document
-          .querySelectorAll('[data-filter="status"]')
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        state.statusFilter = btn.dataset.val;
-        render();
-      });
-
-      document.getElementById("itemFilter").addEventListener("click", (e) => {
-        const btn = e.target.closest('[data-filter="item"]');
-        if (!btn) return;
-        document
-          .querySelectorAll('[data-filter="item"]')
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        state.itemFilter = btn.dataset.val;
-        render();
-      });
-
-      document.getElementById("sortSel").addEventListener("change", (e) => {
-        state.sort = e.target.value;
-        render();
-      });
-
-      document.getElementById("refreshBtn").addEventListener("click", sync);
-
-      document.getElementById("btnBoard").addEventListener("click", () => {
-        switchFromScan();
-        state.view = "board";
-        document.getElementById("btnBoard").classList.add("active");
-        document.getElementById("btnList").classList.remove("active");
-        document.getElementById("btnScan").classList.remove("active");
-        render();
-      });
-      document.getElementById("btnList").addEventListener("click", () => {
-        switchFromScan();
-        state.view = "list";
-        document.getElementById("btnList").classList.add("active");
-        document.getElementById("btnBoard").classList.remove("active");
-        document.getElementById("btnScan").classList.remove("active");
-        render();
-      });
-      document
-        .getElementById("btnScan")
-        .addEventListener("click", switchToScan);
       document.getElementById("scanBtn").addEventListener("click", runScan);
       document.getElementById("dedupScanBtn").addEventListener("click", deduplicateExisting);
+      document.getElementById("clearScanBtn").addEventListener("click", clearAllScan);
+
       document.getElementById("blockedAddBtn").addEventListener("click", addBlocked);
       document.getElementById("blockedInput").addEventListener("keydown", e => { if (e.key === 'Enter' && !e.isComposing) addBlocked(); });
       renderBlockedTags();
-      document
-        .getElementById("clearScanBtn")
-        .addEventListener("click", clearAllScan);
+
+      document.getElementById("dateChips").addEventListener("click", (e) => {
+        const btn = e.target.closest(".date-chip");
+        if (!btn) return;
+        state.dateFilter = btn.dataset.date || null;
+        renderScanResults();
+      });
 
       /* ── 링크 추출기 ─────────────────────────────── */
       async function runExtract() {
@@ -2803,7 +1794,7 @@
 
           copyBtn.onclick = () => {
             navigator.clipboard.writeText(links.join('\n'));
-            copyBtn.textContent = '복사됨 ✓';
+            copyBtn.textContent = '복사됨';
             setTimeout(() => { copyBtn.textContent = '전체 복사'; }, 1500);
           };
           toScanBtn.onclick = () => {
@@ -2819,30 +1810,11 @@
       }
       document.getElementById('extractBtn').addEventListener('click', runExtract);
 
-      document
-        .getElementById("modalClose")
-        .addEventListener("click", closeModal);
-      document
-        .getElementById("modalEditBtn")
-        .addEventListener("click", enterEditMode);
-      document.getElementById("saveBtn").addEventListener("click", saveEdits);
-      document
-        .getElementById("cancelBtn")
-        .addEventListener("click", exitEditMode);
-      document.getElementById("overlay").addEventListener("click", (e) => {
-        if (e.target === document.getElementById("overlay")) closeModal();
-      });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          if (_editMode) exitEditMode();
-          else closeModal();
-        }
-      });
-
       /* ══════════════════════════════════════════════════════
    INIT
    ══════════════════════════════════════════════════════ */
-      sync().then(() => startTimer());
+      renderScanResults();
+      refreshFromSheet();
 
       /* ── LOCK SCREEN ─────────────────────────────────── */
       (() => {
@@ -2912,17 +1884,17 @@ d['제조국']=fld(['제조국','원산지']);
 d['전화번호']=fld(['A/S 책임자 및 전화번호','고객센터','전화번호']);
 d.addedAt=new Date().toISOString();
 var u=new URL(S);Object.keys(d).forEach(function(k){u.searchParams.set(k,d[k]);});
-var el=document.createElement('div');el.style.cssText='position:fixed;top:20px;right:20px;z-index:99999;background:#1e293b;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;font-family:sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+var el=document.createElement('div');el.style.cssText='position:fixed;top:20px;right:20px;z-index:99999;background:#111;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;font-family:sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.5);border:1px solid #333';
 el.textContent='저장 중...';document.body.appendChild(el);
-fetch(u.toString()).then(function(r){return r.json();}).then(function(j){el.style.background=j.success?'#10b981':'#ef4444';el.textContent=j.success?'✓ 저장됨: '+(d['품명']||'(품명없음)'):'✕ '+j.error;setTimeout(function(){el.remove();},3000);}).catch(function(e){el.style.background='#ef4444';el.textContent='✕ '+e.message;setTimeout(function(){el.remove();},3000);});
+fetch(u.toString()).then(function(r){return r.json();}).then(function(j){el.style.borderColor=j.success?'#4ade80':'#f87171';el.textContent=j.success?'저장됨: '+(d['품명']||'(품명없음)'):'오류: '+j.error;setTimeout(function(){el.remove();},3000);}).catch(function(e){el.style.borderColor='#f87171';el.textContent='오류: '+e.message;setTimeout(function(){el.remove();},3000);});
 })()`;
 
         const extractBkmkCode = `(function(){
 var as=document.querySelectorAll('a[href*="itemView.ssg"]');var ls=[];
 as.forEach(function(a){var h=a.href;if(h&&ls.indexOf(h)<0)ls.push(h);});
 if(!ls.length){alert('링크 없음');return;}
-var t=document.createElement('div');t.style.cssText='position:fixed;top:20px;right:20px;z-index:99999;background:#3b82f6;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;font-family:sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.3)';
-t.innerHTML='✓ '+ls.length+'개 링크 복사됨<br><small style="opacity:.8">스캔창에 붙여넣으세요</small>';
+var t=document.createElement('div');t.style.cssText='position:fixed;top:20px;right:20px;z-index:99999;background:#111;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;font-family:sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.5);border:1px solid #333';
+t.innerHTML=ls.length+'개 링크 복사됨<br><small style="opacity:.7">스캔창에 붙여넣으세요</small>';
 document.body.appendChild(t);
 if(navigator.clipboard){navigator.clipboard.writeText(ls.join('\n'));}else{var ta=document.createElement('textarea');ta.value=ls.join('\n');ta.style.cssText='position:fixed;top:-9999px';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
 setTimeout(function(){t.remove();},4000);
