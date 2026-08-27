@@ -693,15 +693,24 @@
         flex-shrink: 0;
         color: var(--text-3);
       }
-      .meta-item .flag {
+      .flag-svg {
         flex-shrink: 0;
-        font-size: 13px;
-        line-height: 1;
+        display: block;
+        border-radius: 2px;
+        overflow: hidden;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
       }
       .meta-item span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+      .meta-phone {
+        flex-shrink: 0;
+      }
+      .meta-phone span {
+        overflow: visible;
+        text-overflow: clip;
       }
 
       .card-note {
@@ -1684,21 +1693,103 @@
           '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>',
       };
 
-      const COUNTRY_FLAG = {
-        한국: "🇰🇷", 대한민국: "🇰🇷", 중국: "🇨🇳", 베트남: "🇻🇳", 태국: "🇹🇭", 일본: "🇯🇵", 미국: "🇺🇸",
-        대만: "🇹🇼", 홍콩: "🇭🇰", 인도: "🇮🇳", 인도네시아: "🇮🇩", 말레이시아: "🇲🇾", 필리핀: "🇵🇭",
-        캄보디아: "🇰🇭", 미얀마: "🇲🇲", 라오스: "🇱🇦", 싱가포르: "🇸🇬", 방글라데시: "🇧🇩", 파키스탄: "🇵🇰",
-        독일: "🇩🇪", 이탈리아: "🇮🇹", 프랑스: "🇫🇷", 영국: "🇬🇧", 스페인: "🇪🇸", 포르투갈: "🇵🇹",
-        네덜란드: "🇳🇱", 스위스: "🇨🇭", 스웨덴: "🇸🇪", 노르웨이: "🇳🇴", 덴마크: "🇩🇰", 폴란드: "🇵🇱",
-        터키: "🇹🇷", 러시아: "🇷🇺", 캐나다: "🇨🇦", 멕시코: "🇲🇽", 브라질: "🇧🇷",
-        호주: "🇦🇺", 오스트레일리아: "🇦🇺", 뉴질랜드: "🇳🇿",
+      /* ── 국기 아이콘 (SVG, OS 폰트 의존 없음) ─────────────── */
+      function flagIcon(inner) {
+        return `<svg class="flag-svg" width="16" height="12" viewBox="0 0 24 18" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+      }
+      function hStripes(colors) {
+        const h = 18 / colors.length;
+        return colors.map((c, i) => `<rect y="${(h * i).toFixed(2)}" width="24" height="${h.toFixed(2)}" fill="${c}"/>`).join("");
+      }
+      function vStripes(colors) {
+        const w = 24 / colors.length;
+        return colors.map((c, i) => `<rect x="${(w * i).toFixed(2)}" width="${w.toFixed(2)}" height="18" fill="${c}"/>`).join("");
+      }
+      function starPts(cx, cy, r, r2) {
+        const pts = [];
+        for (let i = 0; i < 10; i++) {
+          const rad = i % 2 === 0 ? r : r2 != null ? r2 : r * 0.4;
+          const ang = -Math.PI / 2 + (i * Math.PI) / 5;
+          pts.push(`${(cx + rad * Math.cos(ang)).toFixed(2)},${(cy + rad * Math.sin(ang)).toFixed(2)}`);
+        }
+        return pts.join(" ");
+      }
+      function star(cx, cy, r, fill, r2) {
+        return `<polygon points="${starPts(cx, cy, r, r2)}" fill="${fill}"/>`;
+      }
+      function crescent(cx, cy, r, fill, holeFill, offset) {
+        return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}"/><circle cx="${(cx + (offset != null ? offset : r * 0.42)).toFixed(2)}" cy="${cy}" r="${(r * 0.82).toFixed(2)}" fill="${holeFill}"/>`;
+      }
+      function nordicCross(bg, cross, border) {
+        return (
+          `<rect width="24" height="18" fill="${bg}"/>` +
+          (border ? `<rect x="6" width="6" height="18" fill="${border}"/><rect y="6" width="24" height="6" fill="${border}"/>` : "") +
+          `<rect x="7" width="4" height="18" fill="${cross}"/><rect y="7" width="24" height="4" fill="${cross}"/>`
+        );
+      }
+      const FLAG_SVG = {
+        한국: flagIcon(
+          '<rect width="24" height="18" fill="#fff"/><path d="M12 4a5 5 0 0 1 0 10 2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 0 0-5z" fill="#c60c30"/><path d="M12 4a5 5 0 0 0 0 10 2.5 2.5 0 0 0 0-5 2.5 2.5 0 0 1 0-5z" fill="#003478"/>'
+        ),
+        중국: flagIcon(
+          `<rect width="24" height="18" fill="#de2910"/>${star(6, 5, 2.2, "#ffde00")}${star(9.5, 3, 0.7, "#ffde00")}${star(10.8, 5, 0.7, "#ffde00")}${star(10.5, 7.2, 0.7, "#ffde00")}${star(9, 8.8, 0.7, "#ffde00")}`
+        ),
+        베트남: flagIcon(`<rect width="24" height="18" fill="#da251d"/>${star(12, 9, 5, "#ffcd00")}`),
+        태국: flagIcon('<rect width="24" height="18" fill="#a51931"/><rect y="3" width="24" height="12" fill="#f4f5f8"/><rect y="6" width="24" height="6" fill="#2d2a4a"/>'),
+        일본: flagIcon('<rect width="24" height="18" fill="#fff"/><circle cx="12" cy="9" r="5" fill="#bc002d"/>'),
+        미국: flagIcon(`${hStripes(["#B22234", "#fff", "#B22234", "#fff", "#B22234", "#fff", "#B22234"])}<rect width="10" height="10" fill="#3C3B6E"/>`),
+        대만: flagIcon('<rect width="24" height="18" fill="#fe0000"/><rect width="12" height="9" fill="#000095"/><circle cx="6" cy="4.5" r="2.4" fill="none" stroke="#fff" stroke-width="1"/>'),
+        홍콩: flagIcon(
+          `<rect width="24" height="18" fill="#de2910"/>${star(9.5, 7, 1, "#fff")}${star(11, 4.8, 1, "#fff")}${star(13.6, 5.2, 1, "#fff")}${star(14.4, 7.8, 1, "#fff")}${star(12, 10, 1, "#fff")}`
+        ),
+        인도: flagIcon(`${hStripes(["#ff9933", "#fff", "#138808"])}<circle cx="12" cy="9" r="1.6" fill="none" stroke="#000080" stroke-width="0.5"/>`),
+        인도네시아: flagIcon(hStripes(["#ff0000", "#fff"])),
+        말레이시아: flagIcon(
+          `${hStripes(["#cc0001", "#fff", "#cc0001", "#fff", "#cc0001", "#fff", "#cc0001"])}<rect width="12" height="10.3" fill="#010066"/>${crescent(6, 5.2, 2, "#ffcc00", "#010066", 0.9)}${star(9.5, 5.2, 1.1, "#ffcc00")}`
+        ),
+        필리핀: flagIcon(`<rect width="24" height="9" fill="#0038a8"/><rect y="9" width="24" height="9" fill="#ce1126"/><path d="M0 0 L9 9 L0 18 Z" fill="#fff"/>${star(3, 9, 1.3, "#fcd116")}`),
+        캄보디아: flagIcon('<rect width="24" height="18" fill="#032ea1"/><rect y="4.5" width="24" height="9" fill="#e00025"/><rect x="9" y="6.5" width="6" height="5" fill="#fff"/>'),
+        미얀마: flagIcon(`${hStripes(["#fecb00", "#34b233", "#ea2839"])}${star(12, 9, 3, "#fff")}`),
+        라오스: flagIcon('<rect width="24" height="18" fill="#ce1126"/><rect y="4.5" width="24" height="9" fill="#002868"/><circle cx="12" cy="9" r="3" fill="#fff"/>'),
+        싱가포르: flagIcon(`<rect width="24" height="9" fill="#ed2939"/><rect y="9" width="24" height="9" fill="#fff"/>${crescent(6, 4.5, 2, "#fff", "#ed2939", 0.9)}${star(10, 3, 0.6, "#fff")}${star(11.5, 4.3, 0.6, "#fff")}${star(11, 6, 0.6, "#fff")}`),
+        방글라데시: flagIcon('<rect width="24" height="18" fill="#006a4e"/><circle cx="10.5" cy="9" r="4" fill="#f42a41"/>'),
+        파키스탄: flagIcon(`<rect width="24" height="18" fill="#01411c"/><rect width="6" height="18" fill="#fff"/>${crescent(15, 9, 2.6, "#fff", "#01411c", 1)}${star(19, 9, 1.1, "#fff")}`),
+        독일: flagIcon(hStripes(["#000", "#dd0000", "#ffce00"])),
+        이탈리아: flagIcon(vStripes(["#009246", "#fff", "#ce2b37"])),
+        프랑스: flagIcon(vStripes(["#0055a4", "#fff", "#ef4135"])),
+        영국: flagIcon(
+          '<rect width="24" height="18" fill="#00247d"/><path d="M0 0 24 18M24 0 0 18" stroke="#fff" stroke-width="3.6"/><path d="M0 0 24 18M24 0 0 18" stroke="#cf142b" stroke-width="1.4"/><path d="M12 0V18M0 9H24" stroke="#fff" stroke-width="6"/><path d="M12 0V18M0 9H24" stroke="#cf142b" stroke-width="2.4"/>'
+        ),
+        스페인: flagIcon('<rect width="24" height="18" fill="#aa151b"/><rect y="4.5" width="24" height="9" fill="#f1bf00"/>'),
+        포르투갈: flagIcon(`${vStripes(["#046a38", "#046a38", "#da020e", "#da020e", "#da020e"])}<circle cx="9.6" cy="9" r="2.2" fill="#ffcc00" stroke="#da020e" stroke-width="0.4"/>`),
+        네덜란드: flagIcon(hStripes(["#ae1c28", "#fff", "#21468b"])),
+        스위스: flagIcon('<rect width="24" height="18" fill="#d52b1e"/><rect x="10" y="5" width="4" height="8" fill="#fff"/><rect x="7" y="8" width="10" height="4" fill="#fff"/>'),
+        스웨덴: flagIcon(nordicCross("#006aa7", "#fecc00")),
+        노르웨이: flagIcon(nordicCross("#ba0c2f", "#00205b", "#fff")),
+        덴마크: flagIcon(nordicCross("#c60c30", "#fff")),
+        폴란드: flagIcon(hStripes(["#fff", "#dc143c"])),
+        터키: flagIcon(`<rect width="24" height="18" fill="#e30a17"/>${crescent(10, 9, 4, "#fff", "#e30a17", 1.4)}${star(15, 9, 1.6, "#fff")}`),
+        러시아: flagIcon(hStripes(["#fff", "#0039a6", "#d52b1e"])),
+        캐나다: flagIcon(
+          '<rect width="24" height="18" fill="#fff"/><rect width="6" height="18" fill="#ff0000"/><rect x="18" width="6" height="18" fill="#ff0000"/><path d="M12 4.5 12.8 6.3 14.5 5.8 13.6 7.3 15 8 13.3 8.4 13.6 10 12 9 10.4 10 10.7 8.4 9 8 10.4 7.3 9.5 5.8 11.2 6.3Z" fill="#ff0000"/>'
+        ),
+        멕시코: flagIcon(`${vStripes(["#006341", "#fff", "#ce1126"])}<circle cx="12" cy="9" r="1.8" fill="#8b5e34"/>`),
+        브라질: flagIcon('<rect width="24" height="18" fill="#009c3b"/><polygon points="12,3 21,9 12,15 3,9" fill="#ffdf00"/><circle cx="12" cy="9" r="3.2" fill="#002776"/>'),
+        호주: flagIcon(
+          `<rect width="24" height="18" fill="#00247d"/><rect x="1" y="1.5" width="8" height="5.5" fill="#fff"/><rect x="2" y="2.3" width="6" height="4" fill="#cf142b"/>${star(16, 4, 1, "#fff")}${star(19, 7, 1.2, "#fff")}${star(17, 10.5, 0.9, "#fff")}${star(20, 12.5, 1, "#fff")}${star(14, 13, 0.8, "#fff")}`
+        ),
+        뉴질랜드: flagIcon(
+          `<rect width="24" height="18" fill="#00247d"/><rect x="1" y="1.5" width="8" height="5.5" fill="#fff"/><rect x="2" y="2.3" width="6" height="4" fill="#cf142b"/>${star(16, 5, 1, "#cf142b")}${star(19, 8, 1.3, "#cf142b")}${star(15, 11, 0.9, "#cf142b")}${star(19, 13, 1, "#cf142b")}`
+        ),
       };
+      FLAG_SVG.대한민국 = FLAG_SVG.한국;
+      FLAG_SVG.오스트레일리아 = FLAG_SVG.호주;
       function countryFlag(name) {
         const n = String(name || "").trim();
         if (!n) return "";
-        if (COUNTRY_FLAG[n]) return COUNTRY_FLAG[n];
-        const key = Object.keys(COUNTRY_FLAG).find((k) => n.includes(k));
-        return key ? COUNTRY_FLAG[key] : "";
+        if (FLAG_SVG[n]) return FLAG_SVG[n];
+        const key = Object.keys(FLAG_SVG).find((k) => n.includes(k));
+        return key ? FLAG_SVG[key] : "";
       }
 
       function cardHTML(item) {
@@ -1717,8 +1808,8 @@
           ${senior ? '<div class="senior-flag">Blocked</div>' : ""}
           <div class="card-meta">
             <span class="meta-item">${ICON.factory}<span title="${esc(item.제조사수입자 || "")}">${esc(item.제조사수입자 || "—")}</span></span>
-            <span class="meta-item">${flag ? `<span class="flag">${flag}</span>` : ICON.pin}<span>${esc(item.제조국 || "—")}</span></span>
-            <span class="meta-item">${ICON.phone}<span>${esc(item.전화번호 || "—")}</span></span>
+            <span class="meta-item">${flag || ICON.pin}<span>${esc(item.제조국 || "—")}</span></span>
+            <span class="meta-item meta-phone">${ICON.phone}<span>${esc(item.전화번호 || "—")}</span></span>
           </div>
           <div class="card-note${note ? " has-note" : ""}">
             <div class="note-row">
@@ -1822,7 +1913,7 @@
       function copyCurrentList() {
         const items = renderCtl.list;
         if (!items.length) { showToast("Nothing to copy", "warn"); return; }
-        const lines = items.map((i) => [i.품명 || "", i.제조사수입자 || "", i.전화번호 || "", i.url || ""].join("\t"));
+        const lines = items.map((i) => [i.품명 || "", i.제조사수입자 || "", i.전화번호 || ""].join("\t"));
         navigator.clipboard
           .writeText(lines.join("\n"))
           .then(() => showToast(`Copied ${items.length}`, "ok"))
