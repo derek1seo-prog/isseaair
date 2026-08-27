@@ -368,9 +368,10 @@
         outline: none;
         background: transparent;
         color: var(--text);
-        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-        font-size: 12px;
+        font-family: inherit;
+        font-size: 13px;
         line-height: 1.65;
+        letter-spacing: -0.006em;
         padding: 3px 3px 7px;
       }
       .composer textarea::placeholder {
@@ -691,6 +692,11 @@
       .meta-item svg {
         flex-shrink: 0;
         color: var(--text-3);
+      }
+      .meta-item .flag {
+        flex-shrink: 0;
+        font-size: 13px;
+        line-height: 1;
       }
       .meta-item span {
         overflow: hidden;
@@ -1272,7 +1278,7 @@
     <div class="shell">
       <!-- 링크 입력 -->
       <div class="composer">
-        <textarea id="scanUrlInput" placeholder="Paste product links…"></textarea>
+        <textarea id="scanUrlInput"></textarea>
         <div class="composer-bar">
           <button class="btn btn-primary btn-sm" id="scanBtn">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
@@ -1678,6 +1684,23 @@
           '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>',
       };
 
+      const COUNTRY_FLAG = {
+        한국: "🇰🇷", 대한민국: "🇰🇷", 중국: "🇨🇳", 베트남: "🇻🇳", 태국: "🇹🇭", 일본: "🇯🇵", 미국: "🇺🇸",
+        대만: "🇹🇼", 홍콩: "🇭🇰", 인도: "🇮🇳", 인도네시아: "🇮🇩", 말레이시아: "🇲🇾", 필리핀: "🇵🇭",
+        캄보디아: "🇰🇭", 미얀마: "🇲🇲", 라오스: "🇱🇦", 싱가포르: "🇸🇬", 방글라데시: "🇧🇩", 파키스탄: "🇵🇰",
+        독일: "🇩🇪", 이탈리아: "🇮🇹", 프랑스: "🇫🇷", 영국: "🇬🇧", 스페인: "🇪🇸", 포르투갈: "🇵🇹",
+        네덜란드: "🇳🇱", 스위스: "🇨🇭", 스웨덴: "🇸🇪", 노르웨이: "🇳🇴", 덴마크: "🇩🇰", 폴란드: "🇵🇱",
+        터키: "🇹🇷", 러시아: "🇷🇺", 캐나다: "🇨🇦", 멕시코: "🇲🇽", 브라질: "🇧🇷",
+        호주: "🇦🇺", 오스트레일리아: "🇦🇺", 뉴질랜드: "🇳🇿",
+      };
+      function countryFlag(name) {
+        const n = String(name || "").trim();
+        if (!n) return "";
+        if (COUNTRY_FLAG[n]) return COUNTRY_FLAG[n];
+        const key = Object.keys(COUNTRY_FLAG).find((k) => n.includes(k));
+        return key ? COUNTRY_FLAG[key] : "";
+      }
+
       function cardHTML(item) {
         const url = item.url || "";
         const urlEnc = esc(url);
@@ -1685,6 +1708,7 @@
         const st = senior ? "reject" : statusOf(item);
         const b = bucketOf(item.addedAt);
         const note = getNote(url);
+        const flag = countryFlag(item.제조국);
         return `<div class="card status-${st}" data-url="${urlEnc}">
           <div class="card-head">
             <div class="card-title">${esc(item.품명 || "Untitled")}</div>
@@ -1693,7 +1717,7 @@
           ${senior ? '<div class="senior-flag">Blocked</div>' : ""}
           <div class="card-meta">
             <span class="meta-item">${ICON.factory}<span title="${esc(item.제조사수입자 || "")}">${esc(item.제조사수입자 || "—")}</span></span>
-            <span class="meta-item">${ICON.pin}<span>${esc(item.제조국 || "—")}</span></span>
+            <span class="meta-item">${flag ? `<span class="flag">${flag}</span>` : ICON.pin}<span>${esc(item.제조국 || "—")}</span></span>
             <span class="meta-item">${ICON.phone}<span>${esc(item.전화번호 || "—")}</span></span>
           </div>
           <div class="card-note${note ? " has-note" : ""}">
