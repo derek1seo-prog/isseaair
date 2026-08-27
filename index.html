@@ -369,7 +369,7 @@
         background: transparent;
         color: var(--text);
         font-family: inherit;
-        font-size: 13px;
+        font-size: 11.5px;
         line-height: 1.65;
         letter-spacing: -0.006em;
         padding: 3px 3px 7px;
@@ -659,12 +659,27 @@
         letter-spacing: -0.008em;
         color: var(--text);
       }
+      .card-title.is-empty {
+        color: var(--text-3);
+        font-weight: 500;
+        font-style: italic;
+      }
+      .card-time-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .flag-wrap {
+        display: flex;
+        cursor: default;
+      }
       .card-time {
         flex-shrink: 0;
         font-size: 10.5px;
         color: var(--text-3);
         white-space: nowrap;
-        margin-top: 1px;
         font-variant-numeric: tabular-nums;
         cursor: default;
       }
@@ -704,13 +719,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-      }
-      .meta-phone {
-        flex-shrink: 0;
-      }
-      .meta-phone span {
-        overflow: visible;
-        text-overflow: clip;
       }
 
       .card-note {
@@ -1729,7 +1737,7 @@
       }
       const FLAG_SVG = {
         한국: flagIcon(
-          '<rect width="24" height="18" fill="#fff"/><path d="M12 4a5 5 0 0 1 0 10 2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 0 0-5z" fill="#c60c30"/><path d="M12 4a5 5 0 0 0 0 10 2.5 2.5 0 0 0 0-5 2.5 2.5 0 0 1 0-5z" fill="#003478"/>'
+          '<rect width="24" height="18" fill="#fff"/><path d="M12 4A5 5 0 0 1 12 14Z" fill="#c60c30"/><path d="M12 4A5 5 0 0 0 12 14Z" fill="#003478"/><circle cx="12" cy="6.5" r="2.5" fill="#c60c30"/><circle cx="12" cy="11.5" r="2.5" fill="#003478"/>'
         ),
         중국: flagIcon(
           `<rect width="24" height="18" fill="#de2910"/>${star(6, 5, 2.2, "#ffde00")}${star(9.5, 3, 0.7, "#ffde00")}${star(10.8, 5, 0.7, "#ffde00")}${star(10.5, 7.2, 0.7, "#ffde00")}${star(9, 8.8, 0.7, "#ffde00")}`
@@ -1802,14 +1810,17 @@
         const flag = countryFlag(item.제조국);
         return `<div class="card status-${st}" data-url="${urlEnc}">
           <div class="card-head">
-            <div class="card-title">${esc(item.품명 || "Untitled")}</div>
-            <div class="card-time" data-tip="${esc(exactDateTime(item.addedAt))}">${esc(b.label)}</div>
+            <div class="card-title${item.품명 ? "" : " is-empty"}">${esc(item.품명 || "Untitled")}</div>
+            <div class="card-time-group">
+              ${flag ? `<span class="flag-wrap" title="${esc(item.제조국)}">${flag}</span>` : ""}
+              <div class="card-time" data-tip="${esc(exactDateTime(item.addedAt))}">${esc(b.label)}</div>
+            </div>
           </div>
           ${senior ? '<div class="senior-flag">Blocked</div>' : ""}
           <div class="card-meta">
             <span class="meta-item">${ICON.factory}<span title="${esc(item.제조사수입자 || "")}">${esc(item.제조사수입자 || "—")}</span></span>
-            <span class="meta-item">${flag || ICON.pin}<span>${esc(item.제조국 || "—")}</span></span>
-            <span class="meta-item meta-phone">${ICON.phone}<span>${esc(item.전화번호 || "—")}</span></span>
+            ${!flag ? `<span class="meta-item">${ICON.pin}<span>${esc(item.제조국 || "—")}</span></span>` : ""}
+            <span class="meta-item">${ICON.phone}<span title="${esc(item.전화번호 || "")}">${esc(item.전화번호 || "—")}</span></span>
           </div>
           <div class="card-note${note ? " has-note" : ""}">
             <div class="note-row">
